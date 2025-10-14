@@ -326,18 +326,18 @@ export default function GalleryPage() {
   }, [localGalleryImages]);
 
   // Get images for specific folder
-  const getFolderImages = (folderKey: string): GalleryImage[] => {
+  const getFolderImages = useCallback((folderKey: string): GalleryImage[] => {
     return organizedImages[folderKey] || [];
-  };
+  }, [organizedImages]);
 
   // Get all images
-  const getAllImages = (): GalleryImage[] => {
+  const getAllImages = useCallback((): GalleryImage[] => {
     const allImages: GalleryImage[] = [];
     Object.values(organizedImages).forEach(images => {
       allImages.push(...images);
     });
     return allImages;
-  };
+  }, [organizedImages]);
 
   // Lightbox navigation
   const handleImageClick = (image: GalleryImage) => {
