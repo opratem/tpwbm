@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7bd49692-65e5-46e0-9b6b-a1e46a41b676" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/biome.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/drizzle.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/netlify.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ClientBody.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/about/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/announcements/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/blog/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/dashboard/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/events/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/media/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/prayer-requests/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/reset-password/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/users/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/youtube/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/announcements/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/analytics/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/blog/[id]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/blog/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/password-reset-complete/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/password-reset-request/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/recent-activity/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/stats/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/admin/users/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/announcements/[id]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/announcements/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/auth/link-account/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/cloudinary/debug-structure/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/cloudinary/debug/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/cloudinary/gallery-folders/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/cloudinary/images/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/cloudinary/sermons/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/cloudinary/test/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/events/[id]/register/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/events/[id]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/events/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/facebook/videos/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/forgot-password/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/media-proxy/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/notifications/stream/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/notifications/test/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/payments/initialize/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/payments/verify/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/prayer-requests/[id]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/prayer-requests/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/profile/update/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/test-db/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/upload/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/youtube/channel/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/youtube/church-content/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/youtube/playlists/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/youtube/test-connection/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/youtube/videos/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/audio-messages/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blog/[slug]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blog/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/contact/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/events/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/faq/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/gallery/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/giving/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/leadership/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/live-streaming/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/dashboard/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/directory/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/forgot-password/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/login/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/prayer/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/profile/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/register/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/members/resources/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/children/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/house-of-grace/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/icwlc/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/men/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/music/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/ushers/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/women/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ministries/youth/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/pastor/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/payments/cancelled/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/payments/success/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/resources/42-success-laws/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/resources/winning-church-workers/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/sermons/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/services/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/test-oauth/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/test-youtube/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/LeaderCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/admin/admin-password-reset.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/admin/cloudinary-upload.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/auth/auth-provider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/auth/login-form.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/auth/logout-button.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/layout/footer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/layout/header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/layout/main-layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/member-profile.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/alert-dialog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/alert.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/animated-section.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/announcements.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/audio-messages.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/avatar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/badge.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/blog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/button.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/calender.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/dialog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/dropdown-menu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/enhanced-media-player.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/events.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/facebook-videos.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/faq.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/form.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/image-with-fallback.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/input.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/label.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/live-notifications.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/live-streaming.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/loading-spinner.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/media-player.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/mini-player.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/newsletter-signup.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/page-transition.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/payment-form.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/prayer-request-form.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/prayer-requests-dashboard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/scroll-progress.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/select.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/sermon-modal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/sheet.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/slider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/smooth-navigation.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/sonner.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/spiritual-quotes.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/switch.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/tabs.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/textarea.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/youtube-integration.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/youtube-media-player.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/contexts/MediaPlayerContext.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/usePaystack.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/useRealTimeNotifications.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/useScrollAnimation.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/cloudinary-client.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/cloudinary.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/db/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/db/schema.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/db/seed.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/email-notification.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/google-drive.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/images.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/leader-images.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/ministry.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/notification-broadcaster.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/notification.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/plausible.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/sermon-sorting.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/youtube-api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/middleware.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/events.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/next-auth.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/prayer-requests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/eslint.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/postcss.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/postcss.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="3039O3oZLOVs8xbaEZuluibEFuC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/snap/intellij-idea-ultimate/638/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="tpwbm-next" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="tpwbm-next" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7bd49692-65e5-46e0-9b6b-a1e46a41b676" name="Changes" comment="" />
+      <created>1752845360992</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1752845360992</updated>
+      <workItem from="1752845376682" duration="164000" />
+      <workItem from="1752845578355" duration="1167000" />
+      <workItem from="1752847491242" duration="2784000" />
+      <workItem from="1752864281206" duration="2973000" />
+      <workItem from="1752927821108" duration="2372000" />
+      <workItem from="1752948511423" duration="4812000" />
+      <workItem from="1753087101105" duration="3560000" />
+      <workItem from="1753117124722" duration="1566000" />
+      <workItem from="1753197385599" duration="418000" />
+      <workItem from="1753198007363" duration="2863000" />
+      <workItem from="1753219157407" duration="1613000" />
+      <workItem from="1753282716864" duration="342000" />
+      <workItem from="1753310201398" duration="1643000" />
+      <workItem from="1753360895375" duration="2375000" />
+      <workItem from="1753408527487" duration="652000" />
+      <workItem from="1753441403680" duration="332000" />
+      <workItem from="1753481769675" duration="896000" />
+      <workItem from="1753483090757" duration="2579000" />
+      <workItem from="1753488636033" duration="1279000" />
+      <workItem from="1753541594982" duration="786000" />
+      <workItem from="1753542415313" duration="3052000" />
+      <workItem from="1753559266518" duration="1937000" />
+      <workItem from="1753561749293" duration="1617000" />
+      <workItem from="1753563399227" duration="966000" />
+      <workItem from="1753564403680" duration="1096000" />
+      <workItem from="1753566075232" duration="1436000" />
+      <workItem from="1753634974165" duration="5974000" />
+      <workItem from="1753737524169" duration="1762000" />
+      <workItem from="1753793509982" duration="360000" />
+      <workItem from="1753794016287" duration="3027000" />
+      <workItem from="1753811748160" duration="1811000" />
+      <workItem from="1753963751950" duration="262000" />
+      <workItem from="1754045720663" duration="395000" />
+      <workItem from="1754046609245" duration="143000" />
+      <workItem from="1754779570062" duration="288000" />
+      <workItem from="1754998797814" duration="9022000" />
+      <workItem from="1755011638209" duration="729000" />
+      <workItem from="1755012394675" duration="3237000" />
+      <workItem from="1755023294155" duration="5428000" />
+      <workItem from="1755084109245" duration="737000" />
+      <workItem from="1755084976753" duration="3843000" />
+      <workItem from="1755092893165" duration="7194000" />
+      <workItem from="1755110573110" duration="5771000" />
+      <workItem from="1755167968281" duration="10672000" />
+      <workItem from="1755181168557" duration="407000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
