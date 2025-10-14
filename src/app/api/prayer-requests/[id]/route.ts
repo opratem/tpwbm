@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { prayerRequests, prayerResponses, users } from "@/lib/db/schema";
 import { eq, and, or, sql } from "drizzle-orm";

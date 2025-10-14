@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from "@/lib/auth";
 import { filterNotificationsForUser, sortNotificationsByPriority, type Notification } from '@/lib/notification';
 import { setBroadcastFunction } from '@/lib/notification-broadcaster';
 import { generateUUID } from '@/lib/utils';

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { plausibleService, type AnalyticsData } from "@/lib/plausible";
 
 // GET /api/admin/analytics - Get analytics data
