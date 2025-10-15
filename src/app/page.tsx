@@ -78,8 +78,14 @@ export default function Home() {
                       delay={100}
                   />{" "}
                   <CascadingText
-                      text="The Prevailing Word Believers Ministry Inc."
-                      className="bg-gradient-to-r from-yellow-200 via-white to-blue-200 bg-clip-text text-transparent drop-shadow-lg font-extrabold block sm:inline"
+                      text="The Prevailing Word Believers"
+                      className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-200 bg-clip-text text-transparent drop-shadow-lg font-extrabold block sm:inline"
+                      animation="fadeIn"
+                      delay={80}
+                  />{" "}
+                  <CascadingText
+                      text="Ministry Inc."
+                      className="text-white drop-shadow-lg font-extrabold block sm:inline"
                       animation="fadeIn"
                       delay={80}
                   />
@@ -95,7 +101,7 @@ export default function Home() {
                 <Button
                     size="lg"
                     variant="default"
-                    className="magnetic-button mobile-button font-bold rounded-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl border-2 border-blue-500 w-full md:w-auto mobile-touch-target py-4 sm:py-5 md:py-3 text-base sm:text-lg md:text-base"
+                    className="magnetic-button mobile-button font-bold rounded-full bg-gradient-to-r from-church-primary to-church-primary-dark hover:from-church-primary-dark hover:to-church-primary text-white transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl border-2 border-church-primary w-full md:w-auto mobile-touch-target py-4 sm:py-5 md:py-3 text-base sm:text-lg md:text-base"
                     asChild
                 >
                   <Link href="/services">Service Times</Link>
@@ -103,7 +109,7 @@ export default function Home() {
                 <Button
                     size="lg"
                     variant="outline"
-                    className="magnetic-button mobile-button font-bold rounded-full bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-blue-900 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl w-full md:w-auto mobile-touch-target py-4 sm:py-5 md:py-3 text-base sm:text-lg md:text-base"
+                    className="magnetic-button mobile-button font-bold rounded-full bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-church-primary transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl w-full md:w-auto mobile-touch-target py-4 sm:py-5 md:py-3 text-base sm:text-lg md:text-base"
                     asChild
                 >
                   <Link href="/pastor">Meet Our Pastor</Link>
@@ -111,7 +117,7 @@ export default function Home() {
                 <Button
                     size="lg"
                     variant="outline"
-                    className="bouncy-hover mobile-button font-bold rounded-full bg-yellow-500/20 backdrop-blur-sm border-2 border-yellow-300 text-yellow-100 hover:bg-yellow-400 hover:text-yellow-900 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl w-full md:w-auto mobile-touch-target py-4 sm:py-5 md:py-3 text-base sm:text-lg md:text-base"
+                    className="bouncy-hover mobile-button font-bold rounded-full bg-church-accent/20 backdrop-blur-sm border-2 border-church-accent text-yellow-100 hover:bg-church-accent hover:text-church-primary transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl w-full md:w-auto mobile-touch-target py-4 sm:py-5 md:py-3 text-base sm:text-lg md:text-base"
                     asChild
                 >
                   <Link href="/about">Learn More</Link>

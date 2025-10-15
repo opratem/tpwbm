@@ -50,7 +50,6 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))'
         },
-        // Church theme colors for easy access
         church: {
           primary: 'hsl(var(--church-primary))',
           'primary-light': 'hsl(var(--church-primary-light))',
@@ -60,7 +59,7 @@ export default {
           text: 'hsl(var(--church-text))',
           'text-muted': 'hsl(var(--church-text-muted))',
           surface: 'hsl(var(--church-surface))',
-          'surface-hover': 'hsl(var(--church-surface-hover))',
+          'surface-hover': 'hsl(var(--church-surface-hover))'
         }
       },
       borderRadius: {
@@ -69,9 +68,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       fontFamily: {
-        sans: ['DM Sans', 'Roboto', 'Nunito', 'system-ui', 'sans-serif'],
-        serif: ['Marcellus', 'serif'],
-        heading: ['Marcellus', 'DM Sans', 'serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       container: {
       center: true,
