@@ -128,12 +128,12 @@ export default function YouthMinistryPage() {
               src="/images/background/youth_background.jpg"
               alt="Youth Ministry Background"
               fill
-              className="object-cover opacity-50 blur-sm"
+              className="object-cover blur-sm"
               priority
             />
-            {/* Enhanced overlay for depth - very light overlay for maximum brightness */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[hsl(218,31%,18%)]/15 via-transparent to-[hsl(218,31%,18%)]/20 z-1" />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(218,31%,18%)]/10 to-[hsl(218,31%,18%)]/15 z-1" />
+            {/* Enhanced overlay using color theme - navy blue gradient for better text visibility */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[hsl(218,31%,18%)]/70 via-[hsl(218,31%,18%)]/50 to-[hsl(218,31%,18%)]/60 z-1" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[hsl(218,31%,18%)]/40 via-transparent to-[hsl(218,31%,18%)]/50 z-1" />
           </div>
 
           <div className="container mx-auto px-4 text-center relative z-10">
@@ -169,8 +169,11 @@ export default function YouthMinistryPage() {
             {/* About Section */}
             <AnimatedSection animation="fadeUp">
               <div className="text-center max-w-5xl mx-auto">
-                <h2 className="mobile-text-2xl font-bold text-[hsl(218,31%,18%)] mb-6">
-                  About Our Youth Ministry
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-6">
+                  About Our{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Youth Ministry
+                  </span>
                 </h2>
                 <p className="mobile-text-lg text-[hsl(218,15%,40%)] mb-12 leading-relaxed">
                   Our Youth Ministry is a vibrant, energetic community where young people discover their identity in Christ,
@@ -207,8 +210,11 @@ export default function YouthMinistryPage() {
             <AnimatedSection animation="fadeUp">
               <div>
                 <div className="text-center mb-12">
-                  <h2 className="mobile-text-2xl font-bold text-[hsl(218,31%,18%)] mb-4">
-                    Age Groups
+                  <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                    Age{" "}
+                    <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                      Groups
+                    </span>
                   </h2>
                   <p className="mobile-text-lg text-[hsl(218,15%,40%)]">Tailored programs for different life stages and experiences</p>
                 </div>
@@ -240,8 +246,11 @@ export default function YouthMinistryPage() {
             <AnimatedSection animation="fadeUp">
               <div>
                 <div className="text-center mb-12">
-                  <h2 className="mobile-text-2xl font-bold text-[hsl(218,31%,18%)] mb-4">
-                    Special Programs
+                  <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                    Special{" "}
+                    <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                      Programs
+                    </span>
                   </h2>
                   <p className="mobile-text-lg text-[hsl(218,15%,40%)]">Exciting events and opportunities throughout the year</p>
                 </div>
@@ -273,8 +282,11 @@ export default function YouthMinistryPage() {
             <AnimatedSection animation="fadeUp">
               <div>
                 <div className="text-center mb-12">
-                  <h2 className="mobile-text-2xl font-bold text-[hsl(218,31%,18%)] mb-4">
-                    Our Moments
+                  <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                    Our{" "}
+                    <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                      Moments
+                    </span>
                   </h2>
                   <p className="mobile-text-lg text-[hsl(218,15%,40%)]">Memories from our conferences, hangouts, and fellowship times</p>
                 </div>
@@ -303,8 +315,11 @@ export default function YouthMinistryPage() {
             <AnimatedSection animation="fadeUp">
               <div>
                 <div className="text-center mb-12">
-                  <h2 className="mobile-text-2xl font-bold text-[hsl(218,31%,18%)] mb-4">
-                    Our Leadership Team
+                  <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                    Our{" "}
+                    <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                      Leadership Team
+                    </span>
                   </h2>
                   <p className="mobile-text-lg text-[hsl(218,15%,40%)]">Passionate leaders guiding and inspiring our youth ministry</p>
                 </div>
@@ -318,40 +333,40 @@ export default function YouthMinistryPage() {
 
             {/* Join Section */}
             <AnimatedSection animation="fadeUp">
-              <div className="bg-gradient-to-br from-[hsl(45,56%,98%)] via-[hsl(45,56%,96%)] to-[hsl(218,15%,98%)] rounded-3xl p-8 md:p-12 shadow-2xl">
+              <div className="bg-gradient-to-br from-[hsl(218,31%,18%)] via-[hsl(218,28%,22%)] to-[hsl(218,31%,18%)] rounded-3xl p-8 md:p-12 shadow-2xl">
                 <div className="text-center mb-10">
-                  <h2 className="mobile-text-2xl font-bold text-[hsl(218,31%,18%)] mb-4">
+                  <h2 className="mobile-text-2xl font-bold tracking-tight mb-4 text-white">
                     Join Our Youth Family
                   </h2>
-                  <p className="mobile-text-lg text-[hsl(218,15%,40%)]">Be part of a community that will challenge, inspire, and transform you! 🔥</p>
+                  <p className="mobile-text-lg text-gray-200">Be part of a community that will challenge, inspire, and transform you! 🔥</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                   <div className="text-center group">
-                    <div className="bg-white rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                      <MapPin className="h-10 w-10 text-[hsl(218,31%,18%)]" />
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/20">
+                      <MapPin className="h-10 w-10 text-white" />
                     </div>
-                    <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Location</h3>
-                    <p className="text-lg text-[hsl(218,15%,40%)]">TPWBM Church</p>
+                    <h3 className="font-bold mobile-text-lg mb-3 text-white">Location</h3>
+                    <p className="text-lg text-gray-200">TPWBM Church</p>
                   </div>
                   <div className="text-center group">
-                    <div className="bg-white rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                    <div className="bg-[hsl(45,56%,55%)]/20 backdrop-blur-sm rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-[hsl(45,56%,55%)]/30">
                       <Users className="h-10 w-10 text-[hsl(45,56%,55%)]" />
                     </div>
-                    <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Age Range</h3>
-                    <p className="text-lg text-[hsl(218,15%,40%)]">Ages 13-30<br />All Welcome</p>
+                    <h3 className="font-bold mobile-text-lg mb-3 text-white">Age Range</h3>
+                    <p className="text-lg text-gray-200">Ages 13-30<br />All Welcome</p>
                   </div>
                 </div>
                 <div className="text-center mt-10">
-                  <p className="text-lg text-[hsl(218,15%,40%)] mb-6 max-w-3xl mx-auto leading-relaxed">
+                  <p className="text-lg text-gray-200 mb-6 max-w-3xl mx-auto leading-relaxed">
                     Ready to take your faith to the next level? Join us for dynamic worship,
                     meaningful fellowship, and life-changing encounters with God! ✨
                   </p>
-                  <div className="bg-white/50 rounded-2xl p-6 max-w-2xl mx-auto">
-                    <p className="text-base text-[hsl(218,15%,40%)] italic font-medium">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto border border-white/20">
+                    <p className="text-base text-gray-100 italic font-medium">
                       "Don't let anyone look down on you because you are young, but set an example
                       for the believers in speech, in conduct, in love, in faith and in purity."
                     </p>
-                    <p className="text-sm text-[hsl(218,15%,40%)] mt-2 font-semibold">- 1 Timothy 4:12</p>
+                    <p className="text-sm text-gray-300 mt-2 font-semibold">- 1 Timothy 4:12</p>
                   </div>
                 </div>
               </div>
