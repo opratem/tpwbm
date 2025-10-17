@@ -32,7 +32,7 @@ export default function MusicMinistryPage() {
                 </div>
             )}
           </div>
-          <h3 className="font-semibold text-lg text-primary">{leader.name}</h3>
+          <h3 className="font-semibold mobile-text-lg text-primary">{leader.name}</h3>
           <p className="text-secondary font-medium">{leader.role}</p>
         </div>
     );
@@ -62,10 +62,10 @@ export default function MusicMinistryPage() {
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-secondary to-secondary/80 rounded-full flex items-center justify-center mx-auto mb-6 animate-in fade-in slide-in-from-top duration-1000 delay-200 drop-shadow-lg">
                 <Music className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold mb-4 md:mb-6 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
+              <h1 className="mobile-text-3xl font-extrabold mb-4 md:mb-6 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
                 Music Ministry
               </h1>
-              <p className="text-lg sm:text-xl text-gray-100 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600">
+              <p className="mobile-text-lg text-gray-100 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600">
                 Using the gift of music to enhance worship, praise, and create meaningful spiritual experiences for our church family
               </p>
             </div>
@@ -78,7 +78,7 @@ export default function MusicMinistryPage() {
             <div className="container px-4 md:px-6">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div className="space-y-6 pt-0">
-                  <h2 className="text-3xl font-bold text-primary mb-4">
+                  <h2 className="mobile-text-2xl font-bold text-primary mb-4">
                     Our Calling
                   </h2>
                   <p className="text-lg text-gray-700 leading-relaxed">
@@ -137,7 +137,7 @@ export default function MusicMinistryPage() {
           <section className="w-full py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
             <div className="container px-4 md:px-6">
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-4">
+                <h2 className="mobile-text-2xl font-bold text-primary mb-4">
                   Our Leadership Team
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -158,7 +158,7 @@ export default function MusicMinistryPage() {
           <section className="w-full py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
             <div className="container px-4 md:px-6">
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-4">
+                <h2 className="mobile-text-2xl font-bold text-primary mb-4">
                   Our Teams
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -206,7 +206,7 @@ export default function MusicMinistryPage() {
           <section className="w-full py-16 md:py-24 bg-gradient-to-b from-gray-50 to-secondary/5">
             <div className="container px-4 md:px-6">
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-4">
+                <h2 className="mobile-text-2xl font-bold text-primary mb-4">
                   Practice{" "}<span className="bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent">Schedule</span>
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -255,7 +255,7 @@ export default function MusicMinistryPage() {
 
             <div className="container px-4 md:px-6 relative z-10">
               <div className="text-center space-y-8">
-                <h2 className="text-3xl font-bold mb-4 text-white drop-shadow-2xl">
+                <h2 className="mobile-text-2xl font-bold mb-4 text-white drop-shadow-2xl">
                   Join Our Music Ministry
                 </h2>
                 <p className="text-xl text-gray-100 max-w-3xl mx-auto">

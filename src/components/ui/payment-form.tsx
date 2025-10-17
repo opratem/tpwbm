@@ -102,13 +102,13 @@ export function PaymentForm({ className }: PaymentFormProps) {
         <CardHeader className="bg-gradient-to-r from-church-primary via-church-primary-dark to-church-accent text-white rounded-t-lg relative overflow-hidden">
           <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
           <div className="relative z-10">
-            <CardTitle className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold flex items-center mb-2">
+            <CardTitle className="text-xl md:text-2xl font-bold flex items-center mb-2">
               <div className="bg-white/20 p-3 rounded-full mr-4">
                 <Heart className="h-8 w-8" />
               </div>
               Online Giving
             </CardTitle>
-            <p className="text-white/90 mobile-text-lg">
+            <p className="text-white/90 mobile-text-base">
               Give securely with multiple payment options
             </p>
             <div className="flex items-center mt-4 space-x-4">
@@ -361,7 +361,7 @@ export function PaymentForm({ className }: PaymentFormProps) {
               <div className="flex items-start">
                 <Shield className="h-6 w-6 text-church-accent mr-3 mt-0.5" />
                 <div>
-                  <h4 className="font-semibold text-church-primary mb-1">Secure Payment Guaranteed</h4>
+                  <h4 className="text-base md:text-lg font-semibold text-church-primary mb-1">Secure Payment Guaranteed</h4>
                   <p className="text-sm text-church-text-muted">
                     Your payment is processed securely by Paystack with bank-level encryption. We never store your card details.
                   </p>

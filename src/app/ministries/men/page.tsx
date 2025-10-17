@@ -113,7 +113,7 @@ export default function MenMinistryPage() {
                 </div>
             )}
           </div>
-          <h3 className="font-semibold text-lg text-gray-900">{leader.name}</h3>
+          <h3 className="font-semibold mobile-text-lg text-gray-900">{leader.name}</h3>
           <p className="text-blue-600 font-medium">{leader.role}</p>
         </div>
     );
@@ -131,7 +131,7 @@ export default function MenMinistryPage() {
             <div className="flex justify-center mb-6 animate-in fade-in slide-in-from-top duration-1000 delay-200">
               <Shield className="h-12 sm:h-16 w-12 sm:w-16 text-blue-200 drop-shadow-lg" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 md:mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
+            <h1 className="mobile-text-3xl font-extrabold mb-4 md:mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
               Men's Ministry
             </h1>
             <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto mb-6 md:mb-8 font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600">
@@ -158,7 +158,7 @@ export default function MenMinistryPage() {
 
             {/* About Section */}
             <div className="text-center max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">About Our Men's Ministry</h2>
+              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-6">About Our Men's Ministry</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Our Men's Ministry is dedicated to building strong, godly men who lead with integrity,
                 serve with humility, and live with purpose. We create a brotherhood where men can grow
@@ -169,21 +169,21 @@ export default function MenMinistryPage() {
                   <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Crown className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Spiritual Leadership</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Spiritual Leadership</h3>
                   <p className="text-gray-600">Leading families and communities with godly wisdom</p>
                 </div>
                 <div className="text-center">
                   <div className="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Handshake className="h-8 w-8 text-indigo-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Brotherhood</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Brotherhood</h3>
                   <p className="text-gray-600">Building authentic relationships and accountability</p>
                 </div>
                 <div className="text-center">
                   <div className="bg-slate-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Trophy className="h-8 w-8 text-slate-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Excellence</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Excellence</h3>
                   <p className="text-gray-600">Pursuing excellence in all areas of life</p>
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default function MenMinistryPage() {
             {/* Focus Areas */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Focus Areas</h2>
+                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Our Focus Areas</h2>
                 <p className="text-gray-600">Key areas of growth and development for men</p>
               </div>
               <div className="grid md:grid-cols-3 gap-6">
@@ -216,7 +216,7 @@ export default function MenMinistryPage() {
             {/* Activities */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Regular Activities</h2>
+                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Regular Activities</h2>
                 <p className="text-gray-600">Building men of God through consistent fellowship and service</p>
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -242,7 +242,7 @@ export default function MenMinistryPage() {
             {/* Special Programs */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Special Programs</h2>
+                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Special Programs</h2>
                 <p className="text-gray-600">Annual events and ongoing initiatives</p>
               </div>
               <div className="grid md:grid-cols-2 gap-6">
@@ -266,7 +266,7 @@ export default function MenMinistryPage() {
             {/* Leadership Team */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Leadership Team</h2>
+                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Our Leadership Team</h2>
                 <p className="text-gray-600">Men of integrity leading our ministry</p>
               </div>
               <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
@@ -279,7 +279,7 @@ export default function MenMinistryPage() {
             {/* Contact & Information */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Join the Brotherhood</h2>
+                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Join the Brotherhood</h2>
                 <p className="text-gray-600">Be part of a community of men committed to Christ and each other</p>
               </div>
               <div className="grid md:grid-cols-3 gap-6 text-center">
@@ -287,21 +287,21 @@ export default function MenMinistryPage() {
                   <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <MapPin className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Location</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Location</h3>
                   <p className="text-gray-600">Fellowship Hall<br />TPWBM Church</p>
                 </div>
                 <div>
                   <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Clock className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Meeting Times</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Meeting Times</h3>
                   <p className="text-gray-600">Saturdays<br />7:00 AM - 8:30 AM</p>
                 </div>
                 <div>
                   <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Shield className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">All Men</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">All Men</h3>
                   <p className="text-gray-600">Every Age<br />Every Background</p>
                 </div>
               </div>

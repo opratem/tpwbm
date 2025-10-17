@@ -85,10 +85,10 @@ export default function ContactPage() {
           <div className="flex flex-col items-center justify-center text-center">
             <div className="space-y-2">
               <MessageCircle className="h-12 sm:h-16 w-12 sm:w-16 text-white mx-auto mb-6 drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-100" />
-              <h1 className="mobile-text-3xl font-bold tracking-tighter bg-gradient-to-r from-white to-church-accent bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-300 heading-hover-underline">
-                Contact Us
+              <h1 className="mobile-text-3xl font-bold tracking-tighter text-white drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-300 heading-hover-underline">
+                Get in Touch
               </h1>
-              <p className="mx-auto max-w-[600px] text-church-accent mobile-text-base font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-500">
+              <p className="mx-auto max-w-[600px] text-white mobile-text-lg font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-500">
                 We'd love to hear from you. Get in touch with us today.
               </p>
             </div>
@@ -109,6 +109,7 @@ export default function ContactPage() {
                     Touch
                   </span>
                 </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto lg:mx-0 mb-4"></div>
                 <p className="text-gray-600 dark:text-gray-400 mobile-text-lg">
                   We're here to help and answer any questions you might have.
                 </p>
@@ -178,7 +179,13 @@ export default function ContactPage() {
               {/* Service Times Section */}
               <Card className="bg-gradient-to-br from-church-accent/10 to-church-accent/20 dark:from-church-accent/5 dark:to-church-accent/10 border-2 border-church-accent/30 dark:border-church-accent/20">
                 <CardHeader>
-                  <CardTitle className="mobile-text-2xl text-center">Service Times</CardTitle>
+                  <CardTitle className="mobile-text-2xl text-center">
+                    Service{" "}
+                    <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                      Times
+                    </span>
+                  </CardTitle>
+                  <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto mt-2"></div>
                   <CardDescription className="text-center">
                     Join us for worship and fellowship
                   </CardDescription>
@@ -214,7 +221,13 @@ export default function ContactPage() {
             <div className="animate-in fade-in slide-in-from-right duration-1000 delay-200">
               <Card className="shadow-xl border-2 border-gray-100 dark:border-gray-800">
                 <CardHeader>
-                  <CardTitle className="mobile-text-2xl">Send Us a Message</CardTitle>
+                  <CardTitle className="mobile-text-2xl">
+                    Send Us a{" "}
+                    <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                      Message
+                    </span>
+                  </CardTitle>
+                  <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mb-2"></div>
                   <CardDescription>
                     Fill out the form below and we'll get back to you as soon as possible.
                   </CardDescription>
@@ -312,7 +325,13 @@ export default function ContactPage() {
       <section className="w-full py-16 md:py-24 bg-gradient-to-br from-gray-50 to-church-accent/10 dark:from-gray-900 dark:to-church-accent/5">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-6 text-center mb-12 animate-in fade-in slide-in-from-top duration-1000">
-            <h2 className="mobile-text-2xl font-bold">Find Us</h2>
+            <h2 className="mobile-text-2xl font-bold">
+              Find{" "}
+              <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                Us
+              </span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto"></div>
             <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-400 md:text-xl">
               We're located in the heart of Abeokuta. Come visit us!
             </p>

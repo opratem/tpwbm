@@ -29,7 +29,7 @@ export default function FAQPage() {
             </div>
 
             {/* Main Title */}
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
+            <h1 className="mobile-text-3xl font-extrabold mb-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
               Frequently Asked Questions
             </h1>
 

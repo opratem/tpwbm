@@ -54,13 +54,13 @@ export default function GivingPage() {
           <div className="container mx-auto px-4 text-center relative z-10">
             <div className="max-w-3xl mx-auto">
               <Heart className="h-12 sm:h-16 w-12 sm:w-16 text-church-accent mx-auto mb-6 drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-200" />
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-4 md:mb-6 text-white drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-400"
+              <h1 className="mobile-text-3xl font-bold mb-4 md:mb-6 text-white drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-400"
                   style={{
                     textShadow: '0 0 30px rgba(0,0,0,0.9), 0 4px 8px rgba(0,0,0,0.7), 0 0 15px hsl(45 56% 55% / 0.3)'
                   }}>
                 Give with a Cheerful Heart
               </h1>
-              <p className="text-lg sm:text-xl text-white mb-6 md:mb-8 font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600"
+              <p className="mobile-text-lg text-white mb-6 md:mb-8 font-light leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600"
                  style={{
                    textShadow: '0 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.3)'
                  }}>
@@ -94,7 +94,7 @@ export default function GivingPage() {
                   Give
                 </span>
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="mobile-text-base text-gray-600">
                 Choose the method that works best for you to support God's work
               </p>
             </div>
@@ -106,7 +106,7 @@ export default function GivingPage() {
               {/* Bank Transfer */}
               <Card className="border-2 border-church-accent/30">
                 <CardHeader>
-                  <CardTitle className="text-2xl text-church-primary flex items-center">
+                  <CardTitle className="text-xl md:text-2xl text-church-primary flex items-center">
                     <Building2 className="h-6 w-6 mr-3" />
                     Bank Transfer
                   </CardTitle>
@@ -178,7 +178,7 @@ export default function GivingPage() {
                   </div>
 
                   <div className="bg-church-accent/20 border border-church-accent/30 p-4 rounded-lg">
-                    <h4 className="font-semibold text-church-primary mb-2">Important Note:</h4>
+                    <h4 className="text-base md:text-lg font-semibold text-church-primary mb-2">Important Note:</h4>
                     <p className="text-church-primary/80">
                       Please use your full name as the transaction reference so we can properly acknowledge your giving.
                     </p>
@@ -189,7 +189,7 @@ export default function GivingPage() {
               {/* Giving Guidelines */}
               <Card className="bg-church-primary/5 border-church-primary/20">
                 <CardHeader>
-                  <CardTitle className="text-2xl text-church-primary flex items-center">
+                  <CardTitle className="text-xl md:text-2xl text-church-primary flex items-center">
                     <Heart className="h-6 w-6 mr-3" />
                     Giving Guidelines
                   </CardTitle>
@@ -197,7 +197,7 @@ export default function GivingPage() {
                 <CardContent>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-church-primary mb-3">Types of Giving</h4>
+                      <h4 className="text-base md:text-lg font-semibold text-church-primary mb-3">Types of Giving</h4>
                       <ul className="space-y-2 text-church-primary/80">
                         <li>• <strong>Tithes:</strong> 10% of your income</li>
                         <li>• <strong>Offerings:</strong> Freewill gifts to God</li>
@@ -207,7 +207,7 @@ export default function GivingPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-church-primary mb-3">Giving Principles</h4>
+                      <h4 className="text-base md:text-lg font-semibold text-church-primary mb-3">Giving Principles</h4>
                       <ul className="space-y-2 text-church-primary/80">
                         <li>• Give with a cheerful heart</li>
                         <li>• Give as you have purposed</li>
@@ -224,7 +224,7 @@ export default function GivingPage() {
             {/* Contact Section */}
             <Card className="mt-8">
               <CardHeader>
-                <CardTitle className="text-xl text-[hsl(var(--church-primary))]">Need Help with Giving?</CardTitle>
+                <CardTitle className="text-lg md:text-xl text-[hsl(var(--church-primary))]">Need Help with Giving?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
@@ -232,7 +232,7 @@ export default function GivingPage() {
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Button variant="outline">
-                    Email: giving@tpwbm.org
+                    Email: prevailingword95@gmail.com
                   </Button>
                   <Button variant="outline">
                     Phone: Available upon request

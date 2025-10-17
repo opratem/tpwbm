@@ -123,7 +123,7 @@ export default function UshersMinistryPage() {
           <div className="flex justify-center mb-6">
             <DoorOpen className="h-16 w-16 text-green-200" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Ushers Ministry</h1>
+          <h1 className="mobile-text-3xl font-bold mb-6">Ushers Ministry</h1>
           <p className="text-xl text-green-100 max-w-3xl mx-auto mb-8">
             Serving as the welcoming face of our church, creating an atmosphere of
             warmth, order, and reverence that allows everyone to encounter God's
@@ -148,7 +148,7 @@ export default function UshersMinistryPage() {
 
           {/* About Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6">About Our Ushers Ministry</h2>
+            <h2 className="mobile-text-2xl font-bold text-gray-900 mb-6">About Our Ushers Ministry</h2>
             <p className="text-lg text-gray-600 mb-8">
               Our Ushers Ministry is the first ministry many people encounter when they visit our church.
               We are committed to creating a welcoming environment where every person feels valued,
@@ -182,7 +182,7 @@ export default function UshersMinistryPage() {
           {/* Qualifications */}
           <div>
             <div className="text-center mb-12">
-              <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Usher Qualifications</h2>
+              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Usher Qualifications</h2>
               <p className="text-gray-600">What we look for in our ushers ministry team</p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
@@ -206,7 +206,7 @@ export default function UshersMinistryPage() {
           {/* Responsibilities */}
           <div>
             <div className="text-center mb-12">
-              <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Our Responsibilities</h2>
+              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Our Responsibilities</h2>
               <p className="text-gray-600">Key areas of service in our ushers ministry</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -232,7 +232,7 @@ export default function UshersMinistryPage() {
           {/* Training & Programs */}
           <div>
             <div className="text-center mb-12">
-              <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Training & Programs</h2>
+              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Training & Programs</h2>
               <p className="text-gray-600">Ongoing development and special initiatives</p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
@@ -256,7 +256,7 @@ export default function UshersMinistryPage() {
           {/* Leadership Team */}
           <div>
             <div className="text-center mb-12">
-              <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Our Leadership Team</h2>
+              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Our Leadership Team</h2>
               <p className="text-gray-600">Experienced servants leading our ushers ministry</p>
             </div>
             <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
@@ -269,7 +269,7 @@ export default function UshersMinistryPage() {
           {/* Join Us Section */}
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-8">
             <div className="text-center mb-8">
-              <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Join Our Ushers Team</h2>
+              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Join Our Ushers Team</h2>
               <p className="text-gray-600">Be part of a ministry that serves as the front door of our church</p>
             </div>
             <div className="grid md:grid-cols-3 gap-6 text-center">

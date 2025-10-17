@@ -11,7 +11,7 @@ export default function HouseOfGracePage() {
         <div className="container mx-auto px-4">
           <AnimatedSection>
             <div className="text-center max-w-4xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              <h1 className="mobile-text-3xl font-bold mb-6">
                 TPWBM House of Grace
               </h1>
               <p className="text-xl md:text-2xl mb-8 opacity-90">

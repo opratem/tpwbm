@@ -72,9 +72,13 @@ export function FAQ() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-secondary/20 rounded-full mb-6">
               <HelpCircle className="h-8 w-8 text-primary" />
             </div>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4 text-primary dark:text-secondary">
-              Frequently Asked Questions
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4">
+              Frequently Asked{" "}
+              <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                Questions
+              </span>
             </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto mb-4"></div>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Find answers to common questions about our church family, services, and how to get involved.
             </p>

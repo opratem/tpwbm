@@ -3,7 +3,7 @@ import { BookOpen } from "lucide-react";
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="w-full py-4 md:py-6 lg:py-8 relative overflow-hidden">
         {/* Blurred background image */}
@@ -20,24 +20,21 @@ export default function BlogPage() {
         />
 
         {/* Enhanced overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/70" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/60 to-primary/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/40 to-primary/60" />
 
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="flex flex-col items-center justify-center space-y-3 text-white">
             {/* Icon */}
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-in fade-in slide-in-from-top duration-1000 delay-200 drop-shadow-lg">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4 animate-in fade-in slide-in-from-top duration-1000 delay-200 drop-shadow-lg">
               <BookOpen className="h-10 w-10 text-white" />
             </div>
 
             <div className="space-y-3 animate-in fade-in-50 slide-in-from-bottom-4 duration-1000">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                <span className="text-white drop-shadow-lg shadow-black">Spiritual Articles &</span>{" "}
-                <span className="bg-gradient-to-r from-purple-200 to-blue-200 bg-clip-text text-transparent">
-                  Blog
-                </span>
+              <h1 className="mobile-text-3xl font-extrabold mb-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent drop-shadow-2xl">
+                Spiritual Articles & Blog
               </h1>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto font-light leading-relaxed">
+              <p className="mobile-text-lg text-white max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-lg">
                 Discover inspiring articles, biblical insights, and practical wisdom for your spiritual journey.
                 Read teachings from our pastors and ministry leaders.
               </p>

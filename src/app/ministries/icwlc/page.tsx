@@ -260,13 +260,13 @@ export default function ICWLCPage() {
               <Globe className="h-12 w-12 text-white drop-shadow-lg" />
             </div>
           </div>
-          <h1 className="text-2xl md:text-4xl font-bold mb-2 text-white drop-shadow-lg leading-tight">
+          <h1 className="mobile-text-3xl font-bold mb-2 text-white drop-shadow-lg leading-tight">
             Interdenominational Church
           </h1>
           <h1 className="text-2xl md:text-4xl font-bold mb-4 text-white drop-shadow-lg leading-tight">
             Worker and Leaders Conference
           </h1>
-          <h2 className="text-xl md:text-2xl font-semibold mb-4 drop-shadow-lg" style={{color: 'hsl(45, 56%, 55%)'}}>
+          <h2 className="mobile-text-lg font-semibold mb-4 drop-shadow-lg" style={{color: 'hsl(45, 56%, 55%)'}}>
             (ICWLC)
           </h2>
           <p className="text-base md:text-lg text-white max-w-4xl mx-auto mb-6 drop-shadow-md leading-relaxed">
@@ -293,7 +293,7 @@ export default function ICWLCPage() {
 
           {/* About Section */}
           <div className="text-center max-w-5xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8" style={{color: 'hsl(218, 31%, 18%)'}}>About ICWLC</h2>
+            <h2 className="mobile-text-2xl font-bold mb-8" style={{color: 'hsl(218, 31%, 18%)'}}>About ICWLC</h2>
             <p className="text-xl text-gray-600 mb-12 leading-relaxed">
               The Interdenominational Church Worker and Leaders Conference (ICWLC) is a unique
               platform that brings together church workers and leaders from various denominations
@@ -328,7 +328,7 @@ export default function ICWLCPage() {
           {/* Benefits */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Membership Benefits</h2>
+              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Membership Benefits</h2>
               <p className="text-xl text-gray-600">What you gain by joining our interdenominational fellowship</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
@@ -357,7 +357,7 @@ export default function ICWLCPage() {
           {/* Conference Themes */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Conference Focus Areas</h2>
+              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Conference Focus Areas</h2>
               <p className="text-xl text-gray-600">Key themes and topics we address in our conferences</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -383,7 +383,7 @@ export default function ICWLCPage() {
           {/* Programs & Events */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Programs & Events</h2>
+              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Programs & Events</h2>
               <p className="text-xl text-gray-600">Regular conferences and special events throughout the year</p>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
@@ -410,7 +410,7 @@ export default function ICWLCPage() {
           {/* Leadership Team */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Our Conference Coordinator</h2>
+              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Our Conference Coordinator</h2>
               <p className="text-xl text-gray-600">Dedicated leader organizing our interdenominational fellowship</p>
             </div>
             <div className="flex justify-center">
@@ -428,7 +428,7 @@ export default function ICWLCPage() {
                   <Camera className="h-8 w-8" style={{color: 'hsl(218, 31%, 18%)'}} />
                 </div>
               </div>
-              <h2 className="text-4xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Conference Memories</h2>
+              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Conference Memories</h2>
               <p className="text-xl text-gray-600 mb-4">Some of the pictures from the past Interdenominational Church Workers Conferences</p>
               <p className="text-lg text-gray-500">Witness the unity, fellowship, and spiritual growth from our gatherings</p>
             </div>
@@ -475,7 +475,7 @@ export default function ICWLCPage() {
 
             <div className="relative z-10 p-8 md:p-12 text-white">
               <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-6 text-white drop-shadow-2xl">Join the Conference</h2>
+                <h2 className="mobile-text-2xl font-bold mb-6 text-white drop-shadow-2xl">Join the Conference</h2>
                 <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed drop-shadow-xl">
                   Be part of a movement that unites the Body of Christ across denominational lines
                 </p>

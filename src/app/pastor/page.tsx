@@ -40,7 +40,7 @@ export default function PastorPage() {
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start pt-8 md:pt-12">
               <div className="text-white animate-in fade-in slide-in-from-left duration-1000">
-                <h1 className="mobile-text-2xl font-extrabold mb-4 md:mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-left duration-1000 delay-200">
+                <h1 className="mobile-text-3xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-left duration-1000 delay-200">
                   Pastor 'Tunde Olufemi
                 </h1>
                 <p className="mobile-text-lg mb-4 text-primary-foreground font-semibold drop-shadow-lg animate-in fade-in slide-in-from-left duration-1000 delay-400">
@@ -109,7 +109,7 @@ export default function PastorPage() {
               <TabsContent value="about" className="space-y-8">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="mobile-text-2xl text-primary">About Pastor 'Tunde Olufemi</CardTitle>
+                    <CardTitle className="text-xl md:text-2xl text-primary">About Pastor 'Tunde Olufemi</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <p className="mobile-text-base leading-relaxed text-gray-700">
@@ -144,7 +144,7 @@ export default function PastorPage() {
                   {/* Books Section */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="mobile-text-xl text-primary">Books</CardTitle>
+                      <CardTitle className="text-xl md:text-2xl text-primary">Books</CardTitle>
                       <CardDescription>Published works by Pastor 'Tunde & Esther Olufemi</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -188,7 +188,7 @@ export default function PastorPage() {
                   {/* Resources for Pastors and Leaders */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="mobile-text-xl text-primary">Resources for Pastors and Leaders</CardTitle>
+                      <CardTitle className="text-xl md:text-2xl text-primary">Resources for Pastors and Leaders</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-4">
@@ -223,7 +223,7 @@ export default function PastorPage() {
                   {/* Church Workers Training */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="mobile-text-xl text-primary">Resources for Church Workers Training</CardTitle>
+                      <CardTitle className="text-xl md:text-2xl text-primary">Resources for Church Workers Training</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-4">
@@ -265,7 +265,7 @@ export default function PastorPage() {
                   {/* Audio CDs */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="mobile-text-xl text-primary">Messages on Audio CDs</CardTitle>
+                      <CardTitle className="text-xl md:text-2xl text-primary">Messages on Audio CDs</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-4">
@@ -292,13 +292,13 @@ export default function PastorPage() {
               <TabsContent value="sermons" className="space-y-8">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="mobile-text-2xl text-primary">Pastor's Sermons</CardTitle>
+                    <CardTitle className="text-xl md:text-2xl text-primary">Pastor's Sermons</CardTitle>
                     <CardDescription>Access all of Pastor 'Tunde Olufemi's messages and teachings</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-12">
                       <Play className="h-16 w-16 text-primary mx-auto mb-4" />
-                      <h3 className="mobile-text-xl font-semibold mb-4">Explore Complete Sermon Library</h3>
+                      <h3 className="mobile-text-lg font-semibold mb-4">Explore Complete Sermon Library</h3>
                       <p className="text-gray-600 mb-6">Visit our sermons page to watch, listen, and download Pastor's powerful messages and teachings.</p>
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
@@ -324,7 +324,7 @@ export default function PastorPage() {
                 <div className="max-w-4xl mx-auto">
                   {/* Hero Contact Section */}
                   <div className="text-center mb-12">
-                    <h2 className="mobile-text-xl font-bold text-primary mb-4">Connect with Pastor 'Tunde</h2>
+                    <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">Connect with Pastor 'Tunde</h2>
                     <p className="mobile-text-base text-gray-600 max-w-2xl mx-auto">
                       Reach out for spiritual guidance, ministry opportunities, or to invite Pastor 'Tunde for speaking engagements and conferences.
                     </p>

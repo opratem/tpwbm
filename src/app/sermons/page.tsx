@@ -379,7 +379,7 @@ export default function SermonsPage() {
             <div className="container px-4 md:px-6 relative z-10">
               <div className="flex flex-col items-center justify-center space-y-6 text-center text-white">
                 <AnimatedSection className="space-y-4" animation="fadeUp" delay={200}>
-                  <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-4xl leading-tight max-w-4xl text-white drop-shadow-2xl">
+                  <h1 className="mobile-text-3xl font-bold tracking-tight leading-tight max-w-4xl text-white drop-shadow-2xl">
                     Sermons & Media Archive
                   </h1>
                   <p className="mx-auto max-w-[700px] text-lg md:text-xl text-white/95 font-medium leading-relaxed drop-shadow-lg">
@@ -457,7 +457,7 @@ export default function SermonsPage() {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col items-center justify-center space-y-6 text-center text-white">
               <AnimatedSection className="space-y-4" animation="fadeUp" delay={200}>
-                <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-white drop-shadow-2xl">
+                <h1 className="mobile-text-3xl font-extrabold mb-4 text-white drop-shadow-2xl">
                   Sermons & Media Archive
                 </h1>
                 <p className="text-lg md:text-xl text-white/95 max-w-3xl mx-auto drop-shadow-lg font-medium leading-relaxed">
@@ -495,7 +495,7 @@ export default function SermonsPage() {
         <section className="w-full py-16 md:py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-6 text-center mb-12">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight sm:text-2xl md:text-3xl text-[hsl(218_31%_18%)]">
+              <h2 className="mobile-text-2xl font-bold tracking-tight text-[hsl(218_31%_18%)]">
                 Sermon{" "}
                 <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
                   Archive
@@ -712,7 +712,7 @@ export default function SermonsPage() {
             {filteredSermons.length === 0 && (
                 <div className="text-center py-12">
                   <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                  <h3 className="mobile-text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">
                     No sermons found
                   </h3>
                   <p className="text-gray-500 dark:text-gray-400">
@@ -727,7 +727,7 @@ export default function SermonsPage() {
         <section className="w-full py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white dark:from-blue-900 dark:to-purple-900">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight sm:text-2xl md:text-3xl mb-4 text-[hsl(218_31%_18%)]">
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-4 text-[hsl(218_31%_18%)]">
                 Explore More{" "}
                 <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
                   Content
@@ -746,7 +746,7 @@ export default function SermonsPage() {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:shadow-xl transition-shadow" style={{ backgroundColor: 'hsl(218, 31%, 18%)' }}>
                     <PlayCircle className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" style={{ color: 'hsl(218, 31%, 18%)' }}>Live Streaming</h3>
+                  <h3 className="mobile-text-lg font-bold mb-3" style={{ color: 'hsl(218, 31%, 18%)' }}>Live Streaming</h3>
                   <p className="mb-6" style={{ color: 'hsl(218, 15%, 40%)' }}>
                     Join us for live worship services and connect with our community
                   </p>
@@ -770,7 +770,7 @@ export default function SermonsPage() {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:shadow-xl transition-shadow" style={{ backgroundColor: 'hsl(45, 56%, 55%)' }}>
                     <Volume2 className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" style={{ color: 'hsl(218, 31%, 18%)' }}>Audio Messages</h3>
+                  <h3 className="mobile-text-lg font-bold mb-3" style={{ color: 'hsl(218, 31%, 18%)' }}>Audio Messages</h3>
                   <p className="mb-6" style={{ color: 'hsl(218, 15%, 40%)' }}>
                     Listen to inspiring radio broadcasts and audio sermons
                   </p>
@@ -794,7 +794,7 @@ export default function SermonsPage() {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:shadow-xl transition-shadow" style={{ backgroundColor: 'hsl(218, 31%, 18%)' }}>
                     <Video className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" style={{ color: 'hsl(218, 31%, 18%)' }}>YouTube Channel</h3>
+                  <h3 className="mobile-text-lg font-bold mb-3" style={{ color: 'hsl(218, 31%, 18%)' }}>YouTube Channel</h3>
                   <p className="mb-6" style={{ color: 'hsl(218, 15%, 40%)' }}>
                     Subscribe to our channel for the latest video content
                   </p>
@@ -843,7 +843,7 @@ export default function SermonsPage() {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col items-center justify-center space-y-6 text-center">
               <div className="space-y-4">
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight sm:text-2xl md:text-3xl text-white">
+                <h2 className="mobile-text-2xl font-bold tracking-tight text-white">
                   More{" "}
                   <span className="text-white">
                     Pastor's Sermons

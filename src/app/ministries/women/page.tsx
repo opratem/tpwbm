@@ -169,21 +169,21 @@ export default function WomenMinistryPage() {
                   <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Crown className="h-8 w-8 text-purple-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Daughters of the King</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Daughters of the King</h3>
                   <p className="text-gray-600">Embracing our identity as beloved daughters of God</p>
                 </div>
                 <div className="text-center">
                   <div className="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <HandHeart className="h-8 w-8 text-pink-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Sisterhood</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Sisterhood</h3>
                   <p className="text-gray-600">Supporting each other through life's joys and challenges</p>
                 </div>
                 <div className="text-center">
                   <div className="bg-rose-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Sparkles className="h-8 w-8 text-rose-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Purpose</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Purpose</h3>
                   <p className="text-gray-600">Living out our calling with grace and strength</p>
                 </div>
               </div>
@@ -287,21 +287,21 @@ export default function WomenMinistryPage() {
                   <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <MapPin className="h-8 w-8 text-purple-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Location</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Location</h3>
                   <p className="text-gray-600">Women's Fellowship Hall<br />TPWBM Church</p>
                 </div>
                 <div>
                   <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Clock className="h-8 w-8 text-purple-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">Meeting Times</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">Meeting Times</h3>
                   <p className="text-gray-600">Tuesdays<br />10:00 AM - 11:30 AM</p>
                 </div>
                 <div>
                   <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Flower className="h-8 w-8 text-purple-600" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">All Women</h3>
+                  <h3 className="font-semibold mobile-text-lg mb-2">All Women</h3>
                   <p className="text-gray-600">Every Age<br />Every Season</p>
                 </div>
               </div>

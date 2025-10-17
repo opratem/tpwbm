@@ -223,7 +223,7 @@ export default function EventsPage() {
                         })}
                       </span>
                         </div>
-                        <h3 className="mobile-text-2xl font-bold">{featuredEvent.title}</h3>
+                        <h3 className="mobile-text-lg font-bold">{featuredEvent.title}</h3>
                         <p className="text-gray-600 dark:text-gray-300 mobile-text-base leading-relaxed">
                           {featuredEvent.description}
                         </p>

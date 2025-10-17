@@ -46,7 +46,7 @@ export default function AboutPage() {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col items-center justify-center space-y-6 text-center">
               <div className="space-y-4">
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tighter text-white drop-shadow-2xl">
+                <h1 className="mobile-text-3xl font-bold tracking-tighter text-white drop-shadow-2xl">
                   About Our Church
                 </h1>
                 <p className="mx-auto max-w-[800px] text-white mobile-text-lg font-light leading-relaxed drop-shadow-lg">
@@ -149,7 +149,7 @@ export default function AboutPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Our Mission</h3>
+                  <h3 className="mobile-text-lg font-bold text-gray-900 dark:text-white">Our Mission</h3>
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     To raise peculiar people in the knowledge of the things of the Spirit through the word, so that they will become mature, useful and ready for the coming King.
                   </p>
@@ -165,7 +165,7 @@ export default function AboutPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Our Vision</h3>
+                  <h3 className="mobile-text-lg font-bold text-gray-900 dark:text-white">Our Vision</h3>
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     To be a vibrant, growing church that transforms lives, strengthens families, and positively impacts our community through Christ's love.
                   </p>
@@ -180,7 +180,7 @@ export default function AboutPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Core Values</h3>
+                  <h3 className="mobile-text-lg font-bold text-gray-900 dark:text-white">Core Values</h3>
                   <ul className="text-gray-600 dark:text-gray-300 space-y-2">
                     <li className="flex items-center">
                       <span className="w-2 h-2 bg-church-primary rounded-full mr-3" />
@@ -249,7 +249,7 @@ export default function AboutPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Pastor Tunde Olufemi</h3>
+                  <h3 className="mobile-text-lg font-bold text-gray-900 dark:text-white">Pastor Tunde Olufemi</h3>
                   <p className="text-church-primary dark:text-church-accent font-semibold">Presiding Pastor</p>
                   <p className="text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-sm">
                     Serving since 1995
@@ -280,7 +280,7 @@ export default function AboutPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Pastor Esther Olufemi</h3>
+                  <h3 className="mobile-text-lg font-bold text-gray-900 dark:text-white">Pastor Esther Olufemi</h3>
                   <p className="text-church-primary-dark dark:text-church-accent font-semibold">Pastor</p>
                   <p className="text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-sm">
                     Serving since 1999
@@ -311,7 +311,7 @@ export default function AboutPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Deacon Sofowora</h3>
+                  <h3 className="mobile-text-lg font-bold text-gray-900 dark:text-white">Deacon Sofowora</h3>
                   <p className="text-church-primary-dark dark:text-church-accent font-semibold">Sunday School Director</p>
                   <p className="text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-sm">
                     Serving since 2018

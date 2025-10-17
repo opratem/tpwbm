@@ -250,7 +250,7 @@ export default function LeadershipPage() {
           <div className="container mx-auto px-4 text-center relative z-10">
             <Users className="h-12 sm:h-16 w-12 sm:w-16 text-secondary/80 mx-auto mb-6 drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-200" />
             <h1 className="mobile-text-3xl font-extrabold mb-4 md:mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
-              Our Leadership
+              Church Leadership
             </h1>
             <p className="mobile-text-lg text-gray-100 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600">
               Meet the dedicated leaders who guide our church family in worship, service, and spiritual growth.

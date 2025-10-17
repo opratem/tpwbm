@@ -134,7 +134,7 @@ export function Blog() {
     return (
         <div className="container mx-auto px-4 py-16">
           <div className="flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <span className="ml-2 mobile-text-lg">Loading blog posts...</span>
           </div>
         </div>
@@ -159,17 +159,24 @@ export function Blog() {
   const otherPosts = filteredPosts.filter(post => post.id !== featuredPost?.id);
 
   return (
-      <section className="py-16 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+      <section className="py-16 bg-white dark:from-gray-950 dark:to-gray-900">
         <div className="container px-4 md:px-6 mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6">
-              <BookOpen className="h-8 w-8 text-blue-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-secondary/20 rounded-full mb-6">
+              <BookOpen className="h-8 w-8 text-primary" />
             </div>
-            <h2 className="mobile-text-2xl font-bold tracking-tight mb-4 text-blue-900 dark:text-blue-400">
-              Spiritual Articles & Insights
-            </h2>
-            <p className="mobile-text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <div className="mobile-space-y-4">
+              <p className="section-subtitle text-primary dark:text-secondary">OUR BLOG</p>
+              <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight text-primary dark:text-gray-100">
+                Spiritual Articles &{" "}
+                <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+                  Insights
+                </span>
+              </h2>
+              <div className="w-24 sm:w-32 h-1 sm:h-1.5 bg-gradient-to-r from-primary via-secondary to-primary rounded-full mx-auto" />
+            </div>
+            <p className="mobile-text-lg text-primary/70 dark:text-gray-300 max-w-2xl mx-auto mt-6">
               Read inspiring articles, biblical insights, and practical wisdom for your spiritual journey.
             </p>
           </div>
@@ -183,13 +190,13 @@ export function Blog() {
                     placeholder="Search articles..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 h-12 border-2 border-gray-200 focus:border-blue-500"
+                    className="pl-10 h-12 border-2 border-gray-200 focus:border-primary"
                 />
               </div>
               <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="h-12 px-4 border-2 border-gray-200 rounded-md focus:border-blue-500 bg-white"
+                  className="h-12 px-4 border-2 border-gray-200 rounded-md focus:border-primary bg-white"
               >
                 <option value="all">All Categories</option>
                 {categories.slice(1).map(category => (
@@ -233,18 +240,18 @@ export function Blog() {
                                 fill
                                 className="object-cover"
                             />
-                            <Badge className="absolute top-4 left-4 bg-blue-600">
+                            <Badge className="absolute top-4 left-4 bg-secondary text-primary">
                               Featured
                             </Badge>
                           </div>
                           <div className="md:w-1/2 p-8 flex flex-col justify-center">
-                            <Badge className="w-fit mb-4 bg-purple-100 text-purple-800">
+                            <Badge className="w-fit mb-4 bg-secondary/20 text-primary border-secondary">
                               {formatCategory(featuredPost.category)}
                             </Badge>
-                            <h3 className="mobile-text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                            <h3 className="mobile-text-2xl font-bold mb-4 text-primary dark:text-white">
                               {featuredPost.title}
                             </h3>
-                            <p className="mobile-text-base text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                            <p className="mobile-text-base text-primary/70 dark:text-gray-300 mb-6 leading-relaxed">
                               {featuredPost.excerpt || featuredPost.content.substring(0, 200) + "..."}
                             </p>
 
@@ -262,14 +269,14 @@ export function Blog() {
 
                             <div className="flex flex-wrap gap-2 mb-6">
                               {featuredPost.tags.map(tag => (
-                                  <Badge key={tag} variant="outline" className="text-xs">
+                                  <Badge key={tag} variant="outline" className="text-xs border-primary/30">
                                     <Tag className="h-3 w-3 mr-1" />
                                     {tag}
                                   </Badge>
                               ))}
                             </div>
 
-                            <Button asChild className="w-fit bg-blue-600 hover:bg-blue-700">
+                            <Button asChild className="w-fit bg-primary hover:bg-primary/90">
                               <Link href={`/blog/${featuredPost.slug}`}>
                                 Read Full Article
                                 <ArrowRight className="h-4 w-4 ml-2" />
@@ -295,17 +302,17 @@ export function Blog() {
                                       fill
                                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                                   />
-                                  <Badge className="absolute top-3 left-3 bg-blue-600/90 text-white text-xs">
+                                  <Badge className="absolute top-3 left-3 bg-secondary/90 text-primary text-xs">
                                     {formatCategory(post.category)}
                                   </Badge>
                                 </div>
                               </CardHeader>
                               <CardContent className="p-6">
-                                <h3 className="mobile-text-lg font-semibold mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                                <h3 className="mobile-text-lg font-semibold mb-3 line-clamp-2 group-hover:text-primary transition-colors">
                                   {post.title}
                                 </h3>
 
-                                <p className="mobile-text-base text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                                <p className="mobile-text-base text-primary/70 dark:text-gray-300 mb-4 line-clamp-3">
                                   {post.excerpt || post.content.substring(0, 120) + "..."}
                                 </p>
 
@@ -322,7 +329,7 @@ export function Blog() {
 
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs text-gray-500">{getReadTime(post.content)}</span>
-                                  <Button variant="ghost" size="sm" asChild className="group-hover:bg-blue-50 group-hover:text-blue-600">
+                                  <Button variant="ghost" size="sm" asChild className="group-hover:bg-secondary/20 group-hover:text-primary">
                                     <Link href={`/blog/${post.slug}`}>
                                       Read More
                                       <ArrowRight className="h-3 w-3 ml-1" />

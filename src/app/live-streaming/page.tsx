@@ -56,7 +56,7 @@ export default function LiveStreamingPage() {
 
         <div className="container px-4 md:px-6 relative z-10">
           <div className="text-center space-y-8">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight text-white drop-shadow-2xl">
+            <h1 className="mobile-text-3xl font-bold tracking-tight leading-tight text-white drop-shadow-2xl">
               Live Streaming
             </h1>
             <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-lg">
@@ -125,7 +125,7 @@ export default function LiveStreamingPage() {
               {/* Enhanced Main Live Stream Player */}
               <div className="lg:col-span-2 space-y-8">
                 <div className="text-center mb-8">
-                  <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4">
+                  <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
                     Watch{" "}
                     <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                       Live Service
@@ -376,7 +376,7 @@ export default function LiveStreamingPage() {
         <section className="w-full py-16 md:py-24 bg-gradient-to-br from-white to-[hsl(45_56%_55%)]/20 dark:from-[hsl(218_31%_18%)] dark:to-[hsl(218_31%_18%)]/80">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4">
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
                 Message{" "}
                 <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                   Archives
@@ -461,7 +461,7 @@ export default function LiveStreamingPage() {
         <section className="w-full py-16 md:py-24 bg-gradient-to-br from-white to-[hsl(45_56%_55%)]/15 dark:from-[hsl(218_31%_18%)]/90 dark:to-[hsl(218_31%_18%)]">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4">
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
                 Upcoming{" "}
                 <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                   Events

@@ -54,12 +54,12 @@ export default function AnnouncementsPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <Bell className="h-8 w-8 text-white/80" />
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white drop-shadow-2xl">
+                <h1 className="mobile-text-3xl font-bold tracking-tighter text-white drop-shadow-2xl">
                   Church Announcements
                 </h1>
               </div>
               <div className="w-24 h-1 bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] rounded-full mx-auto" />
-              <p className="mx-auto max-w-[800px] text-white/90 text-lg md:text-xl lg:text-2xl font-light leading-relaxed drop-shadow-lg">
+              <p className="mx-auto max-w-[800px] text-white/90 mobile-text-lg font-light leading-relaxed drop-shadow-lg">
                 Stay up to date with the latest news, events, and important information from our church community.
               </p>
             </div>

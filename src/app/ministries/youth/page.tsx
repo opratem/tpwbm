@@ -182,21 +182,21 @@ export default function YouthMinistryPage() {
                     <div className="bg-gradient-to-br from-[hsl(45,56%,95%)] to-[hsl(45,56%,90%)] rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                       <Zap className="h-10 w-10 text-[hsl(218,31%,18%)]" />
                     </div>
-                    <h3 className="font-bold text-xl mb-3 text-[hsl(218,31%,18%)]">Dynamic Faith</h3>
+                    <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Dynamic Faith</h3>
                     <p className="text-[hsl(218,15%,40%)]">Building a passionate relationship with Jesus through authentic worship and study</p>
                   </div>
                   <div className="text-center group cursor-pointer">
                     <div className="bg-gradient-to-br from-[hsl(218,15%,96%)] to-[hsl(218,15%,92%)] rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                       <Heart className="h-10 w-10 text-[hsl(45,56%,55%)]" />
                     </div>
-                    <h3 className="font-bold text-xl mb-3 text-[hsl(218,31%,18%)]">Authentic Community</h3>
+                    <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Authentic Community</h3>
                     <p className="text-[hsl(218,15%,40%)]">Creating lasting friendships and support systems that encourage growth</p>
                   </div>
                   <div className="text-center group cursor-pointer">
                     <div className="bg-gradient-to-br from-[hsl(45,56%,95%)] to-[hsl(45,56%,90%)] rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                       <Target className="h-10 w-10 text-[hsl(218,31%,18%)]" />
                     </div>
-                    <h3 className="font-bold text-xl mb-3 text-[hsl(218,31%,18%)]">Purpose-Driven</h3>
+                    <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Purpose-Driven</h3>
                     <p className="text-[hsl(218,15%,40%)]">Discovering and fulfilling God's calling with passion and excellence</p>
                   </div>
                 </div>
@@ -330,14 +330,14 @@ export default function YouthMinistryPage() {
                     <div className="bg-white rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                       <MapPin className="h-10 w-10 text-[hsl(218,31%,18%)]" />
                     </div>
-                    <h3 className="font-bold text-2xl mb-3 text-[hsl(218,31%,18%)]">Location</h3>
+                    <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Location</h3>
                     <p className="text-lg text-[hsl(218,15%,40%)]">TPWBM Church</p>
                   </div>
                   <div className="text-center group">
                     <div className="bg-white rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                       <Users className="h-10 w-10 text-[hsl(45,56%,55%)]" />
                     </div>
-                    <h3 className="font-bold text-2xl mb-3 text-[hsl(218,31%,18%)]">Age Range</h3>
+                    <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Age Range</h3>
                     <p className="text-lg text-[hsl(218,15%,40%)]">Ages 13-30<br />All Welcome</p>
                   </div>
                 </div>

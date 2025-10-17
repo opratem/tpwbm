@@ -33,7 +33,7 @@ export default function WinningChurchWorkersPage() {
 
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold mb-4 text-white drop-shadow-2xl">
+                <h1 className="mobile-text-3xl font-bold mb-4 text-white drop-shadow-2xl">
                   The Winning Church Workers and Leaders
                 </h1>
                 <p className="text-xl text-blue-100 mb-4">

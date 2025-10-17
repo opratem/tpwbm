@@ -170,7 +170,7 @@ export default function ServicesPage() {
 
               {/* Weekday Services */}
               <div className="space-y-8">
-                <h3 className="text-2xl font-bold text-center lg:text-left text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">Weekday Services</h3>
+                <h3 className="mobile-text-lg font-bold text-center lg:text-left text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">Weekday Services</h3>
 
                 {/* Bible Study */}
                 <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden">

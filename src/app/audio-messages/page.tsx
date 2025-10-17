@@ -35,8 +35,8 @@ export default function AudioMessagesPage() {
 
                 <div className="container mx-auto px-4 text-center relative z-10">
                     <div className="space-y-6">
-                        <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-white drop-shadow-2xl">
-                            Audio Messages Library
+                        <h1 className="mobile-text-3xl font-extrabold mb-4 text-white drop-shadow-2xl">
+                          Audio Messages & Radio Broadcasts
                         </h1>
                         <p className="text-lg md:text-xl text-white/95 max-w-3xl mx-auto drop-shadow-lg font-medium leading-relaxed">
                             Listen to powerful sermons, teachings, and inspirational messages from our Pastor's STEWARDSHIP RADIO BROADCAST titled "AKOKO IRIJU" and share with others.
@@ -81,7 +81,7 @@ export default function AudioMessagesPage() {
             <section className="w-full py-16 md:py-24 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
                 <div className="container px-4 md:px-6">
                     <div className="text-center mb-12">
-                        <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-[hsl(218_31%_18%)]">
+                        <h2 className="mobile-text-2xl font-bold tracking-tight mb-4 text-[hsl(218_31%_18%)]">
                             Explore More{" "}
                             <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
                                 Content

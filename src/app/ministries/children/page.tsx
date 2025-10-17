@@ -154,7 +154,7 @@ export default function ChildrenMinistryPage() {
                 </div>
             )}
           </div>
-          <h3 className="font-semibold text-lg text-[hsl(218,31%,18%)]">{leader.name}</h3>
+          <h3 className="font-semibold mobile-text-lg text-[hsl(218,31%,18%)]">{leader.name}</h3>
           <p className="font-medium text-[hsl(45,56%,55%)]">{leader.role}</p>
           {leaderImage && (
               <Badge variant="outline" className="text-xs mt-1">
@@ -192,7 +192,7 @@ export default function ChildrenMinistryPage() {
             <div className="flex justify-center mb-6 animate-in fade-in slide-in-from-top duration-1000 delay-200">
               <Heart className="h-12 sm:h-16 w-12 sm:w-16 text-white drop-shadow-lg" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-white drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-400">
+            <h1 className="mobile-text-3xl font-bold mb-4 md:mb-6 text-white drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-400">
               Children's Ministry
             </h1>
             <p className="mobile-text-lg text-white max-w-3xl mx-auto mb-6 md:mb-8 font-light leading-relaxed drop-shadow-md animate-in fade-in slide-in-from-top duration-1000 delay-600">
@@ -224,7 +224,13 @@ export default function ChildrenMinistryPage() {
 
             {/* About Section */}
             <div className="text-center max-w-4xl mx-auto">
-              <h2 className="mobile-text-2xl font-bold mb-6 text-[hsl(218,31%,18%)]">About Our Children's Ministry</h2>
+              <h2 className="mobile-text-2xl font-bold mb-4 tracking-tight">
+                About Our Children's{" "}
+                <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                  Ministry
+                </span>
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto mb-6" />
               <p className="mobile-text-lg text-[hsl(218,15%,40%)] mb-8 leading-relaxed">
                 Our Children's Ministry is dedicated to creating a loving, safe, and fun environment where
                 children can grow in their relationship with Jesus Christ. We believe every child is precious
@@ -235,21 +241,21 @@ export default function ChildrenMinistryPage() {
                   <div className="bg-gradient-to-br from-[hsl(218,31%,95%)] to-[hsl(218,31%,90%)] rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                     <Heart className="h-10 w-10 text-[hsl(218,31%,18%)]" />
                   </div>
-                  <h3 className="font-bold text-xl mb-3 text-[hsl(218,31%,18%)]">Love of Christ</h3>
+                  <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Love of Christ</h3>
                   <p className="text-[hsl(218,15%,40%)]">Teaching children about God's unconditional love</p>
                 </div>
                 <div className="text-center group cursor-pointer">
                   <div className="bg-gradient-to-br from-[hsl(45,56%,95%)] to-[hsl(45,56%,90%)] rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                     <BookOpen className="h-10 w-10 text-[hsl(45,56%,35%)]" />
                   </div>
-                  <h3 className="font-bold text-xl mb-3 text-[hsl(218,31%,18%)]">Bible Learning</h3>
+                  <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Bible Learning</h3>
                   <p className="text-[hsl(218,15%,40%)]">Bible stories and lessons for all ages</p>
                 </div>
                 <div className="text-center group cursor-pointer">
                   <div className="bg-gradient-to-br from-[hsl(218,31%,95%)] to-[hsl(218,31%,90%)] rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                     <Users className="h-10 w-10 text-[hsl(218,31%,18%)]" />
                   </div>
-                  <h3 className="font-bold text-xl mb-3 text-[hsl(218,31%,18%)]">Community</h3>
+                  <h3 className="font-bold mobile-text-lg mb-3 text-[hsl(218,31%,18%)]">Community</h3>
                   <p className="text-[hsl(218,15%,40%)]">Building friendships and fellowship</p>
                 </div>
               </div>
@@ -258,7 +264,13 @@ export default function ChildrenMinistryPage() {
             {/* Ministry Leaders */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold mb-4 text-[hsl(218,31%,18%)]">Ministry Leaders</h2>
+                <h2 className="mobile-text-2xl font-bold mb-4 tracking-tight">
+                  Ministry{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Leaders
+                  </span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto mb-4" />
                 <p className="text-[hsl(218,15%,40%)]">Meet the dedicated leaders who guide our children</p>
               </div>
               <div className="grid md:grid-cols-2 gap-12 max-w-3xl mx-auto">
@@ -271,7 +283,13 @@ export default function ChildrenMinistryPage() {
             {/* Age Groups */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold mb-4 text-[hsl(218,31%,18%)]">Age Groups</h2>
+                <h2 className="mobile-text-2xl font-bold mb-4 tracking-tight">
+                  Age{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Groups
+                  </span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto mb-4" />
                 <p className="text-[hsl(218,15%,40%)]">We have programs tailored for different age groups</p>
               </div>
               <div className="grid md:grid-cols-3 gap-8">
@@ -300,7 +318,13 @@ export default function ChildrenMinistryPage() {
             {/* Weekly Activities */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold mb-4 text-[hsl(218,31%,18%)]">Weekly Activities</h2>
+                <h2 className="mobile-text-2xl font-bold mb-4 tracking-tight">
+                  Weekly{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Activities
+                  </span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto mb-4" />
                 <p className="text-[hsl(218,15%,40%)]">Engaging activities that make learning about God fun</p>
               </div>
               <div className="grid md:grid-cols-2 gap-8">
@@ -329,7 +353,13 @@ export default function ChildrenMinistryPage() {
             {/* Special Programs */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold mb-4 text-[hsl(218,31%,18%)]">Special Programs</h2>
+                <h2 className="mobile-text-2xl font-bold mb-4 tracking-tight">
+                  Special{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Programs
+                  </span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto mb-4" />
                 <p className="text-[hsl(218,15%,40%)]">Annual events and special celebrations</p>
               </div>
               <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -350,7 +380,7 @@ export default function ChildrenMinistryPage() {
                             <Calendar className="h-8 w-8 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-xl font-bold text-[hsl(218,31%,18%)] mb-1">{program.title}</h3>
+                            <h3 className="mobile-text-lg font-bold text-[hsl(218,31%,18%)] mb-1">{program.title}</h3>
                             <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${index % 2 === 0 ? 'bg-[hsl(45,56%,95%)] text-[hsl(45,56%,35%)]' : 'bg-[hsl(218,31%,95%)] text-[hsl(218,31%,35%)]'}`}>
                               {program.frequency}
                             </span>
@@ -373,7 +403,13 @@ export default function ChildrenMinistryPage() {
             {childrenImages.length > 0 && (
                 <div>
                   <div className="text-center mb-12">
-                    <h2 className="mobile-text-2xl font-bold mb-4 text-[hsl(218,31%,18%)]">Children's Ministry Gallery</h2>
+                    <h2 className="mobile-text-2xl font-bold mb-4 tracking-tight">
+                      Children's Ministry{" "}
+                      <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                        Gallery
+                      </span>
+                    </h2>
+                    <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto mb-4" />
                     <p className="text-[hsl(218,15%,40%)]">See our children in action during ministry activities</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -435,14 +471,14 @@ export default function ChildrenMinistryPage() {
                           <div className="bg-white/10 backdrop-blur-sm rounded-2xl w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                             <Mail className="h-8 w-8 text-white" />
                           </div>
-                          <h3 className="font-semibold mb-2 text-white text-lg">Email Us</h3>
+                          <h3 className="font-semibold mb-2 text-white mobile-text-lg">Email Us</h3>
                           <p className="text-gray-200">children@tpwbm.org</p>
                         </div>
                         <div className="group">
                           <div className="bg-white/10 backdrop-blur-sm rounded-2xl w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                             <MapPin className="h-8 w-8 text-white" />
                           </div>
-                          <h3 className="font-semibold mb-2 text-white text-lg">Visit Us</h3>
+                          <h3 className="font-semibold mb-2 text-white mobile-text-lg">Visit Us</h3>
                           <p className="text-gray-200">Every Sunday at 9:00 AM</p>
                         </div>
                     </div>
