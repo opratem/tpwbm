@@ -265,13 +265,14 @@ export default function LeadershipPage() {
             {/* Board of Trustees */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">
+                <h2 className="mobile-text-2xl font-bold tracking-tight">
                   Board of{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Trustees
                   </span>
                 </h2>
-                <p className="mobile-text-base text-gray-600">The governing body providing oversight and direction</p>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                <p className="mx-auto max-w-[700px] text-gray-600 mobile-text-base leading-relaxed mt-4">The governing body providing oversight and direction</p>
               </div>
               <Card className="border-2 border-secondary/30">
                 <CardHeader>
@@ -364,8 +365,14 @@ export default function LeadershipPage() {
             {/* Ministry Leaders */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Ministry Leaders</h2>
-                <p className="mobile-text-base text-gray-600">Dedicated servants leading various ministries and departments</p>
+                <h2 className="mobile-text-2xl font-bold tracking-tight">
+                  Ministry{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Leaders
+                  </span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                <p className="mx-auto max-w-[700px] text-gray-600 mobile-text-base leading-relaxed mt-4">Dedicated servants leading various ministries and departments</p>
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {ministries.map((ministry, index) => (
@@ -394,8 +401,14 @@ export default function LeadershipPage() {
             {/* Other Administrative Roles */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Administrative Team</h2>
-                <p className="mobile-text-base text-gray-600">Supporting the church operations and special functions</p>
+                <h2 className="mobile-text-2xl font-bold tracking-tight">
+                  Administrative{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Team
+                  </span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                <p className="mx-auto max-w-[700px] text-gray-600 mobile-text-base leading-relaxed mt-4">Supporting the church operations and special functions</p>
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {otherRoles.map((role, index) => (
@@ -446,8 +459,14 @@ export default function LeadershipPage() {
             {/* Church Centres */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Church Centre Leaders</h2>
-                <p className="mobile-text-base text-gray-600">Leaders of our various church locations</p>
+                <h2 className="mobile-text-2xl font-bold tracking-tight">
+                  Church Centre{" "}
+                  <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
+                    Leaders
+                  </span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                <p className="mx-auto max-w-[700px] text-gray-600 mobile-text-base leading-relaxed mt-4">Leaders of our various church locations</p>
               </div>
               <div className="grid md:grid-cols-3 gap-6">
                 {churchCentres.map((centre, index) => (

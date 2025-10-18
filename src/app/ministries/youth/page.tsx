@@ -333,14 +333,26 @@ export default function YouthMinistryPage() {
 
             {/* Join Section */}
             <AnimatedSection animation="fadeUp">
-              <div className="bg-gradient-to-br from-[hsl(218,31%,18%)] via-[hsl(218,28%,22%)] to-[hsl(218,31%,18%)] rounded-3xl p-8 md:p-12 shadow-2xl">
-                <div className="text-center mb-10">
+              <div className="relative rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden">
+                {/* Background Image */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src="/images/background/youth_background.jpg"
+                    alt="Join Youth Ministry Background"
+                    fill
+                    className="object-cover blur-sm"
+                  />
+                  {/* Navy blue overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[hsl(218,31%,18%)]/90 via-[hsl(218,28%,22%)]/85 to-[hsl(218,31%,18%)]/90" />
+                </div>
+
+                <div className="text-center mb-10 relative z-10">
                   <h2 className="mobile-text-2xl font-bold tracking-tight mb-4 text-white">
                     Join Our Youth Family
                   </h2>
                   <p className="mobile-text-lg text-gray-200">Be part of a community that will challenge, inspire, and transform you! 🔥</p>
                 </div>
-                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto relative z-10">
                   <div className="text-center group">
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/20">
                       <MapPin className="h-10 w-10 text-white" />
@@ -356,7 +368,7 @@ export default function YouthMinistryPage() {
                     <p className="text-lg text-gray-200">Ages 13-30<br />All Welcome</p>
                   </div>
                 </div>
-                <div className="text-center mt-10">
+                <div className="text-center mt-10 relative z-10">
                   <p className="text-lg text-gray-200 mb-6 max-w-3xl mx-auto leading-relaxed">
                     Ready to take your faith to the next level? Join us for dynamic worship,
                     meaningful fellowship, and life-changing encounters with God! ✨

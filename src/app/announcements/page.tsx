@@ -200,13 +200,14 @@ export default function AnnouncementsPage() {
                 backgroundImage: `url('/images/gallery/Church2.jpg')`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
-                filter: "blur(4px)",
+                filter: "blur(2px)",
                 transform: "scale(1.05)",
               }}
           />
 
           {/* Enhanced overlay for readability with navy blue theme */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/80 via-[hsl(218_31%_18%)]/60 to-[hsl(218_31%_18%)]/90" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/85 via-[hsl(218_31%_18%)]/75 to-[hsl(218_31%_18%)]/90" />
+          <div className="absolute inset-0 bg-[hsl(218_31%_18%)]/20" />
 
           <CardHeader className="relative z-10">
             <CardTitle className="text-white text-2xl drop-shadow-lg">

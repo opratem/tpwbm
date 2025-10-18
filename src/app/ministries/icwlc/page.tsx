@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getLeaderImagePath } from "@/lib/leader-images";
 import {
   Users,
@@ -247,11 +248,12 @@ export default function ICWLCPage() {
             src="/images/background/icwlc_background.jpg"
             alt="ICWLC Background"
             fill
-            className="object-cover filter blur-lg"
+            className="object-cover blur-sm"
             priority
           />
-          {/* Enhanced gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/40 to-black/50"></div>
+          {/* Enhanced overlay using color theme - navy blue gradient for better text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(218,31%,18%)]/70 via-[hsl(218,31%,18%)]/50 to-[hsl(218,31%,18%)]/60 z-1" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(218,31%,18%)]/40 via-transparent to-[hsl(218,31%,18%)]/50 z-1" />
         </div>
 
         <div className="container mx-auto px-4 text-center relative z-10">
@@ -274,15 +276,27 @@ export default function ICWLCPage() {
             in fellowship, training, and mutual support for effective kingdom ministry
             and the advancement of God's work across all churches.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <div className="flex items-center text-white drop-shadow-md bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-              <Clock className="h-4 w-4 mr-2" />
-              <span className="font-medium text-sm">Annual & Quarterly Events</span>
-            </div>
-            <div className="flex items-center text-white drop-shadow-md bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-              <Users className="h-4 w-4 mr-2" />
-              <span className="font-medium text-sm">All Denominations Welcome</span>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              size="lg"
+              className="h-14 px-8 rounded-full bg-[hsl(218,31%,18%)] hover:bg-[hsl(218,28%,25%)] text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/10"
+            >
+              <Clock className="h-5 w-5 mr-3 stroke-white" />
+              <div className="text-left">
+                <div className="font-bold text-sm text-white">Annual & Quarterly Events</div>
+                <div className="text-xs text-white/90">Join Our Programs</div>
+              </div>
+            </Button>
+            <Button
+              size="lg"
+              className="h-14 px-8 rounded-full bg-[hsl(45,56%,55%)] hover:bg-[hsl(45,56%,48%)] text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/10"
+            >
+              <Users className="h-5 w-5 mr-3 stroke-white" />
+              <div className="text-left">
+                <div className="font-bold text-sm text-white">All Denominations Welcome</div>
+                <div className="text-xs text-white/90">Unity in Diversity</div>
+              </div>
+            </Button>
           </div>
         </div>
       </section>
@@ -293,7 +307,12 @@ export default function ICWLCPage() {
 
           {/* About Section */}
           <div className="text-center max-w-5xl mx-auto">
-            <h2 className="mobile-text-2xl font-bold mb-8" style={{color: 'hsl(218, 31%, 18%)'}}>About ICWLC</h2>
+            <h2 className="mobile-text-2xl font-bold tracking-tight mb-8">
+              About{" "}
+              <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                ICWLC
+              </span>
+            </h2>
             <p className="text-xl text-gray-600 mb-12 leading-relaxed">
               The Interdenominational Church Worker and Leaders Conference (ICWLC) is a unique
               platform that brings together church workers and leaders from various denominations
@@ -328,7 +347,12 @@ export default function ICWLCPage() {
           {/* Benefits */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Membership Benefits</h2>
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-6">
+                Membership{" "}
+                <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                  Benefits
+                </span>
+              </h2>
               <p className="text-xl text-gray-600">What you gain by joining our interdenominational fellowship</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
@@ -357,7 +381,12 @@ export default function ICWLCPage() {
           {/* Conference Themes */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Conference Focus Areas</h2>
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-6">
+                Conference{" "}
+                <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                  Focus Areas
+                </span>
+              </h2>
               <p className="text-xl text-gray-600">Key themes and topics we address in our conferences</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -383,7 +412,12 @@ export default function ICWLCPage() {
           {/* Programs & Events */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Programs & Events</h2>
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-6">
+                Programs &{" "}
+                <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                  Events
+                </span>
+              </h2>
               <p className="text-xl text-gray-600">Regular conferences and special events throughout the year</p>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
@@ -410,7 +444,12 @@ export default function ICWLCPage() {
           {/* Leadership Team */}
           <div>
             <div className="text-center mb-16">
-              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Our Conference Coordinator</h2>
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-6">
+                Our{" "}
+                <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                  Conference Coordinator
+                </span>
+              </h2>
               <p className="text-xl text-gray-600">Dedicated leader organizing our interdenominational fellowship</p>
             </div>
             <div className="flex justify-center">
@@ -421,16 +460,18 @@ export default function ICWLCPage() {
           </div>
 
           {/* Photo Gallery Section */}
-          <div className="rounded-2xl p-8 md:p-12" style={{background: 'linear-gradient(to right, hsl(218, 31%, 98%), hsl(218, 31%, 96%))'}}>
+          <div className="rounded-2xl p-8 md:p-12" style={{background: 'linear-gradient(to right, hsl(218, 31%, 18%), hsl(218, 31%, 22%))'}}>
             <div className="text-center mb-12">
               <div className="flex justify-center mb-6">
-                <div className="rounded-full w-16 h-16 flex items-center justify-center" style={{backgroundColor: 'hsl(218, 31%, 90%)'}}>
-                  <Camera className="h-8 w-8" style={{color: 'hsl(218, 31%, 18%)'}} />
+                <div className="rounded-full w-16 h-16 flex items-center justify-center" style={{backgroundColor: 'hsl(45, 56%, 55%)'}}>
+                  <Camera className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <h2 className="mobile-text-2xl font-bold mb-6" style={{color: 'hsl(218, 31%, 18%)'}}>Conference Memories</h2>
-              <p className="text-xl text-gray-600 mb-4">Some of the pictures from the past Interdenominational Church Workers Conferences</p>
-              <p className="text-lg text-gray-500">Witness the unity, fellowship, and spiritual growth from our gatherings</p>
+              <h2 className="mobile-text-2xl font-bold tracking-tight mb-6 text-white drop-shadow-lg">
+                Conference Memories
+              </h2>
+              <p className="text-xl text-white mb-4 drop-shadow-md">Some of the pictures from the past Interdenominational Church Workers Conferences</p>
+              <p className="text-lg text-gray-200 drop-shadow-md">Witness the unity, fellowship, and spiritual growth from our gatherings</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -453,7 +494,7 @@ export default function ICWLCPage() {
             </div>
 
             <div className="text-center mt-12">
-              <p className="text-gray-600 italic">
+              <p className="text-white italic drop-shadow-md">
                 "Behold, how good and how pleasant it is for brethren to dwell together in unity!" - Psalm 133:1
               </p>
             </div>
@@ -475,7 +516,7 @@ export default function ICWLCPage() {
 
             <div className="relative z-10 p-8 md:p-12 text-white">
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold mb-6 text-white drop-shadow-2xl">Join the Conference</h2>
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-6 text-white drop-shadow-2xl">Join the Conference</h2>
                 <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed drop-shadow-xl">
                   Be part of a movement that unites the Body of Christ across denominational lines
                 </p>

@@ -78,8 +78,11 @@ export default function MusicMinistryPage() {
             <div className="container px-4 md:px-6">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div className="space-y-6 pt-0">
-                  <h2 className="mobile-text-2xl font-bold text-primary mb-4">
-                    Our Calling
+                  <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                    Our{" "}
+                    <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                      Calling
+                    </span>
                   </h2>
                   <p className="text-lg text-gray-700 leading-relaxed">
                     The Music Ministry at The Prevailing Word Believers Ministry Inc. is dedicated to leading God's people into His presence through powerful worship and praise. We believe that music is a divine gift that opens hearts, lifts spirits, and creates an atmosphere where God can move freely.
@@ -137,8 +140,11 @@ export default function MusicMinistryPage() {
           <section className="w-full py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
             <div className="container px-4 md:px-6">
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-primary mb-4">
-                  Our Leadership Team
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                  Our{" "}
+                  <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                    Leadership Team
+                  </span>
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                   Passionate leaders guiding our music ministry
@@ -158,8 +164,11 @@ export default function MusicMinistryPage() {
           <section className="w-full py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
             <div className="container px-4 md:px-6">
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-primary mb-4">
-                  Our Teams
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                  Our{" "}
+                  <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                    Teams
+                  </span>
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                   Different teams working together to create beautiful worship experiences
@@ -206,8 +215,11 @@ export default function MusicMinistryPage() {
           <section className="w-full py-16 md:py-24 bg-gradient-to-b from-gray-50 to-secondary/5">
             <div className="container px-4 md:px-6">
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-primary mb-4">
-                  Practice{" "}<span className="bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent">Schedule</span>
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+                  Practice{" "}
+                  <span className="bg-gradient-to-r from-[hsl(218_31%_18%)] via-[hsl(45_56%_55%)] to-[hsl(218_31%_18%)] bg-clip-text text-transparent">
+                    Schedule
+                  </span>
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                   Practice sessions for worship team and instrumentalists
@@ -255,7 +267,7 @@ export default function MusicMinistryPage() {
 
             <div className="container px-4 md:px-6 relative z-10">
               <div className="text-center space-y-8">
-                <h2 className="mobile-text-2xl font-bold mb-4 text-white drop-shadow-2xl">
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-4 text-white drop-shadow-2xl">
                   Join Our Music Ministry
                 </h2>
                 <p className="text-xl text-gray-100 max-w-3xl mx-auto">

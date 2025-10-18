@@ -99,7 +99,7 @@ export function PaymentForm({ className }: PaymentFormProps) {
 
   return (
       <Card className={`${className} bg-gradient-to-br from-white to-gray-50 border-2 border-gray-100 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
-        <CardHeader className="bg-gradient-to-r from-church-primary via-church-primary-dark to-church-accent text-white rounded-t-lg relative overflow-hidden">
+        <CardHeader className="bg-church-primary text-white rounded-t-lg relative overflow-hidden">
           <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
           <div className="relative z-10">
             <CardTitle className="text-xl md:text-2xl font-bold flex items-center mb-2">
