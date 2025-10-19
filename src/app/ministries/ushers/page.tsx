@@ -148,7 +148,7 @@ export default function UshersMinistryPage() {
 
           {/* About Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h2 className="mobile-text-2xl font-bold text-gray-900 mb-6">About Our Ushers Ministry</h2>
+            <h2 className="mobile-text-2xl font-bold tracking-tight text-gray-900 mb-6">About Our Ushers Ministry</h2>
             <p className="text-lg text-gray-600 mb-8">
               Our Ushers Ministry is the first ministry many people encounter when they visit our church.
               We are committed to creating a welcoming environment where every person feels valued,
@@ -182,7 +182,7 @@ export default function UshersMinistryPage() {
           {/* Qualifications */}
           <div>
             <div className="text-center mb-12">
-              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Usher Qualifications</h2>
+              <h2 className="mobile-text-2xl font-bold tracking-tight text-gray-900 mb-4">Usher Qualifications</h2>
               <p className="text-gray-600">What we look for in our ushers ministry team</p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">

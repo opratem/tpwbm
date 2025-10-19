@@ -103,7 +103,7 @@ export default function ContactPage() {
             {/* Contact Information Section */}
             <div className="space-y-8">
               <div className="text-center lg:text-left mb-12 animate-in fade-in slide-in-from-left duration-1000">
-                <h2 className="mobile-text-2xl font-bold mb-4">
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
                   Get In{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Touch
@@ -325,7 +325,7 @@ export default function ContactPage() {
       <section className="w-full py-16 md:py-24 bg-gradient-to-br from-gray-50 to-church-accent/10 dark:from-gray-900 dark:to-church-accent/5">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-6 text-center mb-12 animate-in fade-in slide-in-from-top duration-1000">
-            <h2 className="mobile-text-2xl font-bold">
+            <h2 className="mobile-text-2xl font-bold tracking-tight">
               Find{" "}
               <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                 Us

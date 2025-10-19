@@ -142,7 +142,7 @@ export default function Home() {
                 <AnimatedSection animation="slideLeft" delay={200} className="lg:w-1/2 mobile-space-y-6">
                   <div className="mobile-space-y-4">
                     <p className="section-subtitle text-church-primary dark:text-church-accent">Our Community</p>
-                    <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight text-church-primary dark:text-gray-100">
+                    <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight text-church-primary dark:text-gray-100 tracking-tight">
                       A Church for{" "}
                       <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Everyone
@@ -195,7 +195,7 @@ export default function Home() {
               <AnimatedSection animation="fadeUp" className="flex flex-col items-center justify-center mobile-content-spacing text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
                 <div className="mobile-space-y-4">
                   <p className="section-subtitle text-church-primary dark:text-church-accent">Worship With Us</p>
-                  <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl">
+                  <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl tracking-tight">
                     Join Us in{" "}
                     <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                   Worship
@@ -346,7 +346,7 @@ export default function Home() {
             <div className="container mobile-container">
               <div className="text-center mb-12 sm:mb-16 md:mb-20 mobile-space-y-6 animate-fade-in-up">
                 <p className="section-subtitle text-church-primary dark:text-church-accent">Latest Updates</p>
-                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl mx-auto">
+                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl mx-auto tracking-tight">
                   Church{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                       Announcements
@@ -382,7 +382,7 @@ export default function Home() {
             <div className="container mobile-container">
               <div className="text-center mb-12 sm:mb-16 md:mb-20 mobile-space-y-6 animate-fade-in-up">
                 <p className="section-subtitle text-church-primary dark:text-church-accent">What's Coming</p>
-                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl mx-auto">
+                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl mx-auto tracking-tight">
                   Upcoming{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                       Events
@@ -425,7 +425,7 @@ export default function Home() {
             <div className="container mobile-container">
               <AnimatedSection animation="fadeUp" className="text-center mb-12 sm:mb-16 md:mb-20 mobile-space-y-6">
                 <p className="section-subtitle text-church-primary dark:text-church-accent">Get Involved</p>
-                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl mx-auto">
+                <h2 className="mobile-text-2xl md:text-3xl lg:text-4xl text-balance leading-tight max-w-4xl mx-auto tracking-tight">
                   Our{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                       Ministries

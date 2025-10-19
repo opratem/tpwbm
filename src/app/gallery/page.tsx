@@ -392,7 +392,7 @@ export default function GalleryPage() {
                 <Images className="h-8 w-8" />
               </div>
               <div>
-                <h2 className="mobile-text-2xl font-bold text-[hsl(218,31%,18%)] dark:text-gray-100">All Photos</h2>
+                <h2 className="mobile-text-2xl font-bold tracking-tight text-[hsl(218,31%,18%)] dark:text-gray-100">All Photos</h2>
                 <p className="mobile-text-base text-gray-600 dark:text-gray-400">Browse through all our church memories</p>
               </div>
             </div>

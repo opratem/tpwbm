@@ -88,7 +88,7 @@ export default function GivingPage() {
         <section className="py-16">
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="text-center mb-12">
-              <h2 className="text-xl md:text-2xl font-bold text-church-primary mb-4">
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-church-primary mb-4">
                 Ways to{" "}
                 <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                   Give

@@ -68,7 +68,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h2 className="text-xl md:text-2xl font-bold">
+                  <h2 className="text-xl md:text-2xl font-bold tracking-tight">
                     Our{" "}
                     <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                       History
@@ -128,7 +128,7 @@ export default function AboutPage() {
         <section className="w-full py-16 md:py-24">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-              <h2 className="text-xl md:text-2xl font-bold">
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight">
                 Our Mission &{" "}
                 <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                   Values
@@ -213,7 +213,7 @@ export default function AboutPage() {
         <section className="w-full py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-              <h2 className="mobile-text-2xl font-bold">
+              <h2 className="mobile-text-2xl font-bold tracking-tight">
                 Our{" "}
                 <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                   Leadership

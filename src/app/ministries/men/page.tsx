@@ -158,7 +158,7 @@ export default function MenMinistryPage() {
 
             {/* About Section */}
             <div className="text-center max-w-4xl mx-auto">
-              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-6">About Our Men's Ministry</h2>
+              <h2 className="mobile-text-2xl font-bold tracking-tight text-gray-900 mb-6">About Our Men's Ministry</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Our Men's Ministry is dedicated to building strong, godly men who lead with integrity,
                 serve with humility, and live with purpose. We create a brotherhood where men can grow
@@ -192,7 +192,7 @@ export default function MenMinistryPage() {
             {/* Focus Areas */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Our Focus Areas</h2>
+                <h2 className="mobile-text-2xl font-bold tracking-tight text-gray-900 mb-4">Our Focus Areas</h2>
                 <p className="text-gray-600">Key areas of growth and development for men</p>
               </div>
               <div className="grid md:grid-cols-3 gap-6">
@@ -216,7 +216,7 @@ export default function MenMinistryPage() {
             {/* Activities */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Regular Activities</h2>
+                <h2 className="mobile-text-2xl font-bold tracking-tight text-gray-900 mb-4">Regular Activities</h2>
                 <p className="text-gray-600">Building men of God through consistent fellowship and service</p>
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

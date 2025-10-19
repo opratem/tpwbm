@@ -158,7 +158,7 @@ export default function WomenMinistryPage() {
 
             {/* About Section */}
             <div className="text-center max-w-4xl mx-auto">
-              <h2 className="mobile-text-2xl font-bold text-gray-900 mb-6">About Our Women's Ministry</h2>
+              <h2 className="mobile-text-2xl font-bold tracking-tight text-gray-900 mb-6">About Our Women's Ministry</h2>
               <p className="mobile-text-lg text-gray-600 mb-8 leading-relaxed">
                 Our Women's Ministry is a vibrant community where women of all ages and seasons of life
                 come together to grow in faith, build lasting friendships, and discover their unique
@@ -192,7 +192,7 @@ export default function WomenMinistryPage() {
             {/* Focus Areas */}
             <div>
               <div className="text-center mb-12">
-                <h2 className="mobile-text-2xl font-bold text-gray-900 mb-4">Our Focus Areas</h2>
+                <h2 className="mobile-text-2xl font-bold tracking-tight text-gray-900 mb-4">Our Focus Areas</h2>
                 <p className="text-gray-600">Areas of growth and development for women</p>
               </div>
               <div className="grid md:grid-cols-3 gap-6">
