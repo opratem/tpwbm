@@ -65,7 +65,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative w-full py-4 md:py-6 bg-gradient-to-br from-church-primary-dark via-church-primary to-church-secondary text-white overflow-hidden">
+      <section className="relative w-full mobile-section-spacing bg-gradient-to-br from-church-primary-dark via-church-primary to-church-secondary text-white overflow-hidden">
         {/* Background Image with Blur */}
         <div
           className="absolute inset-0 bg-cover bg-no-repeat"
@@ -81,14 +81,14 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70" />
         <div className="absolute inset-0 bg-gradient-to-b from-church-primary/50 via-church-primary-light/30 to-church-primary-dark/50" />
 
-        <div className="container px-4 md:px-6 relative z-10">
+        <div className="container mobile-container relative z-10">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className="space-y-2">
-              <MessageCircle className="h-12 sm:h-16 w-12 sm:w-16 text-white mx-auto mb-6 drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-100" />
+            <div className="mobile-space-y-4">
+              <MessageCircle className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 text-white mx-auto mb-3 sm:mb-4 md:mb-6 drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-100" />
               <h1 className="mobile-text-3xl font-bold tracking-tighter text-white drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-300 heading-hover-underline">
                 Get in Touch
               </h1>
-              <p className="mx-auto max-w-[600px] text-white mobile-text-lg font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-500">
+              <p className="mx-auto max-w-[600px] text-white mobile-text-base font-medium leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-500 px-4 sm:px-0">
                 We'd love to hear from you. Get in touch with us today.
               </p>
             </div>
@@ -97,36 +97,36 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content */}
-      <section className="w-full py-16 md:py-24">
-        <div className="container px-4 md:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <section className="w-full mobile-section-spacing">
+        <div className="container mobile-container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16">
             {/* Contact Information Section */}
-            <div className="space-y-8">
-              <div className="text-center lg:text-left mb-12 animate-in fade-in slide-in-from-left duration-1000">
-                <h2 className="mobile-text-2xl font-bold tracking-tight mb-4">
+            <div className="mobile-space-y-6 md:space-y-8">
+              <div className="text-center lg:text-left mb-8 sm:mb-10 md:mb-12 animate-in fade-in slide-in-from-left duration-1000">
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-3 sm:mb-4">
                   Get In{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Touch
                   </span>
                 </h2>
-                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto lg:mx-0 mb-4"></div>
-                <p className="text-gray-600 dark:text-gray-400 mobile-text-lg">
+                <div className="w-20 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto lg:mx-0 mb-3 sm:mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400 mobile-text-base">
                   We're here to help and answer any questions you might have.
                 </p>
               </div>
 
               {/* Contact Cards */}
-              <div className="space-y-6">
+              <div className="mobile-space-y-4 md:space-y-6">
                 {/* Address Card */}
                 <Card className="border-l-4 border-l-church-primary shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-3 mobile-text-lg">
-                      <MapPin className="h-6 w-6 text-church-primary dark:text-church-accent" />
+                  <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-5 md:p-6">
+                    <CardTitle className="flex items-center gap-2 sm:gap-3 mobile-text-base md:text-lg">
+                      <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-church-primary dark:text-church-accent flex-shrink-0" />
                       Our Location
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <CardContent className="p-4 sm:p-5 md:p-6 pt-0">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mobile-text-sm md:text-base">
                       Behind Asero Carwash,<br />
                       Opposite MRS Filling Station,<br />
                       Asero, Abeokuta.
@@ -136,42 +136,42 @@ export default function ContactPage() {
 
                 {/* Contact Numbers Card */}
                 <Card className="border-l-4 border-l-church-accent shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-3 mobile-text-lg">
-                      <Phone className="h-6 w-6 text-church-accent" />
+                  <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-5 md:p-6">
+                    <CardTitle className="flex items-center gap-2 sm:gap-3 mobile-text-base md:text-lg">
+                      <Phone className="h-5 w-5 sm:h-6 sm:w-6 text-church-accent flex-shrink-0" />
                       Phone Numbers
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p className="text-gray-700 dark:text-gray-300">+234 813 267 5172</p>
-                    <p className="text-gray-700 dark:text-gray-300">+234 706 447 5723</p>
+                  <CardContent className="space-y-2 p-4 sm:p-5 md:p-6 pt-0">
+                    <p className="text-gray-700 dark:text-gray-300 mobile-text-sm md:text-base">+234 813 267 5172</p>
+                    <p className="text-gray-700 dark:text-gray-300 mobile-text-sm md:text-base">+234 706 447 5723</p>
                   </CardContent>
                 </Card>
 
                 {/* Email Card */}
                 <Card className="border-l-4 border-l-church-primary-light shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-3 mobile-text-lg">
-                      <Mail className="h-6 w-6 text-church-primary-light" />
+                  <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-5 md:p-6">
+                    <CardTitle className="flex items-center gap-2 sm:gap-3 mobile-text-base md:text-lg">
+                      <Mail className="h-5 w-5 sm:h-6 sm:w-6 text-church-primary-light flex-shrink-0" />
                       Email
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-700 dark:text-gray-300">prevailingword95@gmail.com</p>
+                  <CardContent className="p-4 sm:p-5 md:p-6 pt-0">
+                    <p className="text-gray-700 dark:text-gray-300 mobile-text-sm md:text-base break-words">prevailingword95@gmail.com</p>
                   </CardContent>
                 </Card>
 
                 {/* Office Hours Card */}
                 <Card className="border-l-4 border-l-church-accent shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-3 mobile-text-lg">
-                      <Clock className="h-6 w-6 text-church-accent" />
+                  <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-5 md:p-6">
+                    <CardTitle className="flex items-center gap-2 sm:gap-3 mobile-text-base md:text-lg">
+                      <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-church-accent flex-shrink-0" />
                       Office Hours
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p className="text-gray-700 dark:text-gray-300">Monday - Friday: 9:00 AM - 5:00 PM</p>
-                    <p className="text-gray-700 dark:text-gray-300">Sunday: 8:00 AM - 1:00 PM</p>
+                  <CardContent className="space-y-2 p-4 sm:p-5 md:p-6 pt-0">
+                    <p className="text-gray-700 dark:text-gray-300 mobile-text-sm md:text-base">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                    <p className="text-gray-700 dark:text-gray-300 mobile-text-sm md:text-base">Sunday: 8:00 AM - 1:00 PM</p>
                   </CardContent>
                 </Card>
               </div>
