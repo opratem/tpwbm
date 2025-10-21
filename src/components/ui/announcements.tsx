@@ -142,21 +142,21 @@ export default function Announcements({
 
   if (error) {
     return (
-        <div className={`space-y-4 ${className}`}>
+        <div className={`mobile-space-y-4 ${className}`}>
           {showHeader && (
-              <div className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                <h2 className="text-xl font-semibold">Announcements</h2>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                <h2 className="mobile-text-lg md:text-xl font-semibold">Announcements</h2>
               </div>
           )}
           <Card>
-            <CardContent className="p-4 text-center text-gray-500">
-              <p>Unable to load announcements. Please try again later.</p>
+            <CardContent className="mobile-card-spacing text-center text-gray-500">
+              <p className="mobile-text-sm">Unable to load announcements. Please try again later.</p>
               <Button
                   variant="outline"
                   size="sm"
                   onClick={fetchAnnouncements}
-                  className="mt-2"
+                  className="mt-3 sm:mt-4 mobile-touch-target"
               >
                 Retry
               </Button>
@@ -168,17 +168,17 @@ export default function Announcements({
 
   if (announcements.length === 0) {
     return (
-        <div className={`space-y-4 ${className}`}>
+        <div className={`mobile-space-y-4 ${className}`}>
           {showHeader && (
-              <div className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                <h2 className="text-xl font-semibold">Announcements</h2>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                <h2 className="mobile-text-lg md:text-xl font-semibold">Announcements</h2>
               </div>
           )}
           <Card>
-            <CardContent className="p-4 text-center text-gray-500">
-              <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p>No announcements available at this time.</p>
+            <CardContent className="mobile-card-spacing text-center text-gray-500">
+              <Bell className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 sm:mb-3 opacity-50" />
+              <p className="mobile-text-sm">No announcements available at this time.</p>
             </CardContent>
           </Card>
         </div>
@@ -187,32 +187,32 @@ export default function Announcements({
 
   if (variant === "compact") {
     return (
-        <div className={`space-y-4 ${className}`}>
+        <div className={`mobile-space-y-4 ${className}`}>
           {showHeader && (
-              <div className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                <h2 className="text-xl font-semibold">Announcements</h2>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                <h2 className="mobile-text-lg md:text-xl font-semibold">Announcements</h2>
               </div>
           )}
-          <div className="space-y-2">
+          <div className="space-y-2 sm:space-y-3">
             {announcements.map((announcement) => {
               const CategoryIcon = getCategoryIcon(announcement.category);
               return (
                   <div
                       key={announcement.id}
-                      className="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                      className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 border rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors min-h-[64px] sm:min-h-[72px]"
                   >
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CategoryIcon className="h-4 w-4 text-blue-600" />
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CategoryIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 text-blue-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm line-clamp-1">{announcement.title}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="font-medium text-xs sm:text-sm md:text-base line-clamp-1">{announcement.title}</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">
                         {formatRelativeTime(announcement.createdAt)}
                       </p>
                     </div>
                     {announcement.priority === "high" && (
-                        <Badge className={getPriorityColor(announcement.priority)}>
+                        <Badge className={`${getPriorityColor(announcement.priority)} text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 flex-shrink-0`}>
                           {announcement.priority}
                         </Badge>
                     )}
@@ -226,50 +226,50 @@ export default function Announcements({
 
   if (variant === "list") {
     return (
-        <div className={`space-y-4 ${className}`}>
+        <div className={`mobile-space-y-4 ${className}`}>
           {showHeader && (
-              <div className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                <h2 className="text-xl font-semibold">Announcements</h2>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                <h2 className="mobile-text-lg md:text-xl font-semibold">Announcements</h2>
               </div>
           )}
-          <div className="space-y-3">
+          <div className="mobile-space-y-2 md:space-y-3">
             {announcements.map((announcement) => {
               const CategoryIcon = getCategoryIcon(announcement.category);
               return (
                   <div
                       key={announcement.id}
-                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className="border rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 hover:shadow-md transition-shadow"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-3 flex-1">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <CategoryIcon className="h-5 w-5 text-blue-600" />
+                    <div className="flex items-start justify-between gap-3 sm:gap-4">
+                      <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <CategoryIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-blue-600" />
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-lg mb-2">{announcement.title}</h3>
-                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold mobile-text-base md:text-lg mb-1 sm:mb-2 line-clamp-2">{announcement.title}</h3>
+                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed mobile-text-sm md:text-base line-clamp-3">
                             {announcement.content}
                           </p>
-                          <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                          <div className="flex items-center gap-3 sm:gap-4 mt-2 sm:mt-3 text-xs sm:text-sm text-gray-500 flex-wrap">
                             <div className="flex items-center gap-1">
-                              <User className="h-3 w-3" />
-                              <span>{announcement.author}</span>
+                              <User className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+                              <span className="truncate max-w-[120px] sm:max-w-none">{announcement.author}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
+                              <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
                               <span>{formatRelativeTime(announcement.createdAt)}</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-2">
+                      <div className="flex flex-col items-end gap-1.5 sm:gap-2 flex-shrink-0">
                         {announcement.priority === "high" && (
-                            <Badge className={getPriorityColor(announcement.priority)}>
+                            <Badge className={`${getPriorityColor(announcement.priority)} text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1`}>
                               {announcement.priority}
                             </Badge>
                         )}
-                        <Badge className={getCategoryColor(announcement.category)}>
+                        <Badge className={`${getCategoryColor(announcement.category)} text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1`}>
                           {announcement.category}
                         </Badge>
                       </div>
@@ -283,37 +283,37 @@ export default function Announcements({
   }
 
   return (
-      <div className={`space-y-4 ${className}`}>
+      <div className={`mobile-space-y-4 ${className}`}>
         {showHeader && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                <h2 className="text-xl font-semibold">Announcements</h2>
+            <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                <h2 className="mobile-text-lg md:text-xl font-semibold">Announcements</h2>
               </div>
-              <Button variant="ghost" size="sm" className="text-blue-600">
-                View All <ChevronRight className="h-4 w-4 ml-1" />
+              <Button variant="ghost" size="sm" className="text-blue-600 mobile-text-xs md:text-sm mobile-touch-target">
+                View All <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
               </Button>
             </div>
         )}
-        <div className="grid gap-4">
+        <div className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6">
           {announcements.map((announcement) => {
             const CategoryIcon = getCategoryIcon(announcement.category);
             return (
-                <Card key={announcement.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <CategoryIcon className="h-5 w-5 text-blue-600" />
+                <Card key={announcement.id} className="hover:shadow-lg transition-shadow mobile-card overflow-hidden">
+                  <CardHeader className="pb-2 sm:pb-3">
+                    <div className="flex items-start justify-between gap-3 sm:gap-4">
+                      <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <CategoryIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-blue-600" />
                         </div>
-                        <div>
-                          <CardTitle className="text-lg">{announcement.title}</CardTitle>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge className={getCategoryColor(announcement.category)}>
+                        <div className="min-w-0 flex-1">
+                          <CardTitle className="mobile-text-base md:text-lg line-clamp-2">{announcement.title}</CardTitle>
+                          <div className="flex items-center gap-1.5 sm:gap-2 mt-1 sm:mt-2 flex-wrap">
+                            <Badge className={`${getCategoryColor(announcement.category)} text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1`}>
                               {announcement.category}
                             </Badge>
                             {announcement.priority === "high" && (
-                                <Badge className={getPriorityColor(announcement.priority)}>
+                                <Badge className={`${getPriorityColor(announcement.priority)} text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1`}>
                                   {announcement.priority}
                                 </Badge>
                             )}
@@ -323,17 +323,17 @@ export default function Announcements({
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-3 sm:mb-4 mobile-text-sm md:text-base line-clamp-3">
                       {announcement.content}
                     </p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 flex-wrap gap-2">
+                      <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
                         <div className="flex items-center gap-1">
-                          <User className="h-3 w-3" />
-                          <span>{announcement.author}</span>
+                          <User className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
+                          <span className="truncate max-w-[120px] sm:max-w-[200px]">{announcement.author}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
+                          <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
                           <span>{formatRelativeTime(announcement.createdAt)}</span>
                         </div>
                       </div>

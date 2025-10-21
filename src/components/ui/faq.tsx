@@ -64,51 +64,51 @@ export function FAQ() {
   };
 
   return (
-    <section className="py-16 bg-gray-50 dark:bg-slate-900">
-      <div className="container px-4 md:px-6 mx-auto">
+    <section className="mobile-section-spacing bg-gray-50 dark:bg-slate-900">
+      <div className="container mobile-container mx-auto">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-secondary/20 rounded-full mb-6">
-              <HelpCircle className="h-8 w-8 text-primary" />
+          <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-secondary/20 rounded-full mb-4 sm:mb-5 md:mb-6">
+              <HelpCircle className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary" />
             </div>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4">
+            <h2 className="mobile-text-xl md:text-2xl lg:text-3xl font-bold tracking-tight mb-3 sm:mb-4 px-4">
               Frequently Asked{" "}
               <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                 Questions
               </span>
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto mb-4"></div>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <div className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary mx-auto mb-3 sm:mb-4"></div>
+            <p className="mobile-text-sm md:text-base lg:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
               Find answers to common questions about our church family, services, and how to get involved.
             </p>
           </div>
 
           {/* FAQ Items */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {faqData.map((item, index) => (
-              <Card key={index} className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <Card key={index} className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-200 mobile-card">
                 <CardContent className="p-0">
                   <button
                     onClick={() => toggleItem(index)}
-                    className="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
+                    className="w-full text-left p-3 sm:p-4 md:p-5 lg:p-6 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg mobile-touch-target"
                   >
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white pr-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="mobile-text-sm md:text-base lg:text-lg font-semibold text-gray-900 dark:text-white pr-2">
                         {item.question}
                       </h3>
                       {openItems.includes(index) ? (
-                        <ChevronUp className="h-5 w-5 text-primary flex-shrink-0" />
+                        <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                       ) : (
-                        <ChevronDown className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                        <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 flex-shrink-0" />
                       )}
                     </div>
                   </button>
 
                   {openItems.includes(index) && (
-                    <div className="px-6 pb-6">
-                      <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    <div className="px-3 sm:px-4 md:px-5 lg:px-6 pb-3 sm:pb-4 md:pb-5 lg:pb-6">
+                      <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
+                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed mobile-text-xs md:text-sm lg:text-base">
                           {item.answer}
                         </p>
                       </div>
@@ -120,8 +120,8 @@ export function FAQ() {
           </div>
 
           {/* Contact for More Questions */}
-          <div className="mt-12 text-center">
-            <div className="relative rounded-xl overflow-hidden">
+          <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-12 text-center">
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
               {/* Background Image with Blur */}
               <div className="absolute inset-0 z-0">
                 <div
@@ -138,23 +138,23 @@ export function FAQ() {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/40 to-primary/60 z-1" />
               </div>
 
-              <div className="relative z-10 p-8 text-white">
-                <h3 className="text-xl font-semibold mb-4 drop-shadow-lg">
+              <div className="relative z-10 p-4 sm:p-6 md:p-8 text-white">
+                <h3 className="mobile-text-base md:text-lg lg:text-xl font-semibold mb-3 sm:mb-4 drop-shadow-lg">
                   Still have questions?
                 </h3>
-                <p className="text-white mb-6 drop-shadow-md">
+                <p className="text-white mb-4 sm:mb-5 md:mb-6 drop-shadow-md mobile-text-sm md:text-base px-4 sm:px-0">
                   We're here to help! Reach out to us and we'll be happy to answer any additional questions you might have.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
                   <a
                     href="/contact"
-                    className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary to-primary/90 text-white rounded-full font-semibold hover:from-primary/90 hover:to-primary transition-all duration-200 drop-shadow-lg"
+                    className="inline-flex items-center justify-center px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-primary to-primary/90 text-white rounded-full font-semibold hover:from-primary/90 hover:to-primary transition-all duration-200 drop-shadow-lg mobile-text-sm md:text-base mobile-touch-target"
                   >
                     Contact Us
                   </a>
                   <a
                     href="mailto:info@prevailingword.org"
-                    className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary to-primary/90 text-white rounded-full font-semibold hover:from-primary/90 hover:to-primary transition-all duration-200 drop-shadow-lg"
+                    className="inline-flex items-center justify-center px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-primary to-primary/90 text-white rounded-full font-semibold hover:from-primary/90 hover:to-primary transition-all duration-200 drop-shadow-lg mobile-text-sm md:text-base mobile-touch-target"
                   >
                     Send Email
                   </a>
