@@ -119,9 +119,9 @@ export default function YouthMinistryPage() {
   };
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[hsl(45,56%,98%)] to-[hsl(218,15%,98%)]">
+      <div className="min-h-screen bg-gradient-to-br from-white via-[hsl(45,56%,98%)] to-[hsl(218,15%,98%)] dark:from-gray-950 dark:to-gray-900">
         {/* Hero Section */}
-        <section className="relative text-white py-6 md:py-8 overflow-hidden">
+        <section className="relative text-white mobile-section-spacing overflow-hidden min-h-[45vh] sm:min-h-[50vh] md:min-h-[55vh]">
           {/* Background with multiple overlays for depth */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -136,26 +136,26 @@ export default function YouthMinistryPage() {
             <div className="absolute inset-0 bg-gradient-to-b from-[hsl(218,31%,18%)]/40 via-transparent to-[hsl(218,31%,18%)]/50 z-1" />
           </div>
 
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="text-center space-y-6 md:space-y-8">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[hsl(45,56%,55%)] to-[hsl(218,31%,18%)] rounded-full flex items-center justify-center mx-auto mb-6 animate-in fade-in slide-in-from-top duration-1000 delay-200 drop-shadow-lg">
-                <Zap className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+          <div className="container mobile-container mx-auto text-center relative z-10 h-full flex items-center justify-center">
+            <div className="text-center mobile-space-y-6 w-full px-4 sm:px-0">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-gradient-to-br from-[hsl(45,56%,55%)] to-[hsl(218,31%,18%)] rounded-full flex items-center justify-center mx-auto animate-in fade-in slide-in-from-top duration-1000 delay-200 drop-shadow-lg">
+                <Zap className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-white" />
               </div>
-              <h1 className="mobile-text-3xl font-bold mb-4 md:mb-6 text-white drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
+              <h1 className="mobile-text-3xl font-bold text-white drop-shadow-2xl animate-in fade-in slide-in-from-top duration-1000 delay-400">
                 Youth Ministry
               </h1>
-              <p className="mobile-text-lg text-gray-100 max-w-3xl mx-auto font-light leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600">
+              <p className="mobile-text-base text-gray-100 max-w-3xl mx-auto font-light leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600">
                 🔥 Igniting young hearts to live boldly for Christ through dynamic fellowship,
                 authentic community, and purpose-driven discipleship! ✨
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-in fade-in slide-in-from-top duration-1000 delay-800">
-                <Button size="lg" className="bg-gradient-to-r from-[hsl(45,56%,55%)] to-[hsl(45,56%,48%)] hover:from-[hsl(45,56%,48%)] hover:to-[hsl(45,56%,42%)] text-[hsl(218,31%,18%)] font-bold px-8 py-4 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <Heart className="h-5 w-5 mr-2" />
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center animate-in fade-in slide-in-from-top duration-1000 delay-800">
+                <Button size="lg" className="bg-gradient-to-r from-[hsl(45,56%,55%)] to-[hsl(45,56%,48%)] hover:from-[hsl(45,56%,48%)] hover:to-[hsl(45,56%,42%)] text-[hsl(218,31%,18%)] font-bold mobile-button rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
+                  <Heart className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   Join Our Family!
                 </Button>
                 <div className="flex items-center text-white drop-shadow-md">
-                  <Users className="h-5 w-5 mr-2" />
-                  <span className="font-medium">Ages 13-30 Welcome</span>
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                  <span className="font-medium mobile-text-sm">Ages 13-30 Welcome</span>
                 </div>
               </div>
             </div>
@@ -163,24 +163,24 @@ export default function YouthMinistryPage() {
         </section>
 
         {/* Main Content */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 space-y-20">
+        <section className="mobile-section-spacing">
+          <div className="container mobile-container mx-auto space-y-12 sm:space-y-16 md:space-y-20">
 
             {/* About Section */}
             <AnimatedSection animation="fadeUp">
               <div className="text-center max-w-5xl mx-auto">
-                <h2 className="mobile-text-2xl font-bold tracking-tight mb-6">
+                <h2 className="mobile-text-2xl font-bold tracking-tight mb-4 sm:mb-6">
                   About Our{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Youth Ministry
                   </span>
                 </h2>
-                <p className="mobile-text-lg text-[hsl(218,15%,40%)] mb-12 leading-relaxed">
+                <p className="mobile-text-base text-[hsl(218,15%,40%)] dark:text-gray-300 mb-8 sm:mb-10 md:mb-12 leading-relaxed px-4 sm:px-0">
                   Our Youth Ministry is a vibrant, energetic community where young people discover their identity in Christ,
                   build lasting friendships, and are equipped to make a difference in their generation.
                   We believe every young person has a unique calling and purpose in God's kingdom! 🚀
                 </p>
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                   <div className="text-center group cursor-pointer">
                     <div className="bg-gradient-to-br from-[hsl(45,56%,95%)] to-[hsl(45,56%,90%)] rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                       <Zap className="h-10 w-10 text-[hsl(218,31%,18%)]" />

@@ -21,7 +21,7 @@ export default function PastorPage() {
   return (
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="relative py-8 md:py-12 church-gradient-hero overflow-hidden">
+        <section className="relative mobile-section-spacing church-gradient-hero overflow-hidden min-h-[50vh] sm:min-h-[55vh] md:min-h-[60vh]">
           {/* Background Image with Blur */}
           <div
               className="absolute inset-0 bg-cover bg-no-repeat"
@@ -37,40 +37,40 @@ export default function PastorPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70" />
           <div className="absolute inset-0 bg-primary/50" />
 
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start pt-8 md:pt-12">
-              <div className="text-white animate-in fade-in slide-in-from-left duration-1000">
-                <h1 className="mobile-text-3xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-left duration-1000 delay-200">
+          <div className="container mobile-container mx-auto relative z-10 h-full flex items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center w-full">
+              <div className="text-white animate-in fade-in slide-in-from-left duration-1000 mobile-space-y-6">
+                <h1 className="mobile-text-3xl font-bold bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-2xl animate-in fade-in slide-in-from-left duration-1000 delay-200">
                   Pastor 'Tunde Olufemi
                 </h1>
-                <p className="mobile-text-lg mb-4 text-primary-foreground font-semibold drop-shadow-lg animate-in fade-in slide-in-from-left duration-1000 delay-400">
+                <p className="mobile-text-lg text-primary-foreground font-semibold drop-shadow-lg animate-in fade-in slide-in-from-left duration-1000 delay-400">
                   The Presiding Pastor
                 </p>
                 <p className="mobile-text-base leading-relaxed text-gray-100 drop-shadow-md font-medium animate-in fade-in slide-in-from-left duration-1000 delay-600">
                   A versatile preacher and teacher of the word, committed to raising a generation of believers who have understanding of the things of the Spirit and are rightly positioned to fulfil their part and purpose in destiny.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 mt-6 md:mt-8 animate-in fade-in slide-in-from-left duration-1000 delay-800">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-in fade-in slide-in-from-left duration-1000 delay-800">
                   <Button
                     size="lg"
-                    className="bg-primary-foreground text-primary hover:bg-primary/10 font-semibold shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+                    className="bg-primary-foreground text-primary hover:bg-primary/10 font-semibold shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl mobile-button"
                     onClick={() => setActiveTab("resources")}
                   >
-                    <BookOpen className="mr-2 h-5 w-5" />
+                    <BookOpen className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     View Resources
                   </Button>
                   <Button
                     size="lg"
-                    className="bg-primary-foreground text-primary hover:bg-primary/10 font-semibold shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+                    className="bg-primary-foreground text-primary hover:bg-primary/10 font-semibold shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl mobile-button"
                     onClick={() => setActiveTab("contact")}
                   >
-                    <Mail className="mr-2 h-5 w-5" />
+                    <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Contact Pastor
                   </Button>
                 </div>
               </div>
-              <div className="flex gap-3 md:gap-4 justify-center md:justify-end animate-in fade-in slide-in-from-right duration-1000 delay-300">
-                <div className="space-y-4">
-                  <div className="relative w-48 sm:w-56 md:w-64 h-60 sm:h-72 md:h-80 rounded-lg overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 hover:shadow-3xl">
+              <div className="flex gap-2 sm:gap-3 md:gap-4 justify-center md:justify-end animate-in fade-in slide-in-from-right duration-1000 delay-300">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="relative w-36 h-48 sm:w-48 sm:h-60 md:w-56 md:h-72 lg:w-64 lg:h-80 rounded-lg overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 hover:shadow-3xl">
                     <Image
                         src={getCloudinaryImageUrl(churchImages.pastor.image1, { width: 400, height: 500, crop: 'fill' })}
                         alt="Pastor 'Tunde Olufemi in gray suit"
@@ -79,8 +79,8 @@ export default function PastorPage() {
                     />
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="relative w-48 sm:w-56 md:w-64 h-60 sm:h-72 md:h-80 rounded-lg overflow-hidden shadow-2xl mt-4 md:mt-8 transform hover:scale-105 transition-all duration-500 hover:shadow-3xl">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="relative w-36 h-48 sm:w-48 sm:h-60 md:w-56 md:h-72 lg:w-64 lg:h-80 rounded-lg overflow-hidden shadow-2xl mt-3 sm:mt-4 md:mt-8 transform hover:scale-105 transition-all duration-500 hover:shadow-3xl">
                     <Image
                         src={getCloudinaryImageUrl(churchImages.pastor.image2, { width: 400, height: 500, crop: 'fill' })}
                         alt="Pastor 'Tunde Olufemi in red suit"
@@ -95,8 +95,8 @@ export default function PastorPage() {
         </section>
 
         {/* Main Content */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
+        <section className="mobile-section-spacing">
+          <div className="container mobile-container mx-auto">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-4 mb-8">
                 <TabsTrigger value="about">About Pastor</TabsTrigger>
@@ -209,7 +209,7 @@ export default function PastorPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-4">
-                        {[
+                       ={[
                           "Competent, Fruitful & Fulfilling Ministers and Associate Ministers of Today",
                           "Understanding Your Spiritual Assignment",
                           "Rising Above Failure in Life and Ministry",
@@ -250,7 +250,7 @@ export default function PastorPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-4">
-                        {[
+                       ={[
                           "Faithful and Committed Workers: the Urgent Need of the Present Day Church",
                           "The Dynamic Church Workers",
                           "Meaningful and Rewarding Service to the Lord",
@@ -298,7 +298,7 @@ export default function PastorPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-4">
-                        {[
+                       ={[
                           "Strive for the Best",
                           "What Next, When Prayer seems to fail?",
                           "How to Make Your Marriage Work (for singles & married)",
@@ -459,7 +459,7 @@ export default function PastorPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-wrap gap-3 justify-center">
-                        {[
+                       ={[
                           "Teaching & Preaching",
                           "Leadership Training",
                           "Church Workers Development",

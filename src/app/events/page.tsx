@@ -53,24 +53,24 @@ export default function EventsPage() {
       <div className="flex flex-col min-h-screen">
         {/* Admin Floating Action Button */}
         {isAdmin && (
-            <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col gap-2 sm:gap-3">
               <Button
                   size="lg"
-                  className="h-14 w-14 rounded-full bg-[hsl(218,31%,18%)] hover:bg-[hsl(218,31%,15%)] shadow-xl text-white"
+                  className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[hsl(218,31%,18%)] hover:bg-[hsl(218,31%,15%)] shadow-xl text-white mobile-touch-target"
                   asChild
               >
                 <Link href="/admin/events">
-                  <Edit className="h-6 w-6" />
+                  <Edit className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="sr-only">Manage Events</span>
                 </Link>
               </Button>
               <Button
                   size="lg"
-                  className="h-14 w-14 rounded-full bg-[hsl(45,56%,55%)] hover:bg-[hsl(45,56%,50%)] shadow-xl text-[hsl(218,31%,18%)]"
+                  className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[hsl(45,56%,55%)] hover:bg-[hsl(45,56%,50%)] shadow-xl text-[hsl(218,31%,18%)] mobile-touch-target"
                   asChild
               >
                 <Link href="/admin/events">
-                  <Plus className="h-6 w-6" />
+                  <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="sr-only">Create Event</span>
                 </Link>
               </Button>
@@ -79,14 +79,16 @@ export default function EventsPage() {
 
         {/* Admin Panel Bar */}
         {isAdmin && (
-            <div className="bg-[hsl(218,31%,18%)] text-white py-2 px-4 text-center sticky top-0 z-40">
-              <div className="flex items-center justify-center gap-4">
-                <Settings className="h-4 w-4" />
-                <span className="text-sm font-medium">Admin Mode</span>
+            <div className="bg-[hsl(218,31%,18%)] text-white py-3 px-4 text-center sticky top-0 z-40">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  <span className="text-sm font-medium">Admin Mode</span>
+                </div>
                 <Button
                     size="sm"
                     variant="outline"
-                    className="border-white text-white hover:bg-white hover:text-[hsl(218,31%,18%)]"
+                    className="border-white text-white hover:bg-white hover:text-[hsl(218,31%,18%)] mobile-touch-target"
                     asChild
                 >
                   <Link href="/admin/events">
@@ -98,7 +100,7 @@ export default function EventsPage() {
         )}
 
         {/* Hero Section */}
-        <section className="w-full py-8 md:py-12 relative overflow-hidden">
+        <section className="w-full mobile-section-spacing relative overflow-hidden min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh]">
           {/* Background Image with Blur Effect */}
           <div
               className="absolute inset-0"
@@ -116,17 +118,17 @@ export default function EventsPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-black/60 to-black/70" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/40" />
 
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="flex flex-col items-center justify-center space-y-6 text-center text-white">
-              <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-1000">
+          <div className="container mobile-container relative z-10 h-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center mobile-space-y-6 text-center text-white w-full">
+              <div className="mobile-space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-1000 px-4 sm:px-0">
                 <h1 className="mobile-text-3xl font-bold tracking-tight leading-tight max-w-4xl text-white">
                   Church Events & Activities
                 </h1>
-                <p className="mx-auto max-w-[700px] mobile-text-lg text-white font-medium leading-relaxed drop-shadow-lg">
+                <p className="mx-auto max-w-[700px] mobile-text-base text-white font-medium leading-relaxed drop-shadow-lg">
                   Discover opportunities to connect, grow, and serve together as a community of faith.
                 </p>
               </div>
-              <Button size="lg" variant="secondary" className="font-semibold px-8 py-4 rounded-full bg-[hsl(45,56%,55%)] text-[hsl(218,31%,18%)] hover:bg-[hsl(45,56%,50%)] transform hover:scale-105 transition-all duration-200 shadow-xl" asChild>
+              <Button size="lg" variant="secondary" className="font-semibold mobile-button rounded-full bg-[hsl(45,56%,55%)] text-[hsl(218,31%,18%)] hover:bg-[hsl(45,56%,50%)] transform hover:scale-105 transition-all duration-200 shadow-xl" asChild>
                 <Link href="#events-calendar">
                   View Events Calendar
                 </Link>
@@ -137,26 +139,26 @@ export default function EventsPage() {
 
         {/* Featured Event Section */}
         {featuredEvent && (
-            <section className="w-full py-16 md:py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
-              <div className="container px-4 md:px-6">
-                <div className="flex flex-col items-center justify-center space-y-6 text-center mb-16">
-                  <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+            <section className="w-full mobile-section-spacing bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+              <div className="container mobile-container">
+                <div className="flex flex-col items-center justify-center mobile-content-spacing text-center mb-8 sm:mb-12 md:mb-16">
+                  <div className="mobile-space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
                     <h2 className="mobile-text-2xl font-bold tracking-tight">
                       Featured{" "}
                       <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                         Event
                       </span>
                     </h2>
-                    <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
-                    <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 md:text-xl leading-relaxed">
+                    <div className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                    <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 mobile-text-base leading-relaxed px-4 sm:px-0">
                       Don't miss our upcoming featured event - mark your calendar!
                     </p>
                   </div>
                 </div>
 
-                <Card className="group overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border-0 bg-white dark:bg-gray-800 max-w-4xl mx-auto">
-                  <div className="md:flex">
-                    <div className="md:w-1/2 h-64 md:h-auto overflow-hidden relative">
+                <Card className="group overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border-0 bg-white dark:bg-gray-800 max-w-4xl mx-auto mobile-card">
+                  <div className="flex flex-col md:flex-row">
+                    <div className="md:w-1/2 h-56 sm:h-64 md:h-auto overflow-hidden relative">
                       {/* Event Image */}
                       {(featuredEvent.imageUrls && featuredEvent.imageUrls.length > 0) || featuredEvent.imageUrl ? (
                           <div className="relative h-full w-full">

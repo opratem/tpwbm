@@ -35,9 +35,9 @@ export default function GivingPage() {
   };
 
   return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
         {/* Hero Section */}
-        <section className="relative text-white py-6 md:py-8 overflow-hidden">
+        <section className="relative text-white mobile-section-spacing overflow-hidden min-h-[45vh] sm:min-h-[50vh] md:min-h-[55vh]">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -51,32 +51,32 @@ export default function GivingPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/70 via-black/40 to-[hsl(218_31%_18%)]/60"></div>
           </div>
 
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="max-w-3xl mx-auto">
-              <Heart className="h-12 sm:h-16 w-12 sm:w-16 text-church-accent mx-auto mb-6 drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-200" />
-              <h1 className="mobile-text-3xl font-bold mb-4 md:mb-6 text-white drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-400"
+          <div className="container mobile-container mx-auto text-center relative z-10 h-full flex items-center justify-center">
+            <div className="max-w-3xl mx-auto mobile-space-y-6 w-full px-4 sm:px-0">
+              <Heart className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 text-church-accent mx-auto drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-200" />
+              <h1 className="mobile-text-3xl font-bold text-white drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-400"
                   style={{
                     textShadow: '0 0 30px rgba(0,0,0,0.9), 0 4px 8px rgba(0,0,0,0.7), 0 0 15px hsl(45 56% 55% / 0.3)'
                   }}>
                 Give with a Cheerful Heart
               </h1>
-              <p className="mobile-text-lg text-white mb-6 md:mb-8 font-light leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600"
+              <p className="mobile-text-base text-white font-light leading-relaxed drop-shadow-lg animate-in fade-in slide-in-from-top duration-1000 delay-600"
                  style={{
                    textShadow: '0 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.3)'
                  }}>
                 "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver." - 2 Corinthians 9:7
               </p>
-              <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 md:gap-4 animate-in fade-in slide-in-from-bottom duration-1000 delay-800">
-                <Badge variant="secondary" className="text-base sm:text-lg px-3 sm:px-4 py-2 bg-white/95 text-church-primary shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <Gift className="h-4 sm:h-5 w-4 sm:w-5 mr-2" />
+              <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 animate-in fade-in slide-in-from-bottom duration-1000 delay-800">
+                <Badge variant="secondary" className="mobile-text-sm px-3 py-2 bg-white/95 text-church-primary shadow-lg transform hover:scale-105 transition-all duration-300 mobile-touch-target">
+                  <Gift className="h-4 w-4 mr-2" />
                   Tithes & Offerings
                 </Badge>
-                <Badge variant="secondary" className="text-base sm:text-lg px-3 sm:px-4 py-2 bg-white/95 text-church-primary shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <Church className="h-4 sm:h-5 w-4 sm:w-5 mr-2" />
+                <Badge variant="secondary" className="mobile-text-sm px-3 py-2 bg-white/95 text-church-primary shadow-lg transform hover:scale-105 transition-all duration-300 mobile-touch-target">
+                  <Church className="h-4 w-4 mr-2" />
                   Building Fund
                 </Badge>
-                <Badge variant="secondary" className="text-base sm:text-lg px-3 sm:px-4 py-2 bg-white/95 text-church-primary shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <Users className="h-4 sm:h-5 w-4 sm:w-5 mr-2" />
+                <Badge variant="secondary" className="mobile-text-sm px-3 py-2 bg-white/95 text-church-primary shadow-lg transform hover:scale-105 transition-all duration-300 mobile-touch-target">
+                  <Users className="h-4 w-4 mr-2" />
                   Mission Support
                 </Badge>
               </div>
@@ -85,16 +85,16 @@ export default function GivingPage() {
         </section>
 
         {/* Main Content */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center mb-12">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-church-primary mb-4">
+        <section className="mobile-section-spacing">
+          <div className="container mobile-container mx-auto max-w-4xl">
+            <div className="text-center mb-8 sm:mb-10 md:mb-12">
+              <h2 className="mobile-text-2xl font-bold tracking-tight text-church-primary dark:text-church-accent mb-3 sm:mb-4">
                 Ways to{" "}
                 <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                   Give
                 </span>
               </h2>
-              <p className="mobile-text-base text-gray-600">
+              <p className="mobile-text-base text-gray-600 dark:text-gray-300 px-4 sm:px-0">
                 Choose the method that works best for you to support God's work
               </p>
             </div>

@@ -19,7 +19,7 @@ export default function ServicesPage() {
   return (
       <div className="flex flex-col min-h-screen">
         {/* Hero Section */}
-        <section className="w-full py-8 md:py-12 relative overflow-hidden">
+        <section className="w-full mobile-section-spacing relative overflow-hidden min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh]">
           {/* Background Image with Blur */}
           <div
               className="absolute inset-0 bg-cover bg-no-repeat"
@@ -30,13 +30,13 @@ export default function ServicesPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70" />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(218_31%_18%)]/50 via-[hsl(218_31%_18%)]/30 to-[hsl(218_31%_18%)]/50" />
 
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="flex flex-col items-center justify-center space-y-6 text-center text-white">
-              <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-1000">
+          <div className="container mobile-container relative z-10 h-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center mobile-space-y-6 text-center text-white w-full">
+              <div className="mobile-space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-1000 px-4 sm:px-0">
                 <h1 className="mobile-text-3xl font-bold tracking-tighter text-white drop-shadow-2xl">
                   Worship Services & Special Programs
                 </h1>
-                <p className="mx-auto max-w-[800px] text-white mobile-text-lg font-light leading-relaxed drop-shadow-lg">
+                <p className="mx-auto max-w-[800px] text-white mobile-text-base leading-relaxed drop-shadow-lg">
                   Join us for meaningful worship experiences and community events that strengthen our faith together.
                 </p>
               </div>
@@ -45,31 +45,31 @@ export default function ServicesPage() {
         </section>
 
         {/* Service Times Section */}
-        <section className="w-full py-16 md:py-28 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-6 text-center mb-16">
-              <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+        <section className="w-full mobile-section-spacing bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+          <div className="container mobile-container">
+            <div className="flex flex-col items-center justify-center mobile-content-spacing text-center mb-8 sm:mb-12 md:mb-16">
+              <div className="mobile-space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
                 <h2 className="mobile-text-2xl font-bold tracking-tight">
                   Weekly{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Services
                   </span>
                 </h2>
-                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
-                <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 mobile-text-lg leading-relaxed">
+                <div className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 mobile-text-base leading-relaxed px-4 sm:px-0">
                   Join us for multiple worship experiences designed to meet you wherever you are in your faith journey.
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12 md:mb-16">
               {/* Sunday Services */}
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 <h3 className="mobile-text-lg font-bold text-center lg:text-left text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">Sunday Services</h3>
 
                 {/* Traditional Service Card */}
-                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden">
-                  <div className="h-56 overflow-hidden relative">
+                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden mobile-card">
+                  <div className="h-48 sm:h-56 md:h-64 overflow-hidden relative">
                     <Image
                         src="/images/Sunday_Bible_School.jpeg"
                         alt="Sunday Bible School"
@@ -116,8 +116,8 @@ export default function ServicesPage() {
                 </Card>
 
                 {/* Contemporary Service */}
-                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden">
-                  <div className="h-56 overflow-hidden relative">
+                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden mobile-card">
+                  <div className="h-48 sm:h-56 md:h-64 overflow-hidden relative">
                     <Image
                         src="/images/Celebration_of_Jesus.jpeg"
                         alt="Celebration of Jesus"
@@ -169,12 +169,12 @@ export default function ServicesPage() {
               </div>
 
               {/* Weekday Services */}
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 <h3 className="mobile-text-lg font-bold text-center lg:text-left text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">Weekday Services</h3>
 
                 {/* Bible Study */}
-                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden">
-                  <div className="h-56 overflow-hidden relative">
+                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden mobile-card">
+                  <div className="h-48 sm:h-56 md:h-64 overflow-hidden relative">
                     <Image
                         src="/images/Bible_Study.jpeg"
                         alt="Bible Study"
@@ -217,8 +217,8 @@ export default function ServicesPage() {
                 </Card>
 
                 {/* Thursday Soul Winning & Evangelism */}
-                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden">
-                  <div className="h-56 overflow-hidden relative">
+                <Card className="group shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white dark:bg-gray-800 overflow-hidden mobile-card">
+                  <div className="h-48 sm:h-56 md:h-64 overflow-hidden relative">
                     <Image
                         src="/images/gallery/Church1.jpg"
                         alt="Soul Winning & Evangelism"
@@ -251,7 +251,7 @@ export default function ServicesPage() {
                 </Card>
 
                 {/* Special Services Info */}
-                <div className="bg-gradient-to-r from-[hsl(45_56%_55%)]/20 to-[hsl(218_31%_18%)]/20 dark:from-[hsl(45_56%_55%)]/20 dark:to-[hsl(218_31%_18%)]/20 p-6 rounded-2xl">
+                <div className="bg-gradient-to-r from-[hsl(45_56%_55%)]/20 to-[hsl(218_31%_18%)]/20 dark:from-[hsl(45_56%_55%)]/20 dark:to-[hsl(218_31%_18%)]/20 p-6 rounded-2xl mobile-card">
                   <h4 className="mobile-text-lg font-bold mb-3 text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">Special Services</h4>
                   <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
                     <li>• Gender Fellowship(First Sundays of Each Month)</li>
@@ -264,8 +264,8 @@ export default function ServicesPage() {
             </div>
 
             {/* Service Information */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/10 to-[hsl(218_31%_18%)]/20 dark:from-[hsl(218_31%_18%)]/20 dark:to-[hsl(218_31%_18%)]/30">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/10 to-[hsl(218_31%_18%)]/20 dark:from-[hsl(218_31%_18%)]/20 dark:to-[hsl(218_31%_18%)]/30 mobile-card">
                 <MapPin className="h-8 w-8 text-[hsl(218_31%_18%)] mx-auto mb-3" />
                 <h4 className="mobile-text-lg font-bold mb-2 text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">Location</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -275,7 +275,7 @@ export default function ServicesPage() {
                 </p>
               </Card>
 
-              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(45_56%_55%)]/10 to-[hsl(45_56%_55%)]/20 dark:from-[hsl(45_56%_55%)]/20 dark:to-[hsl(45_56%_55%)]/30">
+              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(45_56%_55%)]/10 to-[hsl(45_56%_55%)]/20 dark:from-[hsl(45_56%_55%)]/20 dark:to-[hsl(45_56%_55%)]/30 mobile-card">
                 <Users className="h-8 w-8 text-[hsl(45_56%_55%)] mx-auto mb-3" />
                 <h4 className="mobile-text-lg font-bold mb-2 text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">All Welcome</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -284,7 +284,7 @@ export default function ServicesPage() {
                 </p>
               </Card>
 
-              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/10 to-[hsl(45_56%_55%)]/20 dark:from-[hsl(218_31%_18%)]/20 dark:to-[hsl(45_56%_55%)]/30">
+              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/10 to-[hsl(45_56%_55%)]/20 dark:from-[hsl(218_31%_18%)]/20 dark:to-[hsl(45_56%_55%)]/30 mobile-card">
                 <Heart className="h-8 w-8 text-[hsl(218_31%_18%)] mx-auto mb-3" />
                 <h4 className="mobile-text-lg font-bold mb-2 text-[hsl(218_31%_18%)] dark:text-[hsl(45_56%_55%)]">First Time?</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -297,18 +297,18 @@ export default function ServicesPage() {
         </section>
 
         {/* Upcoming Events Section */}
-        <section className="w-full py-16 md:py-28 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-6 text-center mb-16">
-              <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+        <section className="w-full mobile-section-spacing bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+          <div className="container mobile-container">
+            <div className="flex flex-col items-center justify-center mobile-content-spacing text-center mb-8 sm:mb-12 md:mb-16">
+              <div className="mobile-space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
                 <h2 className="mobile-text-2xl font-bold tracking-tight">
                   Upcoming{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Events
                   </span>
                 </h2>
-                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
-                <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 mobile-text-base md:text-lg lg:text-xl leading-relaxed">
+                <div className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 mobile-text-base md:text-lg lg:text-xl leading-relaxed px-4 sm:px-0">
                   Join us for special events that build community, strengthen faith, and serve others.
                 </p>
               </div>
@@ -361,18 +361,18 @@ export default function ServicesPage() {
         </section>
 
         {/* Special Services Section */}
-        <section className="w-full py-16 md:py-28 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-6 text-center mb-16">
-              <div className="space-y-4">
+        <section className="w-full mobile-section-spacing bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+          <div className="container mobile-container">
+            <div className="flex flex-col items-center justify-center mobile-content-spacing text-center mb-8 sm:mb-12 md:mb-16">
+              <div className="mobile-space-y-4">
                 <h2 className="mobile-text-2xl font-bold tracking-tight">
                   Special{" "}
                   <span className="bg-gradient-to-r from-church-primary via-church-accent to-church-primary bg-clip-text text-transparent">
                     Services
                   </span>
                 </h2>
-                <div className="w-24 h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
-                <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 text-lg md:text-xl leading-relaxed">
+                <div className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-church-primary via-church-accent to-church-primary rounded-full mx-auto" />
+                <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-300 text-lg md:text-xl leading-relaxed px-4 sm:px-0">
                   Throughout the year, we celebrate special occasions and milestones with meaningful services.
                 </p>
               </div>
@@ -380,7 +380,7 @@ export default function ServicesPage() {
 
             <div className="flex justify-center">
               {/* Special Programs */}
-              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/10 to-[hsl(45_56%_55%)]/10 dark:from-[hsl(218_31%_18%)]/20 dark:to-[hsl(45_56%_55%)]/20 shadow-lg hover:shadow-xl transition-shadow duration-300 max-w-md">
+              <Card className="p-6 text-center border-0 bg-gradient-to-br from-[hsl(218_31%_18%)]/10 to-[hsl(45_56%_55%)]/10 dark:from-[hsl(218_31%_18%)]/20 dark:to-[hsl(45_56%_55%)]/20 shadow-lg hover:shadow-xl transition-shadow duration-300 max-w-md mobile-card">
                 <div className="bg-gradient-to-r from-[hsl(218_31%_18%)] to-[hsl(45_56%_55%)] text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Heart className="h-8 w-8" />
                 </div>
@@ -397,7 +397,7 @@ export default function ServicesPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="w-full py-16 md:py-24 relative overflow-hidden">
+        <section className="w-full mobile-section-spacing relative overflow-hidden min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh]">
           {/* Background Image with Blur */}
           <div
               className="absolute inset-0 bg-cover bg-no-repeat"
@@ -408,9 +408,9 @@ export default function ServicesPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70" />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(218_31%_18%)]/50 via-[hsl(218_31%_18%)]/30 to-[hsl(218_31%_18%)]/50" />
 
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="flex flex-col items-center justify-center space-y-6 text-center">
-              <div className="space-y-4">
+          <div className="container mobile-container relative z-10 h-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center mobile-space-y-6 text-center text-white w-full">
+              <div className="mobile-space-y-4 animate-in fade-in-50 slide-in-from-bottom-4 duration-1000 px-4 sm:px-0">
                 <h2 className="mobile-text-2xl font-bold tracking-tight leading-tight max-w-3xl text-white drop-shadow-lg"
                     style={{
                       textShadow: '0 0 20px hsl(45 56% 55% / 0.5), 0 2px 4px rgba(0,0,0,0.8)',
