@@ -91,17 +91,17 @@ export default function MemberRegistration() {
   };
 
   return (
-    <div className="container max-w-2xl py-10 space-y-8">
+    <div className="container max-w-2xl py-6 sm:py-8 md:py-10 px-3 sm:px-4 md:px-6 mobile-space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-          <Link href="/members/login" className="flex items-center gap-1 hover:text-primary">
-            <ArrowLeft className="h-4 w-4" />
+      <div className="text-center mobile-space-y-3 sm:space-y-4">
+        <div className="flex items-center justify-center gap-2 mobile-text-xs sm:text-sm text-gray-500">
+          <Link href="/members/login" className="flex items-center gap-1 hover:text-primary mobile-touch-target">
+            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
             Back to Login
           </Link>
         </div>
-        <h1 className="text-3xl font-bold">Request Church Membership</h1>
-        <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+        <h1 className="mobile-text-2xl sm:text-3xl font-bold">Request Church Membership</h1>
+        <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mobile-text-sm sm:text-base px-4 sm:px-0">
           We're excited that you're interested in joining our church family!
           Please fill out this form and we'll contact you soon.
         </p>
@@ -109,18 +109,18 @@ export default function MemberRegistration() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Membership Application</CardTitle>
-          <CardDescription>
+          <CardTitle className="mobile-text-lg sm:text-xl">Membership Application</CardTitle>
+          <CardDescription className="mobile-text-xs sm:text-sm">
             Please provide your information below. All fields marked with * are required.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Personal Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b pb-2">Personal Information</h3>
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="mobile-text-base sm:text-lg font-semibold border-b pb-2">Personal Information</h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name *</Label>
                   <Input
@@ -159,7 +159,7 @@ export default function MemberRegistration() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input
