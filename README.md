@@ -3,11 +3,12 @@
 <div align="center">
   <img src="public/images/CHURCH LOGO.png" alt="TPWBM Logo" width="200" height="200">
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.2.0-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.1-38B2AC)](https://tailwindcss.com/)
 [![Drizzle ORM](https://img.shields.io/badge/Drizzle%20ORM-0.44.1-green)](https://orm.drizzle.team/)
 [![NextAuth.js](https://img.shields.io/badge/NextAuth.js-4.24.11-purple)](https://next-auth.js.org/)
+[![React](https://img.shields.io/badge/React-19.1.0-61DAFB)](https://react.dev/)
 
 **A comprehensive church management website built with modern web technologies**
 </div>
@@ -25,6 +26,256 @@ This is a full-stack web application for The Prevailing Word Baptist Ministry, f
 - **📺 Media Management**: YouTube and Cloudinary integration for sermons, videos, and image galleries
 - **📱 Responsive Design**: Mobile-first design that works seamlessly across all devices
 - **🔒 Security**: Enterprise-level security with authentication, authorization, and audit logging
+
+---
+
+## 📊 Implementation Status
+
+### ✅ **FULLY IMPLEMENTED FEATURES**
+
+#### **Frontend Pages (46 Pages Total)**
+- ✅ Homepage with hero section, announcements, and latest content
+- ✅ About page with church history and mission
+- ✅ Contact page with contact form and embedded Google Maps
+- ✅ Leadership directory with leadership cards
+- ✅ Pastor profile page
+- ✅ Services schedule page
+- ✅ FAQ page with spiritual quotes
+- ✅ Events listing and registration
+- ✅ Announcements page
+- ✅ Blog/Testimonies system
+- ✅ Sermons library with audio/video player
+- ✅ Audio messages page
+- ✅ Gallery with Cloudinary integration
+- ✅ Live streaming page (YouTube/Facebook integration)
+- ✅ Online giving/donations page with Paystack
+- ✅ Payment success and cancellation pages
+
+#### **Ministry Pages (8 Ministries)**
+- ✅ Youth Ministry
+- ✅ Women's Ministry
+- ✅ Men's Ministry
+- ✅ Children's Ministry
+- ✅ Music/Choir Ministry
+- ✅ Ushers Ministry
+- ✅ ICWLC (International Christian Women Leadership Conference)
+- ✅ House of Grace
+
+#### **Member Portal (7 Pages)**
+- ✅ Member login and registration
+- ✅ Member dashboard with personalized content
+- ✅ Member profile management
+- ✅ Prayer requests submission and management
+- ✅ Member directory
+- ✅ Member resources page
+- ✅ Forgot password functionality
+
+#### **Admin Dashboard (10 Pages)**
+- ✅ Admin dashboard with analytics
+- ✅ User management (view, edit, delete users)
+- ✅ Blog post management (create, edit, delete)
+- ✅ Announcements management
+- ✅ Events management
+- ✅ Prayer requests management
+- ✅ Media management (Cloudinary integration)
+- ✅ YouTube content management
+- ✅ Admin password reset functionality
+- ✅ Admin profile management
+
+#### **API Routes (38 Endpoints)**
+✅ **Authentication APIs**
+- `/api/auth/[...nextauth]` - NextAuth authentication
+- `/api/auth/link-account` - OAuth account linking
+- `/api/forgot-password` - Password reset requests
+
+✅ **Admin APIs**
+- `/api/admin/analytics` - Website analytics data
+- `/api/admin/stats` - Dashboard statistics
+- `/api/admin/recent-activity` - Activity logs
+- `/api/admin/blog` - Blog CRUD operations
+- `/api/admin/blog/[id]` - Single blog post operations
+- `/api/admin/users` - User management
+- `/api/admin/password-reset-request` - Admin-initiated password reset
+- `/api/admin/password-reset-complete` - Complete password reset
+
+✅ **Content APIs**
+- `/api/announcements` - Announcements CRUD
+- `/api/announcements/[id]` - Single announcement operations
+- `/api/events` - Events CRUD
+- `/api/events/[id]` - Single event operations
+- `/api/events/[id]/register` - Event registration
+- `/api/prayer-requests` - Prayer requests CRUD
+- `/api/prayer-requests/[id]` - Single prayer request operations
+
+✅ **Media APIs**
+- `/api/cloudinary/images` - Cloudinary image fetching
+- `/api/cloudinary/sermons` - Sermon media management
+- `/api/cloudinary/gallery-folders` - Gallery folder structure
+- `/api/cloudinary/test` - Cloudinary connection test
+- `/api/cloudinary/debug` - Debug Cloudinary setup
+- `/api/cloudinary/debug-structure` - Debug folder structure
+- `/api/upload` - File upload handler
+- `/api/media-proxy` - Media proxy for external content
+
+✅ **YouTube Integration APIs**
+- `/api/youtube/videos` - Fetch YouTube videos
+- `/api/youtube/playlists` - Fetch YouTube playlists
+- `/api/youtube/channel` - Channel information
+- `/api/youtube/church-content` - Church-specific content
+- `/api/youtube/test-connection` - Test YouTube API
+
+✅ **Facebook Integration APIs**
+- `/api/facebook/videos` - Fetch Facebook group videos
+
+✅ **Payment APIs**
+- `/api/payments/initialize` - Initialize Paystack payment
+- `/api/payments/verify` - Verify payment status
+
+✅ **User APIs**
+- `/api/profile/update` - Update user profile
+
+✅ **Notification APIs**
+- `/api/notifications/stream` - Real-time notification stream
+- `/api/notifications/test` - Test notifications
+
+✅ **Utility APIs**
+- `/api/test-db` - Database connection test
+
+#### **Database Schema (Complete)**
+- ✅ Users table with roles and ministry information
+- ✅ Prayer requests with categories and status tracking
+- ✅ Prayer responses tracking
+- ✅ Events with registration and recurring patterns
+- ✅ Event registrations tracking
+- ✅ Announcements with priority and expiration
+- ✅ Blog posts with SEO metadata
+- ✅ Blog comments (database ready, UI pending)
+- ✅ Password reset tokens with security tracking
+- ✅ Security audit logs
+- ✅ NextAuth adapter tables (accounts, sessions, verification tokens)
+
+#### **UI Components (47+ Components)**
+- ✅ All shadcn/ui components customized
+- ✅ Custom media player (audio/video)
+- ✅ YouTube media player integration
+- ✅ Mini player for background playback
+- ✅ Enhanced media player with playlist
+- ✅ Payment form with Paystack
+- ✅ Announcements component
+- ✅ Events component with registration
+- ✅ Blog component with filtering
+- ✅ Prayer request form and dashboard
+- ✅ Live notifications
+- ✅ Spiritual quotes carousel
+- ✅ Newsletter signup (UI only)
+- ✅ Facebook videos integration
+- ✅ YouTube integration
+- ✅ Live streaming interface
+- ✅ FAQ component
+- ✅ Image with fallback
+- ✅ Animated sections with scroll effects
+- ✅ Smooth navigation
+- ✅ Page transitions
+- ✅ Scroll progress indicator
+
+#### **Security Features**
+- ✅ NextAuth.js authentication
+- ✅ Role-based access control (admin, member, visitor)
+- ✅ bcrypt password hashing (10 salt rounds)
+- ✅ Zod schema validation on all forms
+- ✅ Security audit logging with IP tracking
+- ✅ Password reset with expiring tokens
+- ✅ Admin-initiated password resets
+- ✅ User agent and IP address logging
+- ✅ CSRF protection (Next.js built-in)
+- ✅ SQL injection prevention (Drizzle ORM parameterized queries)
+
+
+---
+
+### ❌ **MISSING OR NOT IMPLEMENTED**
+
+#### **Critical Setup Tasks**
+- ❌ **Database Migrations** - No files in `/drizzle` folder yet
+    - Run: `bun run db:generate` to create migrations
+    - Run: `bun run db:push` (dev) or `bun run db:migrate` (prod)
+
+- ❌ **Environment Variables** - No `.env.local` file
+    - Copy `.env.example` to `.env.local`
+    - Fill in actual credentials
+
+#### **Missing API Endpoints**
+- ❌ `/api/newsletter/subscribe` - Newsletter subscription
+- ❌ `/api/newsletter/unsubscribe` - Newsletter unsubscribe
+- ❌ `/api/contact` - Contact form submission with email
+- ❌ `/api/blog/[id]/comments` - Blog comment CRUD
+- ❌ `/api/admin/newsletter` - Newsletter campaign management
+- ❌ `/api/admin/comments` - Comment moderation
+
+#### **Missing Admin Features**
+- ❌ **Email Campaign System**
+    - Bulk email sending
+    - Email templates
+    - Campaign scheduling
+
+- ❌ **Newsletter Management**
+    - Subscriber list management
+    - Newsletter composition
+    - Send history
+
+- ❌ **Blog Comment Moderation**
+    - Approve/reject comments
+    - Spam filtering
+    - Bulk actions
+
+- ❌ **Advanced Analytics**
+    - Detailed charts/graphs
+    - Custom date ranges
+    - Export functionality
+
+- ❌ **File Manager**
+    - Browse uploaded files
+    - Delete/organize media
+    - Storage usage stats
+
+- ❌ **Backup & Restore**
+    - Database backups
+    - Data export/import
+
+#### **Missing Member Features**
+- ❌ **Small Group Management**
+- ❌ **Volunteer Signup System**
+- ❌ **Member-to-Member Messaging**
+- ❌ **Event QR Check-in**
+- ❌ **Detailed Donation History**
+- ❌ **Tax Receipt Generation**
+- ❌ **Member Directory Privacy Controls**
+- ❌ **Personal Prayer Journal**
+
+#### **Missing Public Features**
+- ❌ **Multi-language Support** (i18n)
+- ❌ **Global Search Functionality**
+- ❌ **Podcast RSS Feed**
+- ❌ **SMS Notifications**
+- ❌ **Print-friendly Stylesheets**
+- ❌ **Advanced Sermon Filtering** (by speaker, series, date)
+- ❌ **Sermon Notes/Study Guides**
+- ❌ **Social Media Auto-posting**
+
+#### **Testing & Quality**
+- ❌ **Unit Tests** - No test files
+- ❌ **Integration Tests** - No API tests
+- ❌ **E2E Tests** - No Playwright/Cypress tests
+- ❌ **Performance Tests**
+- ❌ **Security Audits**
+
+#### **DevOps & Monitoring**
+- ❌ **CI/CD Pipeline**
+- ❌ **Error Tracking** (Sentry)
+- ❌ **Performance Monitoring**
+- ❌ **Uptime Monitoring**
+- ❌ **Automated Backups**
+- ❌ **Load Testing**
 
 ---
 
@@ -170,82 +421,332 @@ tpwbm-next/
 ## 🔧 Installation & Setup
 
 ### Prerequisites
-- Node.js 18+ or Bun
-- PostgreSQL database (Neon recommended)
-- Cloudinary account
-- YouTube Data API key
-- Paystack account (for payments)
+- **Node.js 18+** or **Bun** (recommended - faster)
+- **PostgreSQL database** (Neon recommended for serverless)
+- **Git** for version control
 
-### Environment Variables
-Create a `.env.local` file with the following variables:
+### Optional Services (Enhance Functionality)
+- **Cloudinary account** (free tier available) - for media storage
+- **YouTube Data API key** (free) - for video content
+- **Paystack account** (Nigerian payments) - for donations
+- **Resend account** (free tier) - for email notifications
+- **Plausible Analytics** (optional) - for website analytics
+
+---
+
+### Step 1: Clone and Install
 
 ```bash
-# Database
-DATABASE_URL="postgresql://..."
-DIRECT_URL="postgresql://..."
+# Clone the repository
+git clone <your-repository-url>
+cd tpwbm-next
 
-# Authentication
-NEXTAUTH_SECRET="your-secret-key"
+# Install dependencies with Bun (recommended)
+bun install
+
+# OR with npm
+npm install
+```
+
+---
+
+### Step 2: Environment Configuration
+
+#### 2.1 Copy Environment Template
+```bash
+cp .env.example .env.local
+```
+
+#### 2.2 Configure Required Variables
+
+Open `.env.local` and set these **REQUIRED** variables:
+
+```bash
+# =============================================================================
+# REQUIRED - Application won't work without these
+# =============================================================================
+
+# Database (Get from Neon.tech - free tier available)
+DATABASE_URL="postgresql://username:password@host/database"
+DIRECT_URL="postgresql://username:password@host/database"
+
+# Authentication Secret (Generate: openssl rand -base64 32)
+NEXTAUTH_SECRET="<your-generated-secret-here>"
 NEXTAUTH_URL="http://localhost:3000"
+```
 
-# Cloudinary
+**How to get a Database URL (Neon):**
+1. Go to [neon.tech](https://neon.tech)
+2. Sign up for free account
+3. Create a new project
+4. Copy the connection string
+5. Use the same URL for both `DATABASE_URL` and `DIRECT_URL`
+
+**Generate NEXTAUTH_SECRET:**
+```bash
+# On Mac/Linux
+openssl rand -base64 32
+
+# On Windows (PowerShell)
+[Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Minimum 0 -Maximum 256 }))
+```
+
+#### 2.3 Configure Optional Services
+
+Add these for enhanced functionality:
+
+```bash
+# =============================================================================
+# OPTIONAL - App works without these, but features are limited
+# =============================================================================
+
+# Cloudinary (for gallery and media) - Get from cloudinary.com
 CLOUDINARY_CLOUD_NAME="your-cloud-name"
 CLOUDINARY_API_KEY="your-api-key"
 CLOUDINARY_API_SECRET="your-api-secret"
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your-cloud-name"
 
-# YouTube API
+# YouTube (for sermons) - Get from console.cloud.google.com
 YOUTUBE_API_KEY="your-youtube-api-key"
+NEXT_PUBLIC_YOUTUBE_API_KEY="your-youtube-api-key"
 YOUTUBE_CHANNEL_ID="your-channel-id"
 
-# Paystack
-PAYSTACK_SECRET_KEY="your-paystack-secret"
-NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY="your-paystack-public-key"
+# Paystack (for donations) - Get from paystack.com
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY="pk_test_xxxxx"
+PAYSTACK_SECRET_KEY="sk_test_xxxxx"
 
-# Email
+# Facebook (for videos) - Get from developers.facebook.com
+FACEBOOK_ACCESS_TOKEN="your-access-token"
+FACEBOOK_GROUP_ID="your-group-id"
+
+# Email (for notifications) - Get from resend.com
 RESEND_API_KEY="your-resend-api-key"
+FROM_EMAIL="noreply@yourdomain.com"
 ```
 
-### Installation Steps
+---
 
-1. **Clone the repository**
-   ```bash
-   git clone [repository-url]
-   cd tpwbm-next
-   ```
+### Step 3: Database Setup
 
-2. **Install dependencies**
-   ```bash
-   bun install
-   # or npm install
-   ```
+```bash
+# Generate migration files from schema
+bun run db:generate
 
-3. **Set up the database**
-   ```bash
-   bun run db:generate
-   bun run db:migrate
-   bun run db:seed
-   ```
+# Push schema to database (RECOMMENDED for first-time setup)
+bun run db:push
 
-4. **Start the development server**
-   ```bash
-   bun run dev
-   ```
+# Seed the database with sample data (creates admin and test users)
+bun run db:seed
 
-5. **Open your browser**
-   Navigate to `http://localhost:3000`
+
+--
+
+### Step 4: Start Development Server
+
+```bash
+# Start with Bun (recommended - faster)
+bun run dev
+
+# OR with npm
+npm run dev
+```
+
+The application will be available at: **http://localhost:3000**
+
+---
+
+### Step 5: Verify Installation
+
+Check these to confirm everything works:
+
+#### ✅ Basic Functionality
+1. Visit http://localhost:3000 - Homepage loads
+2. Click "Login" - Login page appears
+3. Login with `admin@tpwbm.org` / `admin123`
+4. Access Admin Dashboard - Should see dashboard
+
+#### ✅ Database Connection
+- Admin Dashboard shows statistics
+- Can view users in Admin → Users
+- Prayer requests page loads
+
+#### 🔍 Troubleshooting
+If you see errors:
+
+**Database connection error:**
+```bash
+# Check your DATABASE_URL is correct
+# Make sure database is running
+# Try: bun run db:push again
+```
+
+**NextAuth error:**
+```bash
+# Make sure NEXTAUTH_SECRET is set
+# Make sure NEXTAUTH_URL matches your localhost
+```
+
+**Build errors:**
+```bash
+# Clear cache and reinstall
+rm -rf .next node_modules
+bun install
+bun run dev
+```
+
+---
+
+### Step 6: Next Steps
+
+Once everything is working:
+
+1. **Change default passwords** in Admin → Users
+2. **Configure optional services** you want to use
+3. **Customize content** (About page, services, etc.)
+4. **Add your church information**
+5. **Upload media** if Cloudinary is configured
+6. **Test payment flow** if Paystack is configured
+
+---
+
+### Development Tools
+
+```bash
+# View database in browser (Drizzle Studio)
+bun run db:studio
+# Opens at http://localhost:4983
+
+# Lint and type-check
+bun run lint
+
+# Format code
+bun run format
+
+# Type-check only
+bunx tsc --noEmit
+```
 
 ---
 
 ## 🗄 Database Schema
 
-The application uses a robust PostgreSQL database with the following key tables:
+The application uses a robust PostgreSQL database with **13 main tables** and comprehensive relationships:
 
-- **users**: User accounts with role-based access
-- **events**: Church events and activities
-- **prayer_requests**: Member prayer requests
-- **blog_posts**: Blog posts and announcements
-- **security_audit_logs**: Security monitoring and logging
-- **password_reset_tokens**: Secure password reset functionality
+### **Core Tables**
+
+#### **users** - User Accounts & Ministry Information
+- Authentication (email, hashed password, email verification)
+- Role-based access (admin, member, visitor)
+- Ministry roles (pastor, elder, deacon, worship leader, etc.)
+- Ministry levels (senior leadership, board member, ministry leader, etc.)
+- Profile data (name, phone, address, birthday, bio, interests)
+- Membership tracking (join date, active status)
+
+#### **events** - Church Events & Activities
+- Event details (title, description, location, dates)
+- Categories (worship, fellowship, youth, outreach, etc.)
+- Registration system with capacity limits
+- Recurring event support (daily, weekly, monthly, yearly)
+- Multiple images support
+- Status tracking (draft, published, cancelled, completed)
+- Contact information for event organizers
+
+#### **event_registrations** - Event Attendance Tracking
+- Links users to events
+- Registration date and status
+- Notes field for special requests
+- Waitlist support
+
+#### **prayer_requests** - Prayer Request Management
+- Request details (title, description)
+- Categories (health, family, work, spiritual, financial, etc.)
+- Priority levels (urgent, high, normal, low)
+- Status tracking (pending, approved, active, answered, expired)
+- Anonymous option available
+- Prayer count tracking
+- Admin notes and follow-ups
+- Answered prayer testimonies
+
+#### **prayer_responses** - Prayer Participation Tracking
+- Links users to prayer requests
+- Tracks who prayed for what
+- Response/testimony recording
+
+#### **announcements** - Church Announcements
+- Title and content
+- Categories (general, event, schedule, ministry, outreach, urgent)
+- Priority levels (high, normal, low)
+- Status (draft, published, expired, archived)
+- Expiration dates
+- Author tracking
+
+#### **blog_posts** - Blog & Testimonies
+- Full blog system with slug-based URLs
+- Categories (sermons, testimonies, ministry updates, etc.)
+- Status (draft, published, scheduled, archived)
+- SEO metadata (meta title, meta description)
+- Featured post support
+- View count tracking
+- Tags system
+- Comment toggle
+- Schedule publishing
+
+#### **blog_comments** - Comment System (Database Ready)
+- Nested comments support (parent/child)
+- Moderation (pending, approved, rejected)
+- Author information (logged-in or guest)
+- IP and user agent tracking for spam prevention
+- Status tracking
+
+### **Security Tables**
+
+#### **password_reset_tokens** - Secure Password Resets
+- Unique token generation
+- Token types (regular reset, admin-initiated reset)
+- Status tracking (active, used, expired, revoked)
+- Expiration timestamps
+- IP address and user agent logging
+- Admin requester tracking for admin-initiated resets
+- Security notes field
+
+#### **security_audit_logs** - Comprehensive Audit Trail
+- All admin actions logged
+- User actions tracked (login, password reset, etc.)
+- Resource tracking (what was changed)
+- IP address and user agent
+- Success/failure tracking
+- Risk level assessment (low, medium, high, critical)
+- Detailed metadata in JSON format
+
+### **NextAuth Tables**
+
+#### **accounts** - OAuth Account Linking
+- Links OAuth providers to users
+- Stores OAuth tokens and metadata
+- Supports Google, Facebook, etc.
+
+#### **sessions** - User Session Management
+- Active session tracking
+- Session token management
+- Expiration handling
+
+#### **verification_tokens** - Email Verification
+- Email verification tokens
+- Password reset tokens (NextAuth)
+
+---
+
+### Database Features
+
+- ✅ **Full Type Safety** - All tables have TypeScript types exported
+- ✅ **Relationships** - Proper foreign keys and cascading deletes
+- ✅ **Enums** - PostgreSQL enums for status, categories, roles
+- ✅ **Timestamps** - Created/updated timestamps on all tables
+- ✅ **UUIDs** - Using UUIDs for all primary keys
+- ✅ **JSON Fields** - JSONB for flexible metadata storage
+- ✅ **Indexes** - Optimized for common queries
+
+**View Full Schema:** `src/lib/db/schema.ts` (400+ lines)
 
 ---
 
@@ -292,14 +793,6 @@ The website is fully responsive and optimized for:
 
 ---
 
-## 🌐 Deployment
-
-The application is configured for deployment on:
-
-- **Netlify** (Primary)
-- **Vercel**
-- **Railway**
-- **Digital Ocean**
 
 ### Deployment Configuration
 
@@ -333,28 +826,94 @@ bun run format
 
 ---
 
-## 📈 Future Enhancements
 
-- [ ] Mobile application with React Native
-- [ ] Advanced analytics dashboard
-- [ ] Live streaming integration
-- [ ] Multi-language support
-- [ ] Advanced member communication tools
-- [ ] Automated email campaigns
-- [ ] Integration with church management systems
+## 🔒 Security Best Practices
+
+### Implemented Security Measures
+
+✅ **Authentication & Authorization**
+- NextAuth.js with session-based authentication
+- Role-based access control (RBAC)
+- Protected API routes with middleware
+- Secure password hashing (bcrypt, 10 rounds)
+
+✅ **Data Protection**
+- SQL injection prevention (parameterized queries)
+- XSS protection (React's built-in escaping)
+- CSRF protection (Next.js built-in)
+- Input validation with Zod schemas
+
+✅ **Audit & Logging**
+- Comprehensive security audit logs
+- IP address tracking
+- User agent tracking
+- Failed login attempt logging
+
+✅ **Password Security**
+- Secure password reset flow
+- Token expiration (24 hours)
+- One-time use tokens
+- Admin-initiated resets with audit trail
 
 ---
 
-## 🤝 Contributing
 
-This project demonstrates enterprise-level development practices including:
+### Common Commands
+```bash
+# Development
+bun run dev              # Start dev server
+bun run build            # Build for production
+bun run start            # Start production server
 
-- **Clean Code Architecture**
-- **Type Safety**
-- **Security Best Practices**
-- **Performance Optimization**
-- **Responsive Design**
-- **Modern Development Tools**
+# Database
+bun run db:generate      # Generate migrations
+bun run db:push          # Push schema (dev)
+bun run db:migrate       # Run migrations (prod)
+bun run db:seed          # Seed data
+bun run db:studio        # Open Drizzle Studio
+
+# Code Quality
+bun run lint             # Lint + type-check
+bun run format           # Format code
+bunx tsc --noEmit        # Type-check only
+```
+
+### Important Files
+- **Database Schema:** `src/lib/db/schema.ts`
+- **Auth Config:** `src/lib/auth.ts`
+- **API Routes:** `src/app/api/*/route.ts`
+- **Environment:** `.env.local` (create from `.env.example`)
+- **Deployment:** `netlify.toml`
+
+### URLs (After Deployment)
+- **Homepage:** `/`
+- **Member Login:** `/members/login`
+- **Admin Dashboard:** `/admin/dashboard`
+- **API Docs:** Check individual `route.ts` files
+
+---
+
+## 📞 Support & Resources
+
+### Getting Help
+- **Code Comments:** Extensive comments throughout codebase
+- **Type Definitions:** Full TypeScript types for autocomplete
+- **Database Schema:** See `src/lib/db/schema.ts`
+- **API Routes:** Check `src/app/api/` for endpoint documentation
+
+### Useful Resources
+- [Next.js Documentation](https://nextjs.org/docs)
+- [NextAuth.js Guide](https://next-auth.js.org/)
+- [Drizzle ORM Docs](https://orm.drizzle.team/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [shadcn/ui Components](https://ui.shadcn.com/)
+
+### External Services Setup
+- [Neon Database](https://neon.tech) - Free PostgreSQL hosting
+- [Cloudinary](https://cloudinary.com) - Free media storage
+- [Paystack](https://paystack.com) - Nigerian payment gateway
+- [Resend](https://resend.com) - Email API
+- [Plausible](https://plausible.io) - Privacy-friendly analytics
 
 ---
 
@@ -364,7 +923,48 @@ For questions about the technical implementation or architecture decisions, plea
 
 ---
 
+## 📊 Project Statistics
+
+- **Total Pages:** 46 public + member + admin pages
+- **API Endpoints:** 38 RESTful endpoints
+- **UI Components:** 47+ custom components
+- **Database Tables:** 13 main tables
+- **Lines of Code:** 15,000+ (estimated)
+- **Technologies:** 25+ modern web technologies
+
+---
+
+## 🤝 Contributing
+
+This project demonstrates enterprise-level development practices:
+
+- **Clean Code Architecture** - Separation of concerns, DRY principles
+- **Type Safety** - Full TypeScript coverage
+- **Security First** - Authentication, authorization, audit logging
+- **Performance** - Optimized rendering, lazy loading
+- **Responsive Design** - Mobile-first approach
+- **Modern Stack** - Latest Next.js, React 19, cutting-edge tools
+
+---
+
+## 📄 License
+
+This project is proprietary software developed for The Prevailing Word Baptist Ministry.
+
+---
+
 <div align="center">
-  <p>Built by OpraTech</p>
-  <p>© 2025 The Prevailing Word Baptist Ministry</p>
+
+### Built by OpraTech
+
+**The Prevailing Word Baptist Ministry**
+*where value is added to life*
+
+---
+
+**Version 1.0.0** | **Last Updated:** October 2025
+© 2025 The Prevailing Word Baptist Ministry. All Rights Reserved.
+
+[🏠 Church Website](#) | [📧 Contact](mailto:prevailingword95@gmail.com) | [🙏 Prayer Requests](#)
+
 </div>
