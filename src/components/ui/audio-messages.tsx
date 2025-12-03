@@ -9,7 +9,9 @@ import { EnhancedMediaPlayer } from "@/components/ui/enhanced-media-player";
 import { useMediaPlayer } from "@/contexts/MediaPlayerContext";
 import type { MediaItem } from "@/contexts/MediaPlayerContext";
 import { sortSermons } from "@/lib/sermon-sorting";
-import { Play, Pause, Download, Search, Calendar, User, Clock, Loader2, Maximize } from "lucide-react";
+import { Play, Pause, Bookmark, BookmarkCheck, Search, Calendar, User, Clock, Loader2, Maximize } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 import Image from "next/image";
 import type { CloudinaryGalleryImage } from "@/lib/cloudinary-client";
 
@@ -57,6 +59,7 @@ interface CloudinaryVideoFile {
 }
 
 export function AudioMessages() {
+  const { data: session } = useSession();
   const [searchTerm, setSearchTerm] = useState("");
   const [cloudinaryAudioImages, setCloudinaryAudioImages] = useState<CloudinaryGalleryImage[]>([]);
   const [cloudinaryVideoFiles, setCloudinaryVideoFiles] = useState<CloudinaryVideoFile[]>([]);
@@ -67,6 +70,7 @@ export function AudioMessages() {
   const [showFullPlayer, setShowFullPlayer] = useState(false);
   const [failedMedia, setFailedMedia] = useState<Set<string>>(new Set());
   const [useProxy, setUseProxy] = useState(false);
+  const [bookmarkedMessages, setBookmarkedMessages] = useState<Record<string, boolean>>({});
 
   // Use global media player context
   const { currentMedia, isPlaying, playMedia, pauseMedia, resumeMedia } = useMediaPlayer();
@@ -296,6 +300,86 @@ export function AudioMessages() {
     isVideo: message.isVideo,
   });
 
+  // Check bookmarks for all messages
+  useEffect(() => {
+    if (session?.user && allMessages.length > 0) {
+      const messageIds = allMessages.map(m => m.id).join(',');
+      fetch(`/api/bookmarks/check?resourceIds=${messageIds}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setBookmarkedMessages(data.bookmarked);
+          }
+        })
+        .catch(error => console.error('Error checking bookmarks:', error));
+    }
+  }, [session, allMessages.length]);
+
+  // Toggle bookmark
+  const handleBookmark = async (message: AudioMessage) => {
+    if (!session?.user) {
+      toast("Please login to save audio messages");
+      return;
+    }
+
+    const isBookmarked = bookmarkedMessages[message.id];
+
+    if (isBookmarked) {
+      // Remove bookmark
+      try {
+        const response = await fetch(
+          `/api/bookmarks?resourceId=${message.id}&resourceType=audio_message`,
+          { method: 'DELETE' }
+        );
+
+        if (response.ok) {
+          setBookmarkedMessages(prev => ({ ...prev, [message.id]: false }));
+          toast("Audio message removed from saved");
+        } else {
+          toast("Failed to remove bookmark");
+        }
+      } catch (error) {
+        console.error('Error removing bookmark:', error);
+        toast("Failed to remove bookmark");
+      }
+    } else {
+      // Add bookmark
+      try {
+        const response = await fetch('/api/bookmarks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            resourceType: 'audio_message',
+            resourceId: message.id,
+            resourceTitle: message.title,
+            resourceUrl: message.audioUrl || message.youtubeUrl,
+            resourceThumbnail: message.imageUrl,
+            resourceMetadata: {
+              speaker: message.preacher,
+              date: message.date,
+              duration: message.duration,
+              description: message.description,
+              tags: message.tags,
+              series: message.series
+            }
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok || response.status === 409) {
+          setBookmarkedMessages(prev => ({ ...prev, [message.id]: true }));
+          toast("Audio message saved successfully");
+        } else {
+          toast(data.error || "Failed to save audio message");
+        }
+      } catch (error) {
+        console.error('Error saving bookmark:', error);
+        toast("Failed to save audio message");
+      }
+    }
+  };
+
   const handlePlay = (message: AudioMessage) => {
     // For YouTube videos, always open in full player modal
     if (message.id.startsWith('youtube-') || message.isVideo) {
@@ -519,17 +603,14 @@ export function AudioMessages() {
                       <Button
                           variant="outline"
                           size="sm"
-                          disabled={!audioUrl}
-                          onClick={() => {
-                            if (audioUrl) {
-                              const link = document.createElement('a');
-                              link.href = audioUrl;
-                              link.download = message.title;
-                              link.click();
-                            }
-                          }}
+                          className={bookmarkedMessages[message.id] ? 'bg-amber-50 text-amber-600 hover:bg-amber-100 border-amber-200' : ''}
+                          onClick={() => handleBookmark(message)}
                       >
-                        <Download className="h-4 w-4" />
+                        {bookmarkedMessages[message.id] ? (
+                          <BookmarkCheck className="h-4 w-4 fill-current" />
+                        ) : (
+                          <Bookmark className="h-4 w-4" />
+                        )}
                       </Button>
                     </div>
                   </CardContent>

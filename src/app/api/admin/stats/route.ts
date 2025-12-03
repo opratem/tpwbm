@@ -1,170 +1,106 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { users, prayerRequests, events, announcements } from "@/lib/db/schema";
-import { eq, and, gte, count, sql } from "drizzle-orm";
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { db } from '@/lib/db';
+import { users, events, prayerRequests, blogPosts, announcements } from '@/lib/db/schema';
+import { eq, gte, and, sql } from 'drizzle-orm';
 
-// GET /api/admin/stats - Get admin dashboard statistics
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 401 }
-      );
+    if (!session?.user || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log("[ADMIN-STATS] Fetching admin dashboard statistics...");
+    // Get total users count
+    const totalUsers = await db.select({ count: sql<number>`count(*)` }).from(users);
 
-    // Get current date for filtering
+    // Get active users count
+    const activeUsers = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(users)
+      .where(eq(users.isActive, true));
+
+    // Get total events count
+    const totalEvents = await db.select({ count: sql<number>`count(*)` }).from(events);
+
+    // Get upcoming events count
     const now = new Date();
-    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const firstDayOfLastMonth = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
+    const upcomingEvents = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(events)
+      .where(gte(events.startDate, now));
 
-    try {
-      console.log("[ADMIN-STATS] Querying database for statistics...");
+    // Get total prayer requests count
+    const totalPrayerRequests = await db.select({ count: sql<number>`count(*)` }).from(prayerRequests);
 
-      // Get total members count
-      console.log("[ADMIN-STATS] Fetching total members...");
-      const totalMembersResult = await db
-        .select({ count: count() })
-        .from(users)
-        .where(eq(users.isActive, true));
+    // Get PENDING prayer requests count (key for admin notification)
+    const pendingPrayerRequests = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(prayerRequests)
+      .where(eq(prayerRequests.status, 'pending'));
 
-      const totalMembers = totalMembersResult[0]?.count || 0;
-      console.log(`[ADMIN-STATS] Total members: ${totalMembers}`);
+    // Get active prayer requests count
+    const activePrayerRequests = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(prayerRequests)
+      .where(eq(prayerRequests.status, 'active'));
 
-      // Get new members this month
-      console.log("[ADMIN-STATS] Fetching new members this month...");
-      const newMembersResult = await db
-        .select({ count: count() })
-        .from(users)
-        .where(
-          and(
-            eq(users.isActive, true),
-            gte(users.membershipDate, firstDayOfMonth)
-          )
-        );
+    // Get total blog posts count
+    const totalBlogPosts = await db.select({ count: sql<number>`count(*)` }).from(blogPosts);
 
-      const newMembersThisMonth = newMembersResult[0]?.count || 0;
-      console.log(`[ADMIN-STATS] New members this month: ${newMembersThisMonth}`);
+    // Get published blog posts count
+    const publishedBlogPosts = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(blogPosts)
+      .where(eq(blogPosts.status, 'published'));
 
-      // Get active events (published and upcoming)
-      console.log("[ADMIN-STATS] Fetching active events...");
-      const activeEventsResult = await db
-        .select({ count: count() })
-        .from(events)
-        .where(
-          and(
-            eq(events.status, 'published'),
-            gte(events.startDate, now)
-          )
-        );
+    // Get total announcements count
+    const totalAnnouncements = await db.select({ count: sql<number>`count(*)` }).from(announcements);
 
-      const activeEvents = activeEventsResult[0]?.count || 0;
-      console.log(`[ADMIN-STATS] Active events: ${activeEvents}`);
+    // Get active announcements count
+    const activeAnnouncements = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(announcements)
+      .where(eq(announcements.status, 'published'));
 
-      // Get pending prayer requests
-      console.log("[ADMIN-STATS] Fetching pending prayer requests...");
-      const pendingPrayerRequestsResult = await db
-        .select({ count: count() })
-        .from(prayerRequests)
-        .where(eq(prayerRequests.status, 'pending'));
+    // Get recent pending prayer requests (last 10)
+    const recentPendingRequests = await db
+      .select()
+      .from(prayerRequests)
+      .where(eq(prayerRequests.status, 'pending'))
+      .orderBy(sql`${prayerRequests.createdAt} DESC`)
+      .limit(10);
 
-      const pendingPrayerRequests = pendingPrayerRequestsResult[0]?.count || 0;
-      console.log(`[ADMIN-STATS] Pending prayer requests: ${pendingPrayerRequests}`);
-
-      // Get total prayer requests
-      console.log("[ADMIN-STATS] Fetching total prayer requests...");
-      const totalPrayerRequestsResult = await db
-        .select({ count: count() })
-        .from(prayerRequests);
-
-      const totalPrayerRequests = totalPrayerRequestsResult[0]?.count || 0;
-      console.log(`[ADMIN-STATS] Total prayer requests: ${totalPrayerRequests}`);
-
-      // Get active prayer requests (for display)
-      console.log("[ADMIN-STATS] Fetching active prayer requests...");
-      const activePrayerRequestsResult = await db
-        .select({ count: count() })
-        .from(prayerRequests)
-        .where(eq(prayerRequests.status, 'active'));
-
-      const activePrayerRequests = activePrayerRequestsResult[0]?.count || 0;
-      console.log(`[ADMIN-STATS] Active prayer requests: ${activePrayerRequests}`);
-
-      // Get total announcements
-      console.log("[ADMIN-STATS] Fetching total announcements...");
-      const totalAnnouncementsResult = await db
-        .select({ count: count() })
-        .from(announcements)
-        .where(eq(announcements.status, 'published'));
-
-      const totalAnnouncements = totalAnnouncementsResult[0]?.count || 0;
-      console.log(`[ADMIN-STATS] Total announcements: ${totalAnnouncements}`);
-
-      // Calculate total prayer count
-      console.log("[ADMIN-STATS] Calculating total prayer count...");
-      const totalPrayerCount = await db
-        .select({
-          total: sql<number>`COALESCE(SUM(${prayerRequests.prayerCount}), 0)`
-        })
-        .from(prayerRequests);
-
-      const totalPrayers = totalPrayerCount[0]?.total || 0;
-      console.log(`[ADMIN-STATS] Total prayers: ${totalPrayers}`);
-
-      // Calculate engagement metrics based on real data
-      const memberAttendance = Math.floor(totalMembers * 0.75); // Assume 75% attendance
-      const onlineViewers = Math.floor(totalMembers * 0.25); // Assume 25% online
-
-      // Use a base number with some variation for website views (implement proper analytics later)
-      const websiteViews = 150 + Math.floor(Math.random() * 50); // Base 150 with variation
-
-      const stats = {
-        totalMembers,
-        newMembersThisMonth,
-        activeEvents,
-        prayerRequests: pendingPrayerRequests + activePrayerRequests,
-        pendingPrayerRequests,
-        activePrayerRequests,
-        totalPrayerRequests,
-        totalAnnouncements,
-        totalPrayers,
-        websiteViews,
-        memberAttendance,
-        onlineViewers,
-      };
-
-      console.log("[ADMIN-STATS] Successfully compiled statistics:", stats);
-      return NextResponse.json(stats);
-
-    } catch (dbError) {
-      console.error("[ADMIN-STATS] Database error:", dbError);
-      console.error("[ADMIN-STATS] Error details:", {
-        message: dbError instanceof Error ? dbError.message : 'Unknown error',
-        stack: dbError instanceof Error ? dbError.stack : 'No stack trace'
-      });
-
-      // Return error with database status instead of fallback mock data
-      return NextResponse.json(
-        {
-          error: "Database connection failed",
-          details: "Unable to fetch admin statistics from database",
-          fallback: false
-        },
-        { status: 503 }
-      );
-    }
-
+    return NextResponse.json({
+      users: {
+        total: Number(totalUsers[0]?.count || 0),
+        active: Number(activeUsers[0]?.count || 0),
+      },
+      events: {
+        total: Number(totalEvents[0]?.count || 0),
+        upcoming: Number(upcomingEvents[0]?.count || 0),
+      },
+      prayerRequests: {
+        total: Number(totalPrayerRequests[0]?.count || 0),
+        pending: Number(pendingPrayerRequests[0]?.count || 0),
+        active: Number(activePrayerRequests[0]?.count || 0),
+      },
+      blog: {
+        total: Number(totalBlogPosts[0]?.count || 0),
+        published: Number(publishedBlogPosts[0]?.count || 0),
+      },
+      announcements: {
+        total: Number(totalAnnouncements[0]?.count || 0),
+        active: Number(activeAnnouncements[0]?.count || 0),
+      },
+      recentPendingRequests,
+    });
   } catch (error) {
-    console.error("[ADMIN-STATS] API error:", error);
+    console.error('Error fetching admin stats:', error);
     return NextResponse.json(
-      { error: "Failed to fetch admin statistics" },
+      { error: 'Failed to fetch statistics' },
       { status: 500 }
     );
   }

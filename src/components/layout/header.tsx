@@ -226,7 +226,7 @@ export function Header() {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="flex items-center gap-2 px-2 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 max-w-[140px]">
                         <Avatar className="h-8 w-8 ring-2 ring-white/30 flex-shrink-0">
-                          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white">
+                          <div className="w-full h-full bg-gradient-to-br from-church-primary via-church-primary-light to-church-accent flex items-center justify-center text-sm font-bold text-white">
                             {getUserInitials(session.user.name)}
                           </div>
                         </Avatar>
@@ -358,7 +358,7 @@ export function Header() {
                         <div className="space-y-4">
                           <div className="flex items-center gap-4 pb-4">
                             <Avatar className="h-12 w-12 ring-2 ring-white/30">
-                              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-lg font-bold text-white">
+                              <div className="w-full h-full bg-gradient-to-br from-church-primary via-church-primary-light to-church-accent flex items-center justify-center text-lg font-bold text-white">
                                 {getUserInitials(session.user.name)}
                               </div>
                             </Avatar>

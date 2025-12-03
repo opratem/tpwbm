@@ -352,7 +352,7 @@ export default function AdminEventsPage() {
       };
 
       const response = await fetch(`/api/events/${editingEvent.id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -402,7 +402,7 @@ export default function AdminEventsPage() {
 
     try {
       const response = await fetch(`/api/events/${eventId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -760,7 +760,7 @@ export default function AdminEventsPage() {
               )}
 
               <div className="text-center space-y-4">
-                <div className={`mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center transition-transform duration-300 ${isDragging ? 'scale-110' : ''}`}>
+                <div className={`mx-auto w-16 h-16 bg-gradient-to-br from-church-primary via-church-primary-light to-church-accent rounded-full flex items-center justify-center transition-transform duration-300 ${isDragging ? 'scale-110' : ''}`}>
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>

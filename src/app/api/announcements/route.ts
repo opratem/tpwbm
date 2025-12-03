@@ -157,8 +157,7 @@ export async function GET(request: NextRequest) {
         errorString.includes('ENOTFOUND') ||
         errorString.includes('getaddrinfo') ||
         error?.cause?.code === 'ENOTFOUND' ||
-        error?.sourceError?.code === 'ENOTFOUND' ||
-        true; // Temporarily always use fallback data
+        error?.sourceError?.code === 'ENOTFOUND';
 
     if (isConnectionError) {
       console.log("Database unavailable, returning mock announcements data");

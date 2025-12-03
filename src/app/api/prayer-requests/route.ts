@@ -217,7 +217,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create new prayer request - auto-activate instead of pending
+    // Create new prayer request - requires admin approval
     const [newRequest] = await db.insert(prayerRequests).values({
       title,
       description,
@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
       requestedById,
       requestedByEmail,
       isAnonymous,
-      status: "active", // Auto-activate all prayer requests (no approval needed)
+      status: "pending", // Requires admin approval before becoming active
       isPublic,
       tags,
       prayerCount: 0,
@@ -252,7 +252,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       ...newRequest,
-      message: "Your prayer request has been submitted and is now active. Our church family will be praying for you."
+      message: "Your prayer request has been submitted and is pending approval. You will be notified once it's reviewed by our church admin."
     }, { status: 201 });
 
   } catch (error) {

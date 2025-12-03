@@ -238,6 +238,127 @@ export async function PUT(
   }
 }
 
+// PATCH /api/events/[id] - Partially update event
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+      return NextResponse.json(
+        { error: "Invalid event ID format" },
+        { status: 400 }
+      );
+    }
+
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized - Admin access required" },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+
+    // Get existing event
+    const [existingEvent] = await db
+      .select({
+        id: events.id,
+        title: events.title,
+        description: events.description,
+        category: events.category,
+        startDate: events.startDate,
+        endDate: events.endDate,
+        location: events.location,
+        address: events.address,
+        organizer: events.organizer,
+        organizerId: events.organizerId,
+        capacity: events.capacity,
+        registeredCount: events.registeredCount,
+        requiresRegistration: events.requiresRegistration,
+        isRecurring: events.isRecurring,
+        recurringPattern: events.recurringPattern,
+        recurringDays: events.recurringDays,
+        recurringEndDate: events.recurringEndDate,
+        status: events.status,
+        imageUrl: events.imageUrl,
+        imageUrls: events.imageUrls,
+        contactEmail: events.contactEmail,
+        contactPhone: events.contactPhone,
+        tags: events.tags,
+        price: events.price,
+        registrationDeadline: events.registrationDeadline,
+        createdAt: events.createdAt,
+        updatedAt: events.updatedAt,
+      })
+      .from(events)
+      .where(eq(events.id, id));
+
+    if (!existingEvent) {
+      return NextResponse.json(
+        { error: "Event not found" },
+        { status: 404 }
+      );
+    }
+
+    // Build update data (only fields provided in the request)
+    const updateData: any = {
+      updatedAt: new Date(),
+    };
+
+    // Handle date fields conversion
+    const {
+      title, description, category, startDate, endDate, location, address,
+      organizer, capacity, requiresRegistration, isRecurring, recurringPattern,
+      recurringDays, recurringEndDate, status, imageUrl, imageUrls, contactEmail, contactPhone, tags, price, registrationDeadline
+    } = body;
+
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (category !== undefined) updateData.category = category;
+    if (startDate !== undefined) updateData.startDate = new Date(startDate);
+    if (endDate !== undefined) updateData.endDate = new Date(endDate);
+    if (location !== undefined) updateData.location = location;
+    if (address !== undefined) updateData.address = address;
+    if (organizer !== undefined) updateData.organizer = organizer || session.user.name || 'Unknown';
+    if (capacity !== undefined) updateData.capacity = capacity;
+    if (requiresRegistration !== undefined) updateData.requiresRegistration = requiresRegistration;
+    if (isRecurring !== undefined) updateData.isRecurring = isRecurring;
+    if (recurringPattern !== undefined) updateData.recurringPattern = recurringPattern;
+    if (recurringDays !== undefined) updateData.recurringDays = recurringDays;
+    if (recurringEndDate !== undefined) updateData.recurringEndDate = recurringEndDate ? new Date(recurringEndDate) : null;
+    if (status !== undefined) updateData.status = status;
+    if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
+    if (imageUrls !== undefined) updateData.imageUrls = imageUrls;
+    if (contactEmail !== undefined) updateData.contactEmail = contactEmail;
+    if (contactPhone !== undefined) updateData.contactPhone = contactPhone;
+    if (tags !== undefined) updateData.tags = tags;
+    if (price !== undefined) updateData.price = price;
+    if (registrationDeadline !== undefined) updateData.registrationDeadline = registrationDeadline ? new Date(registrationDeadline) : null;
+
+    // Update the event
+    const [updatedEvent] = await db
+      .update(events)
+      .set(updateData)
+      .where(eq(events.id, id))
+      .returning();
+
+    return NextResponse.json(updatedEvent);
+
+  } catch (error) {
+    console.error("Error updating event:", error);
+    return NextResponse.json(
+      { error: "Failed to update event" },
+      { status: 500 }
+    );
+  }
+}
+
 // DELETE /api/events/[id] - Delete event
 export async function DELETE(
   request: NextRequest,

@@ -208,9 +208,7 @@ export function MediaPlayerProvider({ children }: MediaPlayerProviderProps) {
       <MediaPlayerContext.Provider value={value}>
         {children}
         {/* Global audio element */}
-        <audio ref={audioRef} preload="metadata">
-          <track kind="captions" src="" label="Audio captions" />
-        </audio>
+        <audio ref={audioRef} preload="metadata" />
       </MediaPlayerContext.Provider>
   );
 }

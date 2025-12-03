@@ -164,6 +164,15 @@ export const tokenStatusEnum = pgEnum('token_status', [
   'revoked'
 ]);
 
+// Resource Type Enum for Bookmarks
+export const resourceTypeEnum = pgEnum('resource_type', [
+  'sermon',
+  'audio_message',
+  'video',
+  'blog_post',
+  'other'
+]);
+
 // Security Audit Logs table
 export const securityAuditLogs = pgTable('security_audit_logs', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -183,6 +192,7 @@ export const securityAuditLogs = pgTable('security_audit_logs', {
     errorMessage?: string;
     requestId?: string;
   }>().default({}),
+
   riskLevel: varchar('risk_level', { length: 20 }).default('low'), // 'low', 'medium', 'high', 'critical'
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });
@@ -391,6 +401,26 @@ export const verificationTokens = pgTable('verification_tokens', {
   expires: timestamp('expires', { mode: 'date' }).notNull(),
 });
 
+// Bookmarks/Saved Resources table
+export const bookmarks = pgTable('bookmarks', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  resourceType: resourceTypeEnum('resource_type').notNull(),
+  resourceId: varchar('resource_id', { length: 255 }).notNull(),
+  resourceTitle: varchar('resource_title', { length: 500 }).notNull(),
+  resourceUrl: text('resource_url'),
+  resourceThumbnail: text('resource_thumbnail'),
+  resourceMetadata: jsonb('resource_metadata').$type<{
+    speaker?: string;
+    date?: string;
+    duration?: string;
+    description?: string;
+    tags?: string[];
+    series?: string;
+  }>().default({}),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
 // Type exports for TypeScript
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -415,3 +445,6 @@ export type NewBlogPost = typeof blogPosts.$inferInsert;
 
 export type BlogComment = typeof blogComments.$inferSelect;
 export type NewBlogComment = typeof blogComments.$inferInsert;
+
+export type Bookmark = typeof bookmarks.$inferSelect;
+export type NewBookmark = typeof bookmarks.$inferInsert;

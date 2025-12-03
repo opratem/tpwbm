@@ -364,9 +364,9 @@ export default function Home() {
 
               <div className="flex justify-center mt-12 sm:mt-16 animate-fade-in-up-delay-2">
                 <Button
-                    variant="outline"
+                    variant="default"
                     size="lg"
-                    className="church-button-primary border-2 border-church-primary text-church-primary hover:bg-church-primary hover:text-white mobile-button rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 font-semibold"
+                    className="church-button-primary bg-church-primary text-white hover:bg-church-primary/90 mobile-button rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 font-semibold"
                     asChild
                 >
                   <Link href="/announcements">View All Announcements</Link>
@@ -407,9 +407,9 @@ export default function Home() {
 
               <div className="flex justify-center mt-12 sm:mt-16 animate-fade-in-up-delay-2">
                 <Button
-                    variant="outline"
+                    variant="default"
                     size="lg"
-                    className="church-button-primary border-2 border-church-primary text-church-primary hover:bg-church-primary hover:text-white mobile-button rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 font-semibold"
+                    className="church-button-primary bg-church-primary text-white hover:bg-church-primary/90 mobile-button rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 font-semibold"
                     asChild
                 >
                   <Link href="/events">View All Events</Link>

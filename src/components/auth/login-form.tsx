@@ -225,7 +225,7 @@ export function LoginForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={isLoading || socialLoading !== null}
-                  className="pl-10 transition-all duration-200 focus:ring-2 focus:ring-accent bg-white/80 dark:bg-gray-900/80 border-gray-200/50 dark:border-gray-600/50"
+                  className="!pl-12 pr-10 transition-all duration-200 focus:ring-2 focus:ring-accent bg-white/80 dark:bg-gray-900/80 border-gray-200/50 dark:border-gray-600/50"
                 />
               </div>
             </div>
@@ -252,7 +252,7 @@ export function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={isLoading || socialLoading !== null}
-                  className="pl-10 pr-10 transition-all duration-200 focus:ring-2 focus:ring-accent bg-white/80 dark:bg-gray-900/80 border-gray-200/50 dark:border-gray-600/50"
+                  className="!pl-12 pr-10 transition-all duration-200 focus:ring-2 focus:ring-accent bg-white/80 dark:bg-gray-900/80 border-gray-200/50 dark:border-gray-600/50"
                 />
                 <Button
                   type="button"

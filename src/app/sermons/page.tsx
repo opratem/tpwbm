@@ -24,10 +24,11 @@ import { images } from "@/lib/images";
 import { sortSermons, groupSermonsBySeries, extractPartNumber, extractSeriesName } from "@/lib/sermon-sorting";
 import {
   BookOpen,
+  Bookmark,
+  BookmarkCheck,
   Calendar,
   Clock,
   Copy,
-  Download,
   Eye,
   Facebook,
   Filter,
@@ -49,6 +50,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 const sermonData = [
   {
@@ -210,6 +213,7 @@ const seriesList = [
 ];
 
 export default function SermonsPage() {
+  const { data: session } = useSession();
   const [selectedSeries, setSelectedSeries] = useState("All Series");
   const [searchTerm, setSearchTerm] = useState("");
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
@@ -222,6 +226,7 @@ export default function SermonsPage() {
   );
   const [youtubeSermons, setYoutubeSermons] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [bookmarkedSermons, setBookmarkedSermons] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const loadSermons = async () => {
@@ -332,8 +337,7 @@ export default function SermonsPage() {
         break;
       case "copy":
         navigator.clipboard.writeText(`${sermonTitle} ${sermonUrl}`);
-        // You could add a toast notification here
-        alert("Link copied to clipboard!");
+        toast("Link copied to clipboard!");
         return;
       default:
         return;
@@ -341,6 +345,86 @@ export default function SermonsPage() {
 
     if (shareUrl) {
       window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+  };
+
+  // Check bookmarks for all sermons
+  useEffect(() => {
+    if (session?.user && allSermons.length > 0) {
+      const sermonIds = allSermons.map(s => s.id).join(',');
+      fetch(`/api/bookmarks/check?resourceIds=${sermonIds}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setBookmarkedSermons(data.bookmarked);
+          }
+        })
+        .catch(error => console.error('Error checking bookmarks:', error));
+    }
+  }, [session, allSermons.length]);
+
+  // Toggle bookmark
+  const handleBookmark = async (sermon: any) => {
+    if (!session?.user) {
+      toast("Please login to save sermons");
+      return;
+    }
+
+    const isBookmarked = bookmarkedSermons[sermon.id];
+
+    if (isBookmarked) {
+      // Remove bookmark
+      try {
+        const response = await fetch(
+          `/api/bookmarks?resourceId=${sermon.id}&resourceType=sermon`,
+          { method: 'DELETE' }
+        );
+
+        if (response.ok) {
+          setBookmarkedSermons(prev => ({ ...prev, [sermon.id]: false }));
+          toast("Sermon removed from saved");
+        } else {
+          toast("Failed to remove bookmark");
+        }
+      } catch (error) {
+        console.error('Error removing bookmark:', error);
+        toast("Failed to remove bookmark");
+      }
+    } else {
+      // Add bookmark
+      try {
+        const response = await fetch('/api/bookmarks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            resourceType: 'sermon',
+            resourceId: sermon.id,
+            resourceTitle: sermon.title,
+            resourceUrl: sermon.videoUrl,
+            resourceThumbnail: sermon.thumbnail,
+            resourceMetadata: {
+              speaker: sermon.speaker,
+              date: sermon.date,
+              duration: sermon.duration,
+              description: sermon.description,
+              tags: sermon.tags,
+              series: sermon.series
+            }
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok || response.status === 409) {
+          setBookmarkedSermons(prev => ({ ...prev, [sermon.id]: true }));
+          toast("Sermon saved successfully");
+        } else {
+          toast(data.error || "Failed to save sermon");
+        }
+      } catch (error) {
+        console.error('Error saving bookmark:', error);
+        toast("Failed to save sermon");
+      }
     }
   };
 
@@ -661,9 +745,22 @@ export default function SermonsPage() {
                         </Button>
                       </div>
                       <div className="flex justify-center gap-2 w-full">
-                        <Button variant="ghost" size="sm" className="text-xs px-3 hover:bg-green-50 hover:text-green-600 transition-colors duration-200">
-                          <Download className="h-3 w-3 mr-1" />
-                          Download
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={`text-xs px-3 transition-colors duration-200 ${
+                            bookmarkedSermons[sermon.id]
+                              ? 'bg-amber-50 text-amber-600 hover:bg-amber-100'
+                              : 'hover:bg-amber-50 hover:text-amber-600'
+                          }`}
+                          onClick={() => handleBookmark(sermon)}
+                        >
+                          {bookmarkedSermons[sermon.id] ? (
+                            <BookmarkCheck className="h-3 w-3 mr-1 fill-current" />
+                          ) : (
+                            <Bookmark className="h-3 w-3 mr-1" />
+                          )}
+                          {bookmarkedSermons[sermon.id] ? 'Saved' : 'Save'}
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

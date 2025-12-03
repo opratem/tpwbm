@@ -87,8 +87,7 @@ export default function EventsPage() {
                 </div>
                 <Button
                     size="sm"
-                    variant="outline"
-                    className="border-white text-white hover:bg-white hover:text-[hsl(218,31%,18%)] mobile-touch-target"
+                    className="bg-[hsl(45,56%,55%)] text-[hsl(218,31%,18%)] hover:bg-[hsl(45,56%,50%)] border-0 font-semibold mobile-touch-target"
                     asChild
                 >
                   <Link href="/admin/events">
@@ -100,7 +99,7 @@ export default function EventsPage() {
         )}
 
         {/* Hero Section */}
-        <section className="w-full mobile-section-spacing relative overflow-hidden min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh]">
+        <section className="w-full mobile-section-spacing relative overflow-hidden">
           {/* Background Image with Blur Effect */}
           <div
               className="absolute inset-0"
@@ -426,7 +425,8 @@ export default function EventsPage() {
             <div className="flex flex-col items-center justify-center space-y-6 text-center text-white">
               <div className="space-y-4">
                 <h2 className="mobile-text-2xl font-bold tracking-tight leading-tight max-w-3xl text-white">
-                  Ready to{" "}<span className="text-[hsl(45,56%,55%)] font-bold drop-shadow-lg">
+                  Ready to{" "}
+                  <span className="text-[hsl(45,56%,55%)] font-bold drop-shadow-lg">
                   Get Involved?
                 </span>
                 </h2>

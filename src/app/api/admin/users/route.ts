@@ -26,6 +26,11 @@ export async function GET(request: NextRequest) {
       membershipDate: users.membershipDate,
       createdAt: users.createdAt,
       phone: users.phone,
+      address: users.address,
+      birthday: users.birthday,
+      interests: users.interests,
+      bio: users.bio,
+      emailVerified: users.emailVerified,
     }).from(users);
 
     return NextResponse.json({ users: allUsers });
@@ -90,8 +95,8 @@ export async function POST(request: NextRequest) {
       name,
       email,
       role: role as 'admin' | 'member',
-      ministryRole: ministryRole || null,
-      ministryLevel: ministryLevel || null,
+      ministryRole: (ministryRole && ministryRole !== 'none') ? ministryRole : null,
+      ministryLevel: (ministryLevel && ministryLevel !== 'none') ? ministryLevel : null,
       ministryDescription: ministryDescription || null,
       hashedPassword,
       phone: phone || null,
@@ -160,10 +165,10 @@ export async function PATCH(request: NextRequest) {
       updateData.role = role;
     }
     if (ministryRole !== undefined) {
-      updateData.ministryRole = ministryRole || null;
+      updateData.ministryRole = (ministryRole && ministryRole !== 'none') ? ministryRole : null;
     }
     if (ministryLevel !== undefined) {
-      updateData.ministryLevel = ministryLevel || null;
+      updateData.ministryLevel = (ministryLevel && ministryLevel !== 'none') ? ministryLevel : null;
     }
     if (ministryDescription !== undefined) {
       updateData.ministryDescription = ministryDescription || null;

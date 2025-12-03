@@ -130,8 +130,8 @@ export default function AdminUsersPage() {
     email: "",
     phone: "",
     role: "member" as "admin" | "member" | "visitor",
-    ministryRole: "" as MinistryRole | "",
-    ministryLevel: "" as MinistryLevel | "",
+    ministryRole: "none" as MinistryRole | "none" | "",
+    ministryLevel: "none" as MinistryLevel | "none" | "",
     ministryDescription: "",
     temporaryPassword: "",
   });
@@ -242,10 +242,18 @@ export default function AdminUsersPage() {
 
     setCreateLoading(true);
     try {
+      // Convert "none" to null for ministry fields
+      const payload = {
+        ...createForm,
+        ministryRole: createForm.ministryRole === "none" || createForm.ministryRole === "" ? null : createForm.ministryRole,
+        ministryLevel: createForm.ministryLevel === "none" || createForm.ministryLevel === "" ? null : createForm.ministryLevel,
+        ministryDescription: createForm.ministryDescription || null,
+      };
+
       const response = await fetch("/api/admin/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(createForm),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -258,8 +266,8 @@ export default function AdminUsersPage() {
           email: "",
           phone: "",
           role: "member",
-          ministryRole: "",
-          ministryLevel: "",
+          ministryRole: "none",
+          ministryLevel: "none",
           ministryDescription: "",
           temporaryPassword: "",
         });
@@ -288,9 +296,9 @@ export default function AdminUsersPage() {
           userId: selectedUser.id,
           role: editForm.role,
           isActive: editForm.isActive,
-          ministryRole: editForm.ministryRole,
-          ministryLevel: editForm.ministryLevel,
-          ministryDescription: editForm.ministryDescription,
+          ministryRole: editForm.ministryRole === "none" || editForm.ministryRole === "" ? null : editForm.ministryRole,
+          ministryLevel: editForm.ministryLevel === "none" || editForm.ministryLevel === "" ? null : editForm.ministryLevel,
+          ministryDescription: editForm.ministryDescription || null,
         }),
       });
 
@@ -526,7 +534,7 @@ export default function AdminUsersPage() {
                     onValueChange={(value) => setFilters(prev => ({ ...prev, role: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="All Roles" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Roles</SelectItem>
@@ -544,7 +552,7 @@ export default function AdminUsersPage() {
                     onValueChange={(value) => setFilters(prev => ({ ...prev, ministryLevel: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="All Levels" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Levels</SelectItem>
@@ -564,7 +572,7 @@ export default function AdminUsersPage() {
                     onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="All Status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
@@ -588,7 +596,7 @@ export default function AdminUsersPage() {
                     }}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Sort by..." />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="name-asc">Name (A-Z)</SelectItem>
@@ -626,7 +634,7 @@ export default function AdminUsersPage() {
                         onClick={() => handleBulkAction("deactivate")}
                         disabled={bulkActionLoading}
                     >
-                      <UserX className="h-4 w-4 mr-1" />
+                      <UserX className="h-4 w-4 mr-2" />
                       Deactivate
                     </Button>
                     <Button
@@ -821,8 +829,8 @@ export default function AdminUsersPage() {
                                             email: user.email,
                                             phone: user.phone || "",
                                             role: user.role,
-                                            ministryRole: (user.ministryRole as MinistryRole) || "",
-                                            ministryLevel: (user.ministryLevel as MinistryLevel) || "",
+                                            ministryRole: (user.ministryRole as MinistryRole) || "none",
+                                            ministryLevel: (user.ministryLevel as MinistryLevel) || "none",
                                             ministryDescription: user.ministryDescription || "",
                                             isActive: user.isActive,
                                           });
@@ -937,7 +945,7 @@ export default function AdminUsersPage() {
                     onValueChange={(value) => setCreateForm(prev => ({ ...prev, role: value as "admin" | "member" }))}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="member">Member</SelectItem>
@@ -955,7 +963,7 @@ export default function AdminUsersPage() {
                     <SelectValue placeholder="Select ministry role" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
                     {getMinistryRoleOptions().map((role) => (
                         <SelectItem key={role.value} value={role.value}>
                           {role.label}
@@ -974,7 +982,7 @@ export default function AdminUsersPage() {
                     <SelectValue placeholder="Select ministry level" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
                     {getMinistryLevelOptions().map((level) => (
                         <SelectItem key={level.value} value={level.value}>
                           {level.label}
@@ -1059,7 +1067,7 @@ export default function AdminUsersPage() {
                         onValueChange={(value) => setEditForm(prev => ({ ...prev, role: value as "admin" | "member" }))}
                     >
                       <SelectTrigger>
-                        <SelectValue />
+                        <SelectValue placeholder="Select role" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="member">Member</SelectItem>
@@ -1077,7 +1085,7 @@ export default function AdminUsersPage() {
                         <SelectValue placeholder="Select ministry role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {getMinistryRoleOptions().map((role) => (
                             <SelectItem key={role.value} value={role.value}>
                               {role.label}
@@ -1096,7 +1104,7 @@ export default function AdminUsersPage() {
                         <SelectValue placeholder="Select ministry level" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {getMinistryLevelOptions().map((level) => (
                             <SelectItem key={level.value} value={level.value}>
                               {level.label}
@@ -1260,8 +1268,8 @@ export default function AdminUsersPage() {
                           email: selectedUser.email,
                           phone: selectedUser.phone || "",
                           role: selectedUser.role,
-                          ministryRole: (selectedUser.ministryRole as MinistryRole) || "",
-                          ministryLevel: (selectedUser.ministryLevel as MinistryLevel) || "",
+                          ministryRole: (selectedUser.ministryRole as MinistryRole) || "none",
+                          ministryLevel: (selectedUser.ministryLevel as MinistryLevel) || "none",
                           ministryDescription: selectedUser.ministryDescription || "",
                           isActive: selectedUser.isActive,
                         });
