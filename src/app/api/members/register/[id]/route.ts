@@ -1,0 +1,171 @@
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { membershipRequests, users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import bcrypt from 'bcryptjs';
+import { z } from 'zod';
+
+const reviewSchema = z.object({
+  action: z.enum(['approve', 'reject']),
+  reviewNotes: z.string().optional(),
+  password: z.string().min(8).optional(), // For approved users
+});
+
+export async function PATCH(
+  request: Request,
+  props: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Unauthorized. Admin access required.' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { action, reviewNotes, password } = reviewSchema.parse(body);
+    const { id } = await props.params;
+
+    // Get the membership request
+    const [membershipRequest] = await db
+      .select()
+      .from(membershipRequests)
+      .where(eq(membershipRequests.id, id))
+      .limit(1);
+
+    if (!membershipRequest) {
+      return NextResponse.json(
+        { error: 'Membership request not found' },
+        { status: 404 }
+      );
+    }
+
+    if (membershipRequest.status !== 'pending') {
+      return NextResponse.json(
+        { error: 'This request has already been reviewed' },
+        { status: 400 }
+      );
+    }
+
+    if (action === 'approve') {
+      // Check if email already exists
+      const existingUser = await db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.email, membershipRequest.email),
+      });
+
+      if (existingUser) {
+        return NextResponse.json(
+          { error: 'A user with this email already exists' },
+          { status: 400 }
+        );
+      }
+
+      // Create user account
+      const tempPassword = password || `Welcome${Math.random().toString(36).slice(-8)}!`;
+      const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+      const [newUser] = await db.insert(users).values({
+        name: `${membershipRequest.firstName} ${membershipRequest.lastName}`,
+        email: membershipRequest.email,
+        hashedPassword,
+        phone: membershipRequest.phone,
+        address: membershipRequest.address,
+        interests: membershipRequest.interests,
+        role: 'member',
+        isActive: true,
+        membershipDate: new Date(),
+      }).returning();
+
+      // Update membership request
+      await db.update(membershipRequests)
+        .set({
+          status: 'approved',
+          reviewedBy: session.user.id,
+          reviewedAt: new Date(),
+          reviewNotes,
+          userId: newUser.id,
+          updatedAt: new Date(),
+        })
+        .where(eq(membershipRequests.id, id));
+
+      // TODO: Send welcome email to the user with login credentials
+
+      return NextResponse.json({
+        success: true,
+        message: 'Membership request approved and user account created',
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          tempPassword: password ? undefined : tempPassword, // Only return if auto-generated
+        },
+      });
+    } else {
+      // Reject the request
+      await db.update(membershipRequests)
+        .set({
+          status: 'rejected',
+          reviewedBy: session.user.id,
+          reviewedAt: new Date(),
+          reviewNotes,
+          updatedAt: new Date(),
+        })
+        .where(eq(membershipRequests.id, id));
+
+      return NextResponse.json({
+        success: true,
+        message: 'Membership request rejected',
+      });
+    }
+  } catch (error) {
+    console.error('Error reviewing membership request:', error);
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid request data', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to process membership request' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE endpoint to delete a membership request
+export async function DELETE(
+  request: Request,
+  props: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Unauthorized. Admin access required.' },
+        { status: 401 }
+      );
+    }
+
+    const { id } = await props.params;
+
+    await db.delete(membershipRequests).where(eq(membershipRequests.id, id));
+
+    return NextResponse.json({
+      success: true,
+      message: 'Membership request deleted',
+    });
+  } catch (error) {
+    console.error('Error deleting membership request:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete membership request' },
+      { status: 500 }
+    );
+  }
+}
