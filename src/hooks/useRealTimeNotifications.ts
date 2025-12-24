@@ -39,6 +39,8 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
   const reconnectAttemptsRef = useRef(0);
   const isReconnectingRef = useRef(false);
   const connectionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hasShownErrorToastRef = useRef(false); // Prevent error toast spam
+  const sessionErrorCountRef = useRef(0); // Track session errors to detect authentication issues
 
   const connect = useCallback(() => {
     // Check if SSE is supported
@@ -49,8 +51,18 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
 
     if (!session?.user || status !== 'authenticated') {
       console.log('Not authenticated, skipping SSE connection');
+      sessionErrorCountRef.current++;
+
+      // If we've had multiple session errors, likely an auth config issue
+      if (sessionErrorCountRef.current > 5 && !hasShownErrorToastRef.current) {
+        console.error('Multiple authentication failures detected. Check NEXTAUTH_URL configuration.');
+        hasShownErrorToastRef.current = true;
+      }
       return;
     }
+
+    // Reset session error counter on successful authentication
+    sessionErrorCountRef.current = 0;
 
     // Clear any existing timeout
     if (connectionTimeoutRef.current) {

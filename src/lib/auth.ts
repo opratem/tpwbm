@@ -10,6 +10,39 @@ import { eq, and } from "drizzle-orm";
 import { compare } from "bcryptjs";
 import { emailNotificationService } from "@/lib/email-notification";
 
+// 🚨 CRITICAL PRODUCTION VALIDATION
+if (process.env.NODE_ENV === 'production') {
+  const nextAuthUrl = process.env.NEXTAUTH_URL;
+
+  if (!nextAuthUrl) {
+    throw new Error(
+      '❌ CRITICAL ERROR: NEXTAUTH_URL is not set!\n' +
+      'Set NEXTAUTH_URL in your Vercel environment variables.\n' +
+      'Example: NEXTAUTH_URL=https://tpwbm.com.ng'
+    );
+  }
+
+  if (nextAuthUrl.includes('localhost') || nextAuthUrl.includes('127.0.0.1')) {
+    throw new Error(
+      '❌ CRITICAL ERROR: NEXTAUTH_URL is set to localhost in PRODUCTION!\n' +
+      `Current value: ${nextAuthUrl}\n` +
+      'This will cause authentication to fail.\n' +
+      'Update NEXTAUTH_URL in Vercel environment variables to your production domain.\n' +
+      'Example: NEXTAUTH_URL=https://tpwbm.com.ng'
+    );
+  }
+
+  if (!process.env.NEXTAUTH_SECRET) {
+    throw new Error(
+      '❌ CRITICAL ERROR: NEXTAUTH_SECRET is not set!\n' +
+      'Set NEXTAUTH_SECRET in your Vercel environment variables.'
+    );
+  }
+
+  console.log('✅ NextAuth Configuration Validated');
+  console.log(`   NEXTAUTH_URL: ${nextAuthUrl}`);
+}
+
 // Helper function to extract domain from NEXTAUTH_URL for cookie configuration
 function extractDomainFromUrl(url: string | undefined): string | undefined {
   if (!url) return undefined;
