@@ -10,37 +10,32 @@ import { eq, and } from "drizzle-orm";
 import { compare } from "bcryptjs";
 import { emailNotificationService } from "@/lib/email-notification";
 
-// 🚨 CRITICAL PRODUCTION VALIDATION
+// 🚨 PRODUCTION VALIDATION - Warning only, don't block build
 if (process.env.NODE_ENV === 'production') {
   const nextAuthUrl = process.env.NEXTAUTH_URL;
 
   if (!nextAuthUrl) {
-    throw new Error(
-      '❌ CRITICAL ERROR: NEXTAUTH_URL is not set!\n' +
-      'Set NEXTAUTH_URL in your Vercel environment variables.\n' +
+    console.warn(
+      '⚠️  WARNING: NEXTAUTH_URL is not set!\n' +
+      'Set NEXTAUTH_URL in your deployment environment variables.\n' +
       'Example: NEXTAUTH_URL=https://tpwbm.com.ng'
     );
-  }
-
-  if (nextAuthUrl.includes('localhost') || nextAuthUrl.includes('127.0.0.1')) {
-    throw new Error(
-      '❌ CRITICAL ERROR: NEXTAUTH_URL is set to localhost in PRODUCTION!\n' +
+  } else if (nextAuthUrl.includes('localhost') || nextAuthUrl.includes('127.0.0.1')) {
+    console.warn(
+      '⚠️  WARNING: NEXTAUTH_URL is set to localhost in PRODUCTION!\n' +
       `Current value: ${nextAuthUrl}\n` +
-      'This will cause authentication to fail.\n' +
-      'Update NEXTAUTH_URL in Vercel environment variables to your production domain.\n' +
+      'This may cause authentication to fail.\n' +
+      'Update NEXTAUTH_URL in deployment environment variables to your production domain.\n' +
       'Example: NEXTAUTH_URL=https://tpwbm.com.ng'
     );
   }
 
   if (!process.env.NEXTAUTH_SECRET) {
-    throw new Error(
-      '❌ CRITICAL ERROR: NEXTAUTH_SECRET is not set!\n' +
-      'Set NEXTAUTH_SECRET in your Vercel environment variables.'
+    console.warn(
+      '⚠️  WARNING: NEXTAUTH_SECRET is not set!\n' +
+      'Set NEXTAUTH_SECRET in your deployment environment variables.'
     );
   }
-
-  console.log('✅ NextAuth Configuration Validated');
-  console.log(`   NEXTAUTH_URL: ${nextAuthUrl}`);
 }
 
 // Helper function to extract domain from NEXTAUTH_URL for cookie configuration
@@ -51,10 +46,10 @@ function extractDomainFromUrl(url: string | undefined): string | undefined {
 
     // Warn if NEXTAUTH_URL is still localhost in production
     if (process.env.NODE_ENV === 'production' && hostname === 'localhost') {
-      console.error('❌ CRITICAL: NEXTAUTH_URL is set to localhost in production!');
-      console.error('   This will cause authentication to fail.');
-      console.error('   Set NEXTAUTH_URL to your production domain in environment variables.');
-      console.error('   Example: https://tpwbm.com.ng');
+      console.warn('⚠️  NEXTAUTH_URL is set to localhost in production!');
+      console.warn('   This may cause authentication to fail.');
+      console.warn('   Set NEXTAUTH_URL to your production domain in environment variables.');
+      console.warn('   Example: https://tpwbm.com.ng');
     }
 
     // For domains like tpwbm.com.ng, return .tpwbm.com.ng
@@ -356,10 +351,9 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        // Use cookie domain from env or extract from NEXTAUTH_URL in production
-        domain: process.env.NODE_ENV === 'production'
-          ? (process.env.COOKIE_DOMAIN || extractDomainFromUrl(process.env.NEXTAUTH_URL))
-          : undefined,
+        // Don't set domain in production to allow cookies to work on current hostname
+        // This prevents issues when accessing via different domains (e.g., vercel.app vs custom domain)
+        domain: undefined,
       },
     },
   },

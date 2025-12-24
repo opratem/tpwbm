@@ -35,14 +35,41 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
   const eventSourceRef = useRef<EventSource | null>(null);
   const connectionIdRef = useRef<string | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const maxReconnectAttempts = 3; // Reduced from 5 to prevent spam
+  const maxReconnectAttempts = 3;
   const reconnectAttemptsRef = useRef(0);
   const isReconnectingRef = useRef(false);
   const connectionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const hasShownErrorToastRef = useRef(false); // Prevent error toast spam
-  const sessionErrorCountRef = useRef(0); // Track session errors to detect authentication issues
+  const hasShownErrorToastRef = useRef(false);
+  const sessionErrorCountRef = useRef(0);
+  const mountedRef = useRef(true);
+
+  const disconnect = useCallback(() => {
+    isReconnectingRef.current = false;
+
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
+
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
+
+    if (connectionTimeoutRef.current) {
+      clearTimeout(connectionTimeoutRef.current);
+      connectionTimeoutRef.current = null;
+    }
+
+    setState(prev => ({ ...prev, isConnected: false }));
+  }, []);
 
   const connect = useCallback(() => {
+    // Check if component is still mounted
+    if (!mountedRef.current) {
+      return;
+    }
+
     // Check if SSE is supported
     if (!isEventSourceSupported()) {
       console.warn('EventSource not supported in this environment');
@@ -71,18 +98,12 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
     }
 
     // Prevent multiple simultaneous connection attempts
-    if (isReconnectingRef.current) {
-      console.log('Connection attempt already in progress');
+    if (isReconnectingRef.current || eventSourceRef.current) {
+      console.log('Connection already exists or in progress');
       return;
     }
 
     isReconnectingRef.current = true;
-
-    // Close existing connection
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
 
     // Clear any pending reconnection
     if (reconnectTimeoutRef.current) {
@@ -100,28 +121,21 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
       const eventSource = new EventSource(
         `/api/notifications/stream?connectionId=${connectionIdRef.current}`,
         {
-          withCredentials: false // Set explicitly for clarity
+          withCredentials: true
         }
       );
 
-      // Set a timeout for connection establishment (longer for production)
-      // Production environments may have slower cold starts
-      const connectionTimeout = 50000; // 50 seconds
+      // Longer timeout to account for server auto-close at 290s
+      const connectionTimeout = 295000; // 295 seconds (just under 5 minutes)
       connectionTimeoutRef.current = setTimeout(() => {
-        if (!state.isConnected) {
-          console.warn('SSE connection timeout - closing and will retry');
-          if (eventSourceRef.current) {
-            eventSourceRef.current.close();
-            eventSourceRef.current = null;
-          }
-          isReconnectingRef.current = false;
-        }
+        console.log('SSE connection timeout - server will auto-close, preparing for reconnect');
+        // Don't close manually, let server close and trigger reconnect
       }, connectionTimeout);
 
       eventSource.onopen = () => {
         console.log('SSE connection established');
         setState(prev => ({ ...prev, isConnected: true, lastActivity: new Date() }));
-        reconnectAttemptsRef.current = 0; // Reset reconnect attempts on successful connection
+        reconnectAttemptsRef.current = 0;
         isReconnectingRef.current = false;
 
         // Clear connection timeout since we're connected
@@ -133,7 +147,6 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
 
       eventSource.onmessage = (event) => {
         try {
-          // Validate that event.data exists and is not empty
           if (!event.data || event.data.trim() === '') {
             console.warn('Received empty SSE message');
             return;
@@ -165,7 +178,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
                 };
               });
 
-              // Show toast notification for high priority or admin notifications
+              // Show toast notification for high priority
               if (newNotification.priority === 'high' || newNotification.priority === 'urgent') {
                 toast.warning(newNotification.title, {
                   description: newNotification.message,
@@ -222,22 +235,27 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
           eventSourceRef.current = null;
         }
 
-        // Only attempt reconnection if we haven't exceeded max attempts
-        if (reconnectAttemptsRef.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * 2 ** reconnectAttemptsRef.current, 15000); // Max 15s delay
+        // Only attempt reconnection if authenticated and haven't exceeded max attempts
+        if (!mountedRef.current) {
+          console.log('Component unmounted, skipping reconnection');
+          return;
+        }
+
+        if (session?.user && status === 'authenticated' && reconnectAttemptsRef.current < maxReconnectAttempts) {
+          const delay = Math.min(3000 * 2 ** reconnectAttemptsRef.current, 30000); // Exponential backoff, max 30s
           reconnectAttemptsRef.current++;
 
-          console.log(`Attempting to reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current})`);
+          console.log(`Will reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
 
           reconnectTimeoutRef.current = setTimeout(() => {
-            if (session?.user && status === 'authenticated') {
+            if (session?.user && status === 'authenticated' && mountedRef.current) {
               connect();
             }
           }, delay);
-        } else {
+        } else if (reconnectAttemptsRef.current >= maxReconnectAttempts) {
           console.error('Max reconnection attempts reached');
-          // Don't show error toast in development to reduce noise
-          if (process.env.NODE_ENV === 'production') {
+          if (process.env.NODE_ENV === 'production' && !hasShownErrorToastRef.current) {
+            hasShownErrorToastRef.current = true;
             toast.error('Lost connection to real-time notifications', {
               description: 'Please refresh the page to reconnect',
               duration: 10000,
@@ -252,34 +270,12 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
       setState(prev => ({ ...prev, isConnected: false }));
       isReconnectingRef.current = false;
 
-      // Clear connection timeout
       if (connectionTimeoutRef.current) {
         clearTimeout(connectionTimeoutRef.current);
         connectionTimeoutRef.current = null;
       }
     }
-  }, [session, status, state.isConnected]);
-
-  const disconnect = useCallback(() => {
-    isReconnectingRef.current = false;
-
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
-
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-      reconnectTimeoutRef.current = null;
-    }
-
-    if (connectionTimeoutRef.current) {
-      clearTimeout(connectionTimeoutRef.current);
-      connectionTimeoutRef.current = null;
-    }
-
-    setState(prev => ({ ...prev, isConnected: false }));
-  }, []);
+  }, [session, status]); // Removed state.isConnected dependency
 
   const markAsRead = useCallback((notificationId: string) => {
     setState(prev => {
@@ -329,36 +325,41 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
   }, []);
 
   const reconnect = useCallback(() => {
-    reconnectAttemptsRef.current = 0; // Reset attempts
+    reconnectAttemptsRef.current = 0;
     isReconnectingRef.current = false;
+    hasShownErrorToastRef.current = false;
     disconnect();
-    setTimeout(connect, 1000); // Small delay before reconnecting
+    setTimeout(connect, 1000);
   }, [connect, disconnect]);
 
-  // Effect to establish connection with better lifecycle management
+  // Single effect to manage connection lifecycle
   useEffect(() => {
-    let shouldConnect = false;
+    mountedRef.current = true;
 
     if (status === 'authenticated' && session?.user && isEventSourceSupported()) {
-      shouldConnect = true;
-      connect();
-    } else if (status === 'unauthenticated') {
+      // Small delay to ensure session is fully established
+      const initTimeout = setTimeout(() => {
+        if (mountedRef.current) {
+          connect();
+        }
+      }, 500);
+
+      return () => {
+        clearTimeout(initTimeout);
+        mountedRef.current = false;
+        disconnect();
+      };
+    }
+
+    if (status === 'unauthenticated') {
       disconnect();
     }
 
     return () => {
-      if (shouldConnect) {
-        disconnect();
-      }
-    };
-  }, [connect, disconnect, session?.user, status]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
+      mountedRef.current = false;
       disconnect();
     };
-  }, [disconnect]);
+  }, [session?.user, status, connect, disconnect]); // Include all dependencies
 
   return {
     notifications: state.notifications,

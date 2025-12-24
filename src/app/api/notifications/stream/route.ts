@@ -9,7 +9,7 @@ import { generateUUID } from '@/lib/utils';
 export const runtime = 'nodejs';
 // Configure max duration - 55 seconds for most platforms to prevent timeout
 // On Vercel Pro this can be up to 300, but we'll be conservative
-export const maxDuration = 55;
+export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 // Global notification store (in production, use Redis or a proper pub/sub system)
@@ -156,11 +156,11 @@ export async function GET(request: NextRequest) {
           console.log(`Connection established: ${connectionId}, active connections: ${activeConnections.size}`);
 
           // Auto-close connection before maxDuration to prevent timeout
-          // Close at 50 seconds (5 seconds before the 55 second limit)
+          // Close at 290 seconds (10 seconds before the 300 second limit)
           autoCloseTimeout = setTimeout(() => {
             console.log(`Auto-closing connection ${connectionId} to prevent timeout`);
             cleanupConnection();
-          }, 50000);
+          }, 290000);
 
           // Send connection established message
           if (!sendMessage({
