@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { Bell, X, Check, CheckCheck, Wifi, WifiOff, AlertTriangle, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -161,6 +162,7 @@ interface LiveNotificationsProps {
 }
 
 export function LiveNotifications({ className = '', showConnectionStatus = true }: LiveNotificationsProps) {
+  const { data: session, status } = useSession();
   const {
     notifications,
     unreadCount,
@@ -174,6 +176,15 @@ export function LiveNotifications({ className = '', showConnectionStatus = true 
   } = useRealTimeNotifications();
 
   const [isOpen, setIsOpen] = useState(false);
+
+  // Don't render if not authenticated
+  if (status === 'loading') {
+    return null;
+  }
+
+  if (status === 'unauthenticated' || !session?.user) {
+    return null;
+  }
 
   const handleNotificationClick = (notification: Notification) => {
     // Auto-navigation is handled in the NotificationItem component
