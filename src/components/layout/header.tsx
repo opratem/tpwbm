@@ -67,43 +67,66 @@ const navigationItems = [
 
 // Utility function to get user initials
 const getUserInitials = (name: string | null | undefined): string => {
-  if (!name) return 'U';
+  // Handle all falsy cases and invalid strings
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return 'U';
+  }
 
-  const words = name.trim().split(' ').filter(word => word.length > 0);
+  try {
+    const words = name.trim().split(' ').filter(word => word.length > 0);
 
-  if (words.length === 1) {
-    // Single name: take first two characters if available
-    return words[0].charAt(0).toUpperCase();
-  } else if (words.length === 2) {
-    // Two names: take first character of each
-    return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-  } else {
-    // Three or more names: take first character of first and last name
-    return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+    if (words.length === 0) return 'U';
+
+    if (words.length === 1) {
+      // Single name: take first two characters if available
+      return words[0].charAt(0).toUpperCase();
+    } else if (words.length === 2) {
+      // Two names: take first character of each
+      return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+    } else {
+      // Three or more names: take first character of first and last name
+      return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+    }
+  } catch (error) {
+    console.error('Error getting user initials:', error);
+    return 'U';
   }
 };
 
 // Utility function to truncate name intelligently
 const getDisplayName = (name: string | null | undefined, maxLength = 15): string => {
-  if (!name) return 'User';
-
-  if (name.length <= maxLength) return name;
-
-  const words = name.trim().split(' ');
-  if (words.length >= 2) {
-    // Try to show first name and first letter of last name
-    const firstName = words[0];
-    const lastInitial = words[words.length - 1].charAt(0);
-    const shortened = `${firstName} ${lastInitial}.`;
-
-    if (shortened.length <= maxLength) return shortened;
-
-    // If still too long, just show first name
-    return firstName.length <= maxLength ? firstName : firstName.substring(0, maxLength - 1) + '…';
+  // Handle all falsy cases and invalid strings
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return 'User';
   }
 
-  // Single name case
-  return name.substring(0, maxLength - 1) + '…';
+  try {
+    const trimmedName = name.trim();
+
+    if (trimmedName.length <= maxLength) return trimmedName;
+
+    const words = trimmedName.split(' ').filter(word => word.length > 0);
+
+    if (words.length === 0) return 'User';
+
+    if (words.length >= 2) {
+      // Try to show first name and first letter of last name
+      const firstName = words[0];
+      const lastInitial = words[words.length - 1].charAt(0);
+      const shortened = `${firstName} ${lastInitial}.`;
+
+      if (shortened.length <= maxLength) return shortened;
+
+      // If still too long, just show first name
+      return firstName.length <= maxLength ? firstName : firstName.substring(0, maxLength - 1) + '…';
+    }
+
+    // Single name case
+    return trimmedName.substring(0, maxLength - 1) + '…';
+  } catch (error) {
+    console.error('Error getting display name:', error);
+    return 'User';
+  }
 };
 
 export function Header() {

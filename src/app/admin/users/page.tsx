@@ -105,11 +105,16 @@ interface UserFilters {
 
 // Helper function to safely get user initials
 const getUserInitials = (name: string | null | undefined): string => {
-  if (!name) return 'U';
-  const words = name.trim().split(' ').filter(word => word.length > 0);
-  if (words.length === 0) return 'U';
-  if (words.length === 1) return words[0].charAt(0).toUpperCase();
-  return words.map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  if (!name || typeof name !== 'string' || name.trim() === '') return 'U';
+  try {
+    const words = name.trim().split(' ').filter(word => word.length > 0);
+    if (words.length === 0) return 'U';
+    if (words.length === 1) return words[0].charAt(0).toUpperCase();
+    return words.map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  } catch (error) {
+    console.error('Error getting user initials:', error);
+    return 'U';
+  }
 };
 
 export default function AdminUsersPage() {
