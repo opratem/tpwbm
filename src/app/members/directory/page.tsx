@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,110 +26,75 @@ import {
   Heart
 } from "lucide-react";
 
-// Mock member data
-const mockMembers = [
-  {
-    id: 1,
-    name: "John Smith",
-    initials: "JS",
-    email: "john.smith@email.com",
-    phone: "(555) 123-4567",
-    address: "123 Oak Street",
-    memberSince: "2019-03-15",
-    ministries: ["Worship", "Youth"],
-    role: "member",
-    birthday: "June 15",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Sarah Johnson",
-    initials: "SJ",
-    email: "sarah.j@email.com",
-    phone: "(555) 234-5678",
-    address: "456 Pine Avenue",
-    memberSince: "2020-01-10",
-    ministries: ["Children", "Prayer"],
-    role: "member",
-    birthday: "March 22",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Pastor Michael Davis",
-    initials: "MD",
-    email: "pastor@tpwbm.org",
-    phone: "(555) 345-6789",
-    address: "789 Church Lane",
-    memberSince: "2015-08-01",
-    ministries: ["Pastoral", "Teaching"],
-    role: "admin",
-    birthday: "August 8",
-    status: "active",
-  },
-  {
-    id: 4,
-    name: "Emily Wilson",
-    initials: "EW",
-    email: "emily.w@email.com",
-    phone: "(555) 456-7890",
-    address: "321 Maple Drive",
-    memberSince: "2021-05-20",
-    ministries: ["Outreach", "Women"],
-    role: "member",
-    birthday: "November 3",
-    status: "active",
-  },
-  {
-    id: 5,
-    name: "David Brown",
-    initials: "DB",
-    email: "david.brown@email.com",
-    phone: "(555) 567-8901",
-    address: "654 Elm Street",
-    memberSince: "2018-12-03",
-    ministries: ["Men", "Finance"],
-    role: "member",
-    birthday: "February 14",
-    status: "active",
-  },
-  {
-    id: 6,
-    name: "Lisa Garcia",
-    initials: "LG",
-    email: "lisa.garcia@email.com",
-    phone: "(555) 678-9012",
-    address: "987 Birch Road",
-    memberSince: "2022-01-15",
-    ministries: ["Music", "Hospitality"],
-    role: "member",
-    birthday: "September 25",
-    status: "active",
-  },
-];
+// Type for member data from the API
+interface Member {
+  id: string;
+  name: string | null;
+  email: string;
+  phone: string | null;
+  address: string | null;
+  birthday: string | null;
+  interests: string | null;
+  bio: string | null;
+  image: string | null;
+  role: string;
+  ministryRole: string | null;
+  membershipDate: string | null;
+}
 
 export default function MemberDirectory() {
   const { data: session } = useSession();
-  const [members] = useState(mockMembers);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMinistry, setSelectedMinistry] = useState("all");
   const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
 
-  // Get unique ministries for filter
+  // Fetch members from API
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch("/api/members/directory");
+        if (response.ok) {
+          const data = await response.json();
+          setMembers(data.members || []);
+        } else {
+          console.error("Failed to fetch members");
+        }
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session) {
+      fetchMembers();
+    }
+  }, [session]);
+
+  // Get unique ministries for filter from ministryRole field
   const allMinistries = Array.from(
-      new Set(members.flatMap(member => member.ministries))
+    new Set(
+      members
+        .map(member => member.ministryRole)
+        .filter(Boolean)
+    )
   ).sort();
 
   // Filter members based on search and ministry
   const filteredMembers = members.filter(member => {
-    const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        member.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesMinistry = selectedMinistry === "all" ||
-        member.ministries.includes(selectedMinistry);
+    const matchesSearch =
+      member.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesMinistry =
+      selectedMinistry === "all" ||
+      member.ministryRole === selectedMinistry;
     return matchesSearch && matchesMinistry;
   });
 
-  const getMembershipYears = (memberSince: string) => {
+  const getMembershipYears = (memberSince: string | null) => {
+    if (!memberSince) return 0;
     const years = new Date().getFullYear() - new Date(memberSince).getFullYear();
     return years;
   };
@@ -138,11 +103,22 @@ export default function MemberDirectory() {
     return role === "admin" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800";
   };
 
-  if (!session) {
+  const getInitials = (name: string | null) => {
+    if (!name) return "?";
+    return name.split(" ").map(n => n[0]).join("").toUpperCase();
+  };
+
+  const formatBirthday = (birthday: string | null) => {
+    if (!birthday) return "N/A";
+    const date = new Date(birthday);
+    return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+  };
+
+  if (!session || loading) {
     return (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600" />
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600" />
+      </div>
     );
   }
 
@@ -231,18 +207,18 @@ export default function MemberDirectory() {
                       <div className="flex items-center gap-4">
                         <Avatar className="h-16 w-16">
                           <div className="w-full h-full bg-blue-100 flex items-center justify-center text-lg font-semibold text-blue-600">
-                            {member.initials}
+                            {getInitials(member.name)}
                           </div>
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold">{member.name}</h3>
+                            <h3 className="font-semibold">{member.name || "Unknown"}</h3>
                             <Badge className={getRoleColor(member.role)}>
                               {member.role}
                             </Badge>
                           </div>
                           <p className="text-sm text-gray-500">
-                            Member for {getMembershipYears(member.memberSince)} years
+                            Member for {getMembershipYears(member.membershipDate)} years
                           </p>
                         </div>
                       </div>
@@ -254,25 +230,25 @@ export default function MemberDirectory() {
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <Phone className="h-4 w-4 text-gray-500" />
-                        <span>{member.phone}</span>
+                        <span>{member.phone || "N/A"}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <MapPin className="h-4 w-4 text-gray-500" />
-                        <span className="truncate">{member.address}</span>
+                        <span className="truncate">{member.address || "N/A"}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <Calendar className="h-4 w-4 text-gray-500" />
-                        <span>Birthday: {member.birthday}</span>
+                        <span>Birthday: {formatBirthday(member.birthday)}</span>
                       </div>
 
                       <div className="pt-2">
                         <Label className="text-xs font-medium text-gray-500">MINISTRIES</Label>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {member.ministries.map((ministry, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {ministry}
-                              </Badge>
-                          ))}
+                          {member.ministryRole && (
+                            <Badge key={member.ministryRole} variant="outline" className="text-xs">
+                              {member.ministryRole}
+                            </Badge>
+                          )}
                         </div>
                       </div>
                     </CardContent>
@@ -307,17 +283,17 @@ export default function MemberDirectory() {
                             <div className="flex items-center gap-3">
                               <Avatar className="h-10 w-10">
                                 <div className="w-full h-full bg-blue-100 flex items-center justify-center text-sm font-semibold text-blue-600">
-                                  {member.initials}
+                                  {getInitials(member.name)}
                                 </div>
                               </Avatar>
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <span className="font-medium">{member.name}</span>
+                                  <span className="font-medium">{member.name || "Unknown"}</span>
                                   <Badge className={getRoleColor(member.role)}>
                                     {member.role}
                                   </Badge>
                                 </div>
-                                <p className="text-sm text-gray-500">Birthday: {member.birthday}</p>
+                                <p className="text-sm text-gray-500">Birthday: {formatBirthday(member.birthday)}</p>
                               </div>
                             </div>
                           </td>
@@ -329,21 +305,21 @@ export default function MemberDirectory() {
                               </div>
                               <div className="flex items-center gap-2 text-sm">
                                 <Phone className="h-3 w-3 text-gray-500" />
-                                <span>{member.phone}</span>
+                                <span>{member.phone || "N/A"}</span>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex flex-wrap gap-1">
-                              {member.ministries.map((ministry, index) => (
-                                  <Badge key={index} variant="outline" className="text-xs">
-                                    {ministry}
-                                  </Badge>
-                              ))}
+                              {member.ministryRole && (
+                                <Badge key={member.ministryRole} variant="outline" className="text-xs">
+                                  {member.ministryRole}
+                                </Badge>
+                              )}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            {getMembershipYears(member.memberSince)}
+                            {getMembershipYears(member.membershipDate)}
                           </td>
                         </tr>
                     ))}
