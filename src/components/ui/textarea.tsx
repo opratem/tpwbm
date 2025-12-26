@@ -13,7 +13,8 @@ export interface TextareaProps
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, error, label, helperText, showCharCount, id, maxLength, ...props }, ref) => {
     const [charCount, setCharCount] = React.useState(0)
-    const textareaId = id || `textarea-${React.useId()}`
+    const generatedId = React.useId()
+    const textareaId = id || `textarea-${generatedId}`
     const errorId = `${textareaId}-error`
     const helperId = `${textareaId}-helper`
     const charCountId = `${textareaId}-charcount`
