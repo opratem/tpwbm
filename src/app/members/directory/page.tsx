@@ -78,7 +78,7 @@ export default function MemberDirectory() {
     new Set(
       members
         .map(member => member.ministryRole)
-        .filter(Boolean)
+        .filter((role): role is string => role !== null && role !== undefined)
     )
   ).sort();
 
