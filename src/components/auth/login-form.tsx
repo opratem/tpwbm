@@ -32,7 +32,7 @@ export function LoginForm() {
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  const callbackUrl = searchParams.get("callbackUrl") || "/members/dashboard";
+  const callbackUrl = searchParams.get("callbackUrl");
 
   useEffect(() => {
     // Check for error in URL params (from failed auth redirect)
@@ -106,9 +106,21 @@ export function LoginForm() {
       } else {
         toast.success("Successfully logged in!");
 
-        // Redirect to unified dashboard (or callback URL if provided)
+        // Get the session to check user role
+        const sessionResponse = await fetch("/api/auth/session");
+        const session = await sessionResponse.json();
+
+        // Determine redirect URL based on role and callbackUrl
+        let redirectUrl = callbackUrl;
+        if (!redirectUrl) {
+          // No callback URL, redirect based on role
+          redirectUrl = session?.user?.role === "admin"
+            ? "/admin/dashboard"
+            : "/members/dashboard";
+        }
+
         // Force a hard redirect to ensure session is fully loaded
-        window.location.href = callbackUrl;
+        window.location.href = redirectUrl;
       }
     } catch (error) {
       setError("An unexpected error occurred. Please try again.");
