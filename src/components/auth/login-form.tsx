@@ -32,7 +32,7 @@ export function LoginForm() {
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  const callbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = searchParams.get("callbackUrl") || undefined;
 
   useEffect(() => {
     // Check for error in URL params (from failed auth redirect)
