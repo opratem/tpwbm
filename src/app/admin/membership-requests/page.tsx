@@ -435,14 +435,14 @@ export default function MembershipRequestsPage() {
                   <Label className="text-muted-foreground">Last Name</Label>
                   <p className="font-medium">{selectedRequest.lastName}</p>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <Label className="text-muted-foreground flex items-center gap-1">
                     <Mail className="h-3 w-3" />
                     Email
                   </Label>
-                  <p className="font-medium">{selectedRequest.email}</p>
+                  <p className="font-medium break-all">{selectedRequest.email}</p>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <Label className="text-muted-foreground flex items-center gap-1">
                     <Phone className="h-3 w-3" />
                     Phone

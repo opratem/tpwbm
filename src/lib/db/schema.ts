@@ -2,6 +2,7 @@ import { pgTable, text, varchar, boolean, integer, timestamp, uuid, jsonb, pgEnu
 
 // Enums for all entities
 export const userRoleEnum = pgEnum('user_role', [
+  'super_admin', // Full access including password resets
   'admin',
   'member',
   'visitor'
@@ -245,6 +246,7 @@ export const membershipRequests = pgTable('membership_requests', {
   previousChurch: text('previous_church'),
   referredBy: varchar('referred_by', { length: 255 }),
   additionalInfo: text('additional_info'),
+  hashedPassword: varchar('hashed_password', { length: 255 }), // User's chosen password (hashed)
   status: membershipRequestStatusEnum('status').default('pending').notNull(),
   reviewedBy: uuid('reviewed_by').references(() => users.id), // Admin who reviewed
   reviewedAt: timestamp('reviewed_at', { mode: 'date' }),
