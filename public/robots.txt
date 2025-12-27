@@ -1,11 +1,15 @@
 # robots.txt for The Prevailing Word Believers Ministry Inc.
 
+# Host
+Host: https://www.tpwbm.com.ng
+
 # Allow all search engines
 User-agent: *
 Allow: /
 
 # Disallow admin and member-only areas
 Disallow: /admin/
+Disallow: /admin/*
 Disallow: /members/login
 Disallow: /members/register
 Disallow: /members/dashboard
