@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -422,7 +423,8 @@ export default function AdminDashboard() {
   };
 
   return (
-      <div className="container max-w-7xl py-10 space-y-8">
+    <AdminLayout>
+      <div className="container mx-auto py-8 px-4">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
@@ -1293,5 +1295,6 @@ export default function AdminDashboard() {
           </DialogContent>
         </Dialog>
       </div>
+    </AdminLayout>
   );
 }

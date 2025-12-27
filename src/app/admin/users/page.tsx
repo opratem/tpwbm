@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -79,29 +80,6 @@ import {
   type MinistryRole,
   type MinistryLevel
 } from "@/lib/ministry";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "admin" | "member" | "visitor";
-  ministryRole?: string | null;
-  ministryLevel?: string | null;
-  ministryDescription?: string | null;
-  isActive: boolean;
-  membershipDate: string | null;
-  createdAt: string;
-  phone: string | null;
-}
-
-interface UserFilters {
-  search: string;
-  role: string;
-  ministryLevel: string;
-  status: string;
-  sortBy: string;
-  sortOrder: "asc" | "desc";
-}
 
 // Helper function to safely get user initials
 const getUserInitials = (name: string | null | undefined): string => {
@@ -428,6 +406,7 @@ export default function AdminUsersPage() {
   };
 
   return (
+    <AdminLayout>
       <div className="container max-w-7xl py-10 space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -1300,5 +1279,6 @@ export default function AdminUsersPage() {
           </DialogContent>
         </Dialog>
       </div>
+    </AdminLayout>
   );
 }
