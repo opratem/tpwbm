@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { Calendar, User, Clock, ArrowRight, Search } from "lucide-react";
+import { generateMetadata as genMeta, generateCollectionPageSchema, generateBreadcrumbSchema } from "@/lib/seo";
+import type { Metadata } from "next";
 
 interface BlogPost {
   id: string;
@@ -60,18 +62,58 @@ function getReadTime(content: string) {
   return `${readTime} min read`;
 }
 
-export const metadata = {
-  title: 'Blog | TPWBM',
-  description: 'Read inspiring articles, devotionals, and church updates from The Prevailing Word Believers Ministry',
-};
+export const metadata: Metadata = genMeta({
+  title: 'Blog - Articles, Devotionals & Updates',
+  description: 'Read inspiring articles, devotionals, and church updates from The Prevailing Word Believers Ministry. Explore biblical teachings, Christian living, and spiritual growth content.',
+  path: '/blog',
+  keywords: [
+    'Christian blog',
+    'devotionals',
+    'Bible teachings',
+    'spiritual growth articles',
+    'church updates',
+    'Christian living',
+    'faith articles',
+    'ministry blog Nigeria',
+    'Christian content',
+    'biblical insights',
+  ],
+  ogType: 'website',
+});
+
+// Enable static generation with ISR
+export const revalidate = 1800; // Revalidate every 30 minutes
+export const dynamic = 'force-static';
 
 export default async function BlogPage() {
   const posts = await getBlogPosts();
   const featuredPosts = posts.filter(p => p.isFeatured).slice(0, 3);
   const recentPosts = posts.slice(0, 9);
 
+  // Generate structured data
+  const collectionSchema = generateCollectionPageSchema({
+    name: 'TPWBM Blog - Articles & Devotionals',
+    description: 'Read inspiring articles, devotionals, and church updates from The Prevailing Word Believers Ministry',
+    url: '/blog',
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Blog', url: '/blog' },
+  ]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
       {/* Breadcrumbs */}
       <div className="container mx-auto px-4 pt-4">
         <Breadcrumbs />

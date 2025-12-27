@@ -1,11 +1,18 @@
 "use client";
 
 import { Header } from "./header";
+"use client";
+
+import { Header } from "./header";
 import { Footer } from "./footer";
+import { SkipToContent } from "@/components/shared/skip-to-content";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
+      {/* Skip to main content for accessibility */}
+      <SkipToContent />
+
       {/* Header with proper landmark */}
       <Header />
 
