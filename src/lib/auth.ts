@@ -307,7 +307,7 @@ export const authOptions: NextAuthOptions = {
 
           if (dbUser) {
             token.id = dbUser.id;
-            token.role = dbUser.role;
+            token.role = dbUser.role || "member";
             token.ministryRole = dbUser.ministryRole || undefined;
             token.ministryLevel = dbUser.ministryLevel || undefined;
             token.email = dbUser.email;
