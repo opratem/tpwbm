@@ -28,7 +28,31 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { action, reviewNotes, password } = reviewSchema.parse(body);
+
+    // Validate the request with better error handling
+    let validatedData;
+    try {
+      validatedData = reviewSchema.parse(body);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const passwordError = error.issues.find(issue => issue.path.includes('password'));
+        if (passwordError) {
+          return NextResponse.json(
+            {
+              error: 'Password must be at least 8 characters long. Please enter a longer password or leave it empty to auto-generate one.'
+            },
+            { status: 400 }
+          );
+        }
+        return NextResponse.json(
+          { error: 'Invalid request data. Please check your input and try again.' },
+          { status: 400 }
+        );
+      }
+      throw error;
+    }
+
+    const { action, reviewNotes, password } = validatedData;
     const { id } = await props.params;
 
     // Get the membership request

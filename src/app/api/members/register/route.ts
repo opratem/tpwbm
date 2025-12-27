@@ -4,6 +4,7 @@ import { membershipRequests } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { z } from 'zod';
 import { notificationSender } from '@/lib/notification-broadcaster';
+import bcrypt from 'bcryptjs';
 
 const membershipRequestSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),

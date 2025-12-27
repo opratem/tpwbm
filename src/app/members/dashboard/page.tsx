@@ -142,7 +142,7 @@ export default function MemberDashboard() {
 
   // Helper function to format ministry role
   const formatMinistryRole = (role: string | null | undefined) => {
-    if (!role) return '';
+    if (!role || typeof role !== 'string') return '';
     return role.split('_').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
@@ -176,7 +176,7 @@ export default function MemberDashboard() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 flex-wrap">
                       <h1 className="text-2xl font-bold text-church-primary dark:text-white">
-                        Welcome back, {session.user.name ? session.user.name.split(' ')[0] : 'Member'}
+                        Welcome back, {(session.user.name && typeof session.user.name === 'string') ? session.user.name.split(' ')[0] : 'Member'}
                       </h1>
                       <Badge
                         variant="secondary"
