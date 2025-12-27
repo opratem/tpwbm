@@ -10,6 +10,8 @@ const membershipRequestSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string().optional(),
   phone: z.string().optional(),
   address: z.string().optional(),
   city: z.string().optional(),
@@ -28,6 +30,9 @@ export async function POST(request: Request) {
 
     // Validate request data
     const validatedData = membershipRequestSchema.parse(body);
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
     // Check if email already has a pending request
     const existingRequest = await db.query.membershipRequests.findFirst({
@@ -50,6 +55,7 @@ export async function POST(request: Request) {
       firstName: validatedData.firstName,
       lastName: validatedData.lastName,
       email: validatedData.email,
+      hashedPassword: hashedPassword,
       phone: validatedData.phone || null,
       address: validatedData.address || null,
       city: validatedData.city || null,
