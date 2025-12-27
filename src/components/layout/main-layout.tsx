@@ -1,9 +1,6 @@
 "use client";
 
 import { Header } from "./header";
-"use client";
-
-import { Header } from "./header";
 import { Footer } from "./footer";
 import { SkipToContent } from "@/components/shared/skip-to-content";
 
