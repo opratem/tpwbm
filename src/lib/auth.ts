@@ -311,8 +311,9 @@ export const authOptions: NextAuthOptions = {
             token.ministryRole = dbUser.ministryRole || undefined;
             token.ministryLevel = dbUser.ministryLevel || undefined;
             token.email = dbUser.email;
-            token.name = dbUser.name || undefined;
-            token.picture = dbUser.image || undefined;
+            // Ensure name is always set, fallback to email username or 'User'
+            token.name = dbUser.name || dbUser.email?.split('@')[0] || 'User';
+            token.picture = dbUser.image;
           }
         }
         return token;
@@ -325,12 +326,13 @@ export const authOptions: NextAuthOptions = {
       try {
         if (session.user && token) {
           session.user.id = token.id as string;
-          session.user.role = (token.role as string) || "member";
-          session.user.ministryRole = token.ministryRole as string | undefined;
-          session.user.ministryLevel = token.ministryLevel as string | undefined;
-          session.user.email = (token.email as string) || "";
-          session.user.name = (token.name as string) || undefined;
-          session.user.image = (token.picture as string) || undefined;
+          session.user.role = token.role as string;
+          session.user.ministryRole = token.ministryRole as string;
+          session.user.ministryLevel = token.ministryLevel as string;
+          session.user.email = token.email as string;
+          // Ensure name is always a string, never undefined or null
+          session.user.name = (token.name as string) || (token.email as string)?.split('@')[0] || 'User';
+          session.user.image = token.picture as string;
         }
         return session;
       } catch (error) {

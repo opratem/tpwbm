@@ -67,45 +67,66 @@ const navigationItems = [
 
 // Utility function to get user initials
 const getUserInitials = (name: string | null | undefined): string => {
-  if (!name || typeof name !== 'string' || name.trim().length === 0) return 'U';
+  // Handle all falsy cases and invalid strings
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return 'U';
+  }
 
-  const words = name.trim().split(' ').filter(word => word.length > 0);
+  try {
+    const words = name.trim().split(' ').filter(word => word.length > 0);
 
-  if (words.length === 0) return 'U';
+    if (words.length === 0) return 'U';
 
-  if (words.length === 1) {
-    // Single name: take first two characters if available
-    return words[0].charAt(0).toUpperCase();
-  } else if (words.length === 2) {
-    // Two names: take first character of each
-    return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-  } else {
-    // Three or more names: take first character of first and last name
-    return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+    if (words.length === 1) {
+      // Single name: take first two characters if available
+      return words[0].charAt(0).toUpperCase();
+    } else if (words.length === 2) {
+      // Two names: take first character of each
+      return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+    } else {
+      // Three or more names: take first character of first and last name
+      return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+    }
+  } catch (error) {
+    console.error('Error getting user initials:', error);
+    return 'U';
   }
 };
 
 // Utility function to truncate name intelligently
 const getDisplayName = (name: string | null | undefined, maxLength = 15): string => {
-  if (!name || typeof name !== 'string' || name.trim().length === 0) return 'User';
-
-  if (name.length <= maxLength) return name;
-
-  const words = name.trim().split(' ');
-  if (words.length >= 2) {
-    // Try to show first name and first letter of last name
-    const firstName = words[0];
-    const lastInitial = words[words.length - 1].charAt(0);
-    const shortened = `${firstName} ${lastInitial}.`;
-
-    if (shortened.length <= maxLength) return shortened;
-
-    // If still too long, just show first name
-    return firstName.length <= maxLength ? firstName : firstName.substring(0, maxLength - 1) + '…';
+  // Handle all falsy cases and invalid strings
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return 'User';
   }
 
-  // Single name case
-  return name.substring(0, maxLength - 1) + '…';
+  try {
+    const trimmedName = name.trim();
+
+    if (trimmedName.length <= maxLength) return trimmedName;
+
+    const words = trimmedName.split(' ').filter(word => word.length > 0);
+
+    if (words.length === 0) return 'User';
+
+    if (words.length >= 2) {
+      // Try to show first name and first letter of last name
+      const firstName = words[0];
+      const lastInitial = words[words.length - 1].charAt(0);
+      const shortened = `${firstName} ${lastInitial}.`;
+
+      if (shortened.length <= maxLength) return shortened;
+
+      // If still too long, just show first name
+      return firstName.length <= maxLength ? firstName : firstName.substring(0, maxLength - 1) + '…';
+    }
+
+    // Single name case
+    return trimmedName.substring(0, maxLength - 1) + '…';
+  } catch (error) {
+    console.error('Error getting display name:', error);
+    return 'User';
+  }
 };
 
 export function Header() {
@@ -278,7 +299,7 @@ export function Header() {
                     >
                       <DropdownMenuItem asChild>
                         <Link
-                          href="/members/dashboard"
+                          href={session.user.role === 'admin' ? "/admin/dashboard" : "/members/dashboard"}
                           className="flex items-center gap-3 text-gray-200 hover:text-white focus:text-white rounded-lg font-medium"
                           role="menuitem"
                         >
@@ -288,7 +309,7 @@ export function Header() {
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link
-                          href="/members/profile"
+                          href={session.user.role === 'admin' ? "/admin/profile" : "/members/profile"}
                           className="flex items-center gap-3 text-gray-200 hover:text-white focus:text-white rounded-lg font-medium"
                           role="menuitem"
                         >
@@ -446,7 +467,7 @@ export function Header() {
                           </div>
 
                           <Link
-                              href="/members/dashboard"
+                              href={session.user.role === 'admin' ? "/admin/dashboard" : "/members/dashboard"}
                               className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/10 text-gray-200 hover:text-white transition-all duration-200"
                               onClick={() => setIsMenuOpen(false)}
                               aria-label="Go to dashboard"
@@ -456,7 +477,7 @@ export function Header() {
                           </Link>
 
                           <Link
-                              href="/members/profile"
+                              href={session.user.role === 'admin' ? "/admin/profile" : "/members/profile"}
                               className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/10 text-gray-200 hover:text-white transition-all duration-200"
                               onClick={() => setIsMenuOpen(false)}
                               aria-label="Go to profile"

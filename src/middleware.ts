@@ -161,14 +161,18 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Redirect authenticated users away from login page - ALL users go to unified dashboard
+  // Redirect authenticated users away from login page based on their role
   if (pathname === "/members/login" && token) {
+    // Redirect admins to admin dashboard, regular users to members dashboard
+    if (token.role === "admin") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
     return NextResponse.redirect(new URL("/members/dashboard", request.url));
   }
 
-  // Redirect /admin and /admin/dashboard to unified dashboard at /members/dashboard
-  if ((pathname === "/admin" || pathname === "/admin/dashboard") && token) {
-    return NextResponse.redirect(new URL("/members/dashboard", request.url));
+  // Redirect /admin to admin dashboard
+  if (pathname === "/admin" && token && token.role === "admin") {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
   // Create response and add comprehensive security headers

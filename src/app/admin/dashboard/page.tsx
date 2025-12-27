@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -106,11 +107,16 @@ interface UserFilters {
 
 // Helper function to safely get user initials
 const getUserInitials = (name: string | null | undefined): string => {
-  if (!name) return 'U';
-  const words = name.trim().split(' ').filter(word => word.length > 0);
-  if (words.length === 0) return 'U';
-  if (words.length === 1) return words[0].charAt(0).toUpperCase();
-  return words.map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  if (!name || typeof name !== 'string' || name.trim() === '') return 'U';
+  try {
+    const words = name.trim().split(' ').filter(word => word.length > 0);
+    if (words.length === 0) return 'U';
+    if (words.length === 1) return words[0].charAt(0).toUpperCase();
+    return words.map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  } catch (error) {
+    console.error('Error getting user initials:', error);
+    return 'U';
+  }
 };
 
 export default function AdminDashboard() {
@@ -417,7 +423,8 @@ export default function AdminDashboard() {
   };
 
   return (
-      <div className="container max-w-7xl py-10 space-y-8">
+    <AdminLayout>
+      <div className="container mx-auto py-8 px-4">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
@@ -1288,5 +1295,6 @@ export default function AdminDashboard() {
           </DialogContent>
         </Dialog>
       </div>
+    </AdminLayout>
   );
 }

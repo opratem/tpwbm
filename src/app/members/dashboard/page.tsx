@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -55,36 +56,13 @@ interface DashboardStats {
   upcomingEvents: any[];
 }
 
-interface AdminStats {
-  users: {
-    total: number;
-    active: number;
-  };
-  events: {
-    total: number;
-    upcoming: number;
-  };
-  prayerRequests: {
-    total: number;
-    pending: number;
-    active: number;
-  };
-  membershipRequests: {
-    pending: number;
-  };
-  recentActivity: any[];
-}
-
 export default function MemberDashboard() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [adminStats, setAdminStats] = useState<AdminStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
-  const [adminStatsLoading, setAdminStatsLoading] = useState(true);
   const [bookmarks, setBookmarks] = useState<any[]>([]);
   const [bookmarksLoading, setBookmarksLoading] = useState(true);
-
-  const isAdmin = session?.user?.role === 'admin';
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -92,6 +70,13 @@ export default function MemberDashboard() {
       redirect("/members/login");
     }
   }, [status]);
+
+  // Redirect admins to admin dashboard
+  useEffect(() => {
+    if (session?.user?.role === 'admin') {
+      router.push('/admin/dashboard');
+    }
+  }, [session, router]);
 
   // Fetch dashboard stats
   useEffect(() => {
@@ -109,23 +94,6 @@ export default function MemberDashboard() {
         });
     }
   }, [session]);
-
-  // Fetch admin stats if user is admin
-  useEffect(() => {
-    if (session?.user?.id && isAdmin) {
-      setAdminStatsLoading(true);
-      fetch('/api/admin/stats')
-        .then(res => res.json())
-        .then(data => {
-          setAdminStats(data);
-          setAdminStatsLoading(false);
-        })
-        .catch(error => {
-          console.error('Error fetching admin stats:', error);
-          setAdminStatsLoading(false);
-        });
-    }
-  }, [session, isAdmin]);
 
   // Fetch user bookmarks
   useEffect(() => {
@@ -174,8 +142,7 @@ export default function MemberDashboard() {
 
   // Helper function to format ministry role
   const formatMinistryRole = (role: string | null | undefined) => {
-    if (!role || typeof role !== 'string' || role.trim().length === 0) return '';
-
+    if (!role || typeof role !== 'string' || role.trim() === '') return '';
     return role.split('_').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
@@ -209,14 +176,14 @@ export default function MemberDashboard() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 flex-wrap">
                       <h1 className="text-2xl font-bold text-church-primary dark:text-white">
-                        Welcome back, {session.user.name ? session.user.name.split(' ')[0] : 'Member'}
+                        Welcome back, {session.user.name && typeof session.user.name === 'string' && session.user.name.trim() !== '' ? session.user.name.split(' ')[0] : 'Member'}
                       </h1>
                       <Badge
-                        variant={getRoleVariant(session.user.role)}
+                        variant="secondary"
                         className="px-3 py-1 gap-1"
                       >
-                        {session.user.role === 'admin' ? <Shield className="h-3 w-3" /> : <Users className="h-3 w-3" />}
-                        {session.user.role === 'admin' ? 'Administrator' : 'Member'}
+                        <Users className="h-3 w-3" />
+                        Member
                       </Badge>
                       {session.user.ministryRole && (
                         <Badge variant="outline" className="px-3 py-1 gap-1 border-church-accent text-church-accent">
@@ -227,7 +194,7 @@ export default function MemberDashboard() {
                     </div>
                     <p className="text-church-text-muted dark:text-gray-400 flex items-center gap-2">
                       <Sparkles className="h-4 w-4 text-church-accent" />
-                      {session.user.role === 'admin' ? 'Full system access' : 'Welcome to your member dashboard'}
+                      Welcome to your member dashboard
                     </p>
                   </div>
                 </div>
@@ -331,205 +298,6 @@ export default function MemberDashboard() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Admin Quick Actions - Only visible to admins */}
-        {isAdmin && (
-          <>
-            <div className="mt-8">
-              <div className="flex items-center gap-2 mb-4">
-                <Shield className="h-5 w-5 text-church-primary" />
-                <h2 className="text-xl font-bold text-church-primary dark:text-white">Admin Management</h2>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Link href="/admin/users">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/30 border border-blue-200 dark:border-blue-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                          <Users className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">Users</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Manage members</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                          {adminStatsLoading ? '...' : adminStats?.users?.total || 0}
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-
-                <Link href="/admin/blog">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 border border-purple-200 dark:border-purple-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                          <FileText className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">Blog</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Manage posts</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                          {adminStatsLoading ? '...' : '...'}
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-
-                <Link href="/admin/events">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/30 border border-green-200 dark:border-green-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                          <Calendar className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">Events</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Manage events</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                          {adminStatsLoading ? '...' : adminStats?.events?.total || 0}
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-green-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-
-                <Link href="/admin/announcements">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/30 border border-orange-200 dark:border-orange-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                          <Megaphone className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">Announcements</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Manage posts</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                          {adminStatsLoading ? '...' : '...'}
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-
-                <Link href="/admin/membership-requests">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950/30 dark:to-pink-900/30 border border-pink-200 dark:border-pink-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center text-white shadow-lg relative">
-                          <UserPlus className="h-6 w-6" />
-                          {!adminStatsLoading && (adminStats?.membershipRequests?.pending ?? 0) > 0 && (
-                            <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center bg-red-500 text-white border-2 border-white dark:border-gray-900 text-xs">
-                              {adminStats?.membershipRequests?.pending}
-                            </Badge>
-                          )}
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">Membership Requests</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Review applications</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl font-bold text-pink-600 dark:text-pink-400">
-                            {adminStatsLoading ? '...' : adminStats?.membershipRequests?.pending || 0}
-                          </span>
-                          {!adminStatsLoading && (adminStats?.membershipRequests?.pending ?? 0) > 0 && (
-                            <Badge variant="destructive" className="text-xs">Pending</Badge>
-                          )}
-                        </div>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-pink-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-
-                <Link href="/admin/prayer-requests">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-950/30 dark:to-indigo-900/30 border border-indigo-200 dark:border-indigo-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                          <Heart className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">Prayers</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Prayer requests</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-                          {adminStatsLoading ? '...' : adminStats?.prayerRequests?.total || 0}
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-indigo-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-
-                <Link href="/admin/youtube">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/30 dark:to-red-900/30 border border-red-200 dark:border-red-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                          <Youtube className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">YouTube</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Video content</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-red-600 dark:text-red-400">
-                          Manage
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-red-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-
-                <Link href="/admin/profile">
-                  <Card className="group hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950/30 dark:to-gray-900/30 border border-gray-200 dark:border-gray-800 hover:scale-105 cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                          <Settings className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900 dark:text-white">Settings</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Admin settings</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-gray-600 dark:text-gray-400">
-                          Config
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </div>
-            </div>
-          </>
-        )}
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

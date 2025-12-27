@@ -39,6 +39,8 @@ export default function MemberRegistration() {
     previousChurch: "",
     referredBy: "",
     additionalInfo: "",
+    password: "",
+    confirmPassword: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -57,6 +59,25 @@ export default function MemberRegistration() {
     // Basic validation
     if (!formData.firstName || !formData.lastName || !formData.email) {
       toast.error("Please fill in all required fields");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Password validation
+    if (!formData.password) {
+      toast.error("Please enter a password");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
       setIsSubmitting(false);
       return;
     }
@@ -94,6 +115,8 @@ export default function MemberRegistration() {
         previousChurch: "",
         referredBy: "",
         additionalInfo: "",
+        password: "",
+        confirmPassword: "",
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to submit registration. Please try again.";
@@ -246,6 +269,51 @@ export default function MemberRegistration() {
                     placeholder="12345"
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Password Setup */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Account Password</h3>
+              <p className="text-sm text-muted-foreground">
+                Choose a password for your account. You'll use this to access member resources after your application is approved.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password *</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password *</Label>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    placeholder="Re-enter your password"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">Password Requirements:</p>
+                <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                  <li>• At least 8 characters long</li>
+                  <li>• Make it memorable but secure</li>
+                  <li>• You can change it anytime after logging in</li>
+                </ul>
               </div>
             </div>
 
