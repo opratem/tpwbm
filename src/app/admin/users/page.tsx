@@ -81,6 +81,29 @@ import {
   type MinistryLevel
 } from "@/lib/ministry";
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "member" | "visitor";
+  ministryRole?: string | null;
+  ministryLevel?: string | null;
+  ministryDescription?: string | null;
+  isActive: boolean;
+  membershipDate: string | null;
+  createdAt: string;
+  phone: string | null;
+}
+
+interface UserFilters {
+  search: string;
+  role: string;
+  ministryLevel: string;
+  status: string;
+  sortBy: string;
+  sortOrder: "asc" | "desc";
+}
+
 // Helper function to safely get user initials
 const getUserInitials = (name: string | null | undefined): string => {
   if (!name || typeof name !== 'string' || name.trim() === '') return 'U';
