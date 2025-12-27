@@ -174,7 +174,8 @@ export default function MemberDashboard() {
 
   // Helper function to format ministry role
   const formatMinistryRole = (role: string | null | undefined) => {
-    if (!role) return '';
+    if (!role || typeof role !== 'string' || role.trim().length === 0) return '';
+
     return role.split('_').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');

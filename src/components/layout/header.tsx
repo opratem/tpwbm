@@ -67,9 +67,11 @@ const navigationItems = [
 
 // Utility function to get user initials
 const getUserInitials = (name: string | null | undefined): string => {
-  if (!name) return 'U';
+  if (!name || typeof name !== 'string' || name.trim().length === 0) return 'U';
 
   const words = name.trim().split(' ').filter(word => word.length > 0);
+
+  if (words.length === 0) return 'U';
 
   if (words.length === 1) {
     // Single name: take first two characters if available
@@ -85,7 +87,7 @@ const getUserInitials = (name: string | null | undefined): string => {
 
 // Utility function to truncate name intelligently
 const getDisplayName = (name: string | null | undefined, maxLength = 15): string => {
-  if (!name) return 'User';
+  if (!name || typeof name !== 'string' || name.trim().length === 0) return 'User';
 
   if (name.length <= maxLength) return name;
 
