@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -283,390 +284,392 @@ export default function AdminPrayerRequestsPage() {
   }
 
   return (
-      <div className="container max-w-7xl py-10 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold">Prayer Request Management</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">
-              Manage and moderate prayer requests from church members
-            </p>
+      <AdminLayout>
+        <div className="container max-w-7xl py-10 space-y-8">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold">Prayer Request Management</h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-2">
+                Manage and moderate prayer requests from church members
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-blue-600" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Total</p>
-                  <p className="text-2xl font-bold">{stats.total}</p>
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Total</p>
+                    <p className="text-2xl font-bold">{stats.total}</p>
+                  </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-green-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Active</p>
+                    <p className="text-2xl font-bold">{stats.active}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-emerald-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Answered</p>
+                    <p className="text-2xl font-bold">{stats.answered}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <Timer className="h-4 w-4 text-yellow-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Pending</p>
+                    <p className="text-2xl font-bold">{stats.pending}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">This Week</p>
+                    <p className="text-2xl font-bold">{stats.thisWeek}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-purple-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">This Month</p>
+                    <p className="text-2xl font-bold">{stats.thisMonth}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <Praying className="h-4 w-4 text-indigo-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Total Prayers</p>
+                    <p className="text-2xl font-bold">{stats.totalPrayers}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Filters */}
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                      placeholder="Search prayer requests..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                  />
+                </div>
+
+                {/* Category Filter */}
+                <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value as PrayerRequestCategory | "all")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="health">Health & Healing</SelectItem>
+                    <SelectItem value="family">Family</SelectItem>
+                    <SelectItem value="work">Work & Career</SelectItem>
+                    <SelectItem value="spiritual">Spiritual Growth</SelectItem>
+                    <SelectItem value="financial">Financial</SelectItem>
+                    <SelectItem value="relationships">Relationships</SelectItem>
+                    <SelectItem value="ministry">Ministry</SelectItem>
+                    <SelectItem value="community">Community</SelectItem>
+                    <SelectItem value="salvation">Salvation</SelectItem>
+                    <SelectItem value="thanksgiving">Thanksgiving</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Status Filter */}
+                <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as PrayerRequestStatus | "all")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="answered">Answered</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Priority Filter */}
+                <Select value={priorityFilter} onValueChange={(value) => setPriorityFilter(value as PrayerRequestPriority | "all")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Priorities" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Priorities</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="normal">Normal</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center gap-2 mt-4">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={fetchPrayerRequests}
+                    disabled={isLoading}
+                >
+                  <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
+                  Refresh
+                </Button>
+                <span className="text-sm text-gray-500">
+                {prayerRequests.length} prayer request{prayerRequests.length !== 1 ? "s" : ""}
+              </span>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Heart className="h-4 w-4 text-green-600" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Active</p>
-                  <p className="text-2xl font-bold">{stats.active}</p>
-                </div>
+          {/* Prayer Requests List */}
+          {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600" />
               </div>
-            </CardContent>
-          </Card>
+          ) : (
+              <div className="space-y-4">
+                {prayerRequests.map((request) => (
+                    <Card key={request.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="pt-6">
+                        <div className="flex items-start gap-4">
+                          {/* Avatar */}
+                          <Avatar className="h-10 w-10">
+                            <div className="w-full h-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm">
+                              {request.isAnonymous
+                                  ? "AN"
+                                  : request.requestedBy.split(" ").map(n => n[0]).join("").slice(0, 2)
+                              }
+                            </div>
+                          </Avatar>
 
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Answered</p>
-                  <p className="text-2xl font-bold">{stats.answered}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Timer className="h-4 w-4 text-yellow-600" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Pending</p>
-                  <p className="text-2xl font-bold">{stats.pending}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-blue-600" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">This Week</p>
-                  <p className="text-2xl font-bold">{stats.thisWeek}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-purple-600" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">This Month</p>
-                  <p className="text-2xl font-bold">{stats.thisMonth}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Praying className="h-4 w-4 text-indigo-600" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Total Prayers</p>
-                  <p className="text-2xl font-bold">{stats.totalPrayers}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                    placeholder="Search prayer requests..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                />
-              </div>
-
-              {/* Category Filter */}
-              <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value as PrayerRequestCategory | "all")}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="health">Health & Healing</SelectItem>
-                  <SelectItem value="family">Family</SelectItem>
-                  <SelectItem value="work">Work & Career</SelectItem>
-                  <SelectItem value="spiritual">Spiritual Growth</SelectItem>
-                  <SelectItem value="financial">Financial</SelectItem>
-                  <SelectItem value="relationships">Relationships</SelectItem>
-                  <SelectItem value="ministry">Ministry</SelectItem>
-                  <SelectItem value="community">Community</SelectItem>
-                  <SelectItem value="salvation">Salvation</SelectItem>
-                  <SelectItem value="thanksgiving">Thanksgiving</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Status Filter */}
-              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as PrayerRequestStatus | "all")}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="answered">Answered</SelectItem>
-                  <SelectItem value="archived">Archived</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Priority Filter */}
-              <Select value={priorityFilter} onValueChange={(value) => setPriorityFilter(value as PrayerRequestPriority | "all")}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Priorities" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Priorities</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-center gap-2 mt-4">
-              <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={fetchPrayerRequests}
-                  disabled={isLoading}
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
-                Refresh
-              </Button>
-              <span className="text-sm text-gray-500">
-              {prayerRequests.length} prayer request{prayerRequests.length !== 1 ? "s" : ""}
-            </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Prayer Requests List */}
-        {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600" />
-            </div>
-        ) : (
-            <div className="space-y-4">
-              {prayerRequests.map((request) => (
-                  <Card key={request.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start gap-4">
-                        {/* Avatar */}
-                        <Avatar className="h-10 w-10">
-                          <div className="w-full h-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm">
-                            {request.isAnonymous
-                                ? "AN"
-                                : request.requestedBy.split(" ").map(n => n[0]).join("").slice(0, 2)
-                            }
-                          </div>
-                        </Avatar>
-
-                        <div className="flex-1 space-y-2">
-                          {/* Header */}
-                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
-                            <div>
-                              <h3 className="font-semibold">{request.title}</h3>
-                              <div className="flex items-center gap-2 mt-1">
+                          <div className="flex-1 space-y-2">
+                            {/* Header */}
+                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                              <div>
+                                <h3 className="font-semibold">{request.title}</h3>
+                                <div className="flex items-center gap-2 mt-1">
                           <span className="text-sm font-medium">
                             {request.isAnonymous ? "Anonymous" : request.requestedBy}
                           </span>
-                                {request.requestedById === "00000000-0000-0000-0000-000000000000" && (
-                                    <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
-                                      Guest
-                                    </Badge>
-                                )}
-                                <Badge className={getCategoryColor(request.category)}>
-                                  {request.category}
-                                </Badge>
-                                <Badge className={getPriorityColor(request.priority)}>
-                                  {request.priority}
-                                </Badge>
-                                <Badge className={getStatusColor(request.status)}>
-                                  {request.status}
-                                </Badge>
+                                  {request.requestedById === "00000000-0000-0000-0000-000000000000" && (
+                                      <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+                                        Guest
+                                      </Badge>
+                                  )}
+                                  <Badge className={getCategoryColor(request.category)}>
+                                    {request.category}
+                                  </Badge>
+                                  <Badge className={getPriorityColor(request.priority)}>
+                                    {request.priority}
+                                  </Badge>
+                                  <Badge className={getStatusColor(request.status)}>
+                                    {request.status}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <Clock className="h-4 w-4" />
+                                {formatTimeAgo(request.createdAt)}
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-500">
-                              <Clock className="h-4 w-4" />
-                              {formatTimeAgo(request.createdAt)}
-                            </div>
-                          </div>
 
-                          {/* Content */}
-                          <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2">
-                            {request.description}
-                          </p>
+                            {/* Content */}
+                            <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2">
+                              {request.description}
+                            </p>
 
-                          {/* Tags */}
-                          {request.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {request.tags.slice(0, 3).map((tag) => (
-                                    <Badge key={tag} variant="outline" className="text-xs">
-                                      #{tag}
-                                    </Badge>
-                                ))}
-                                {request.tags.length > 3 && (
-                                    <Badge variant="outline" className="text-xs">
-                                      +{request.tags.length - 3} more
-                                    </Badge>
-                                )}
-                              </div>
-                          )}
+                            {/* Tags */}
+                            {request.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1">
+                                  {request.tags.slice(0, 3).map((tag) => (
+                                      <Badge key={tag} variant="outline" className="text-xs">
+                                        #{tag}
+                                      </Badge>
+                                  ))}
+                                  {request.tags.length > 3 && (
+                                      <Badge variant="outline" className="text-xs">
+                                        +{request.tags.length - 3} more
+                                      </Badge>
+                                  )}
+                                </div>
+                            )}
 
-                          {/* Admin Notes */}
-                          {request.adminNotes && (
-                              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded text-sm">
-                                <strong>Admin Notes:</strong> {request.adminNotes}
-                              </div>
-                          )}
+                            {/* Admin Notes */}
+                            {request.adminNotes && (
+                                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded text-sm">
+                                  <strong>Admin Notes:</strong> {request.adminNotes}
+                                </div>
+                            )}
 
-                          {/* Actions */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                            {/* Actions */}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-4 text-sm text-gray-500">
                         <span className="flex items-center gap-1">
                           <Heart className="h-4 w-4" />
                           {request.prayerCount} prayers
                         </span>
-                              {request.expiresAt && (
-                                  <span className="flex items-center gap-1">
+                                  {request.expiresAt && (
+                                      <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
                             Expires {new Date(request.expiresAt).toLocaleDateString()}
                           </span>
-                              )}
-                            </div>
+                                  )}
+                                </div>
 
-                            <div className="flex items-center gap-2">
-                              {request.status === "pending" && (
-                                  <>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => updateRequestStatus(request.id, "active")}
-                                    >
-                                      <CheckCircle className="h-4 w-4 mr-1" />
-                                      Approve
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => updateRequestStatus(request.id, "archived", "Rejected by admin")}
-                                    >
-                                      <XCircle className="h-4 w-4 mr-1" />
-                                      Reject
-                                    </Button>
-                                  </>
-                              )}
+                                <div className="flex items-center gap-2">
+                                  {request.status === "pending" && (
+                                      <>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => updateRequestStatus(request.id, "active")}
+                                        >
+                                          <CheckCircle className="h-4 w-4 mr-1" />
+                                          Approve
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => updateRequestStatus(request.id, "archived", "Rejected by admin")}
+                                        >
+                                          <XCircle className="h-4 w-4 mr-1" />
+                                          Reject
+                                        </Button>
+                                      </>
+                                  )}
 
-                              {request.status === "active" && (
-                                  <Dialog>
-                                    <DialogTrigger asChild>
+                                  {request.status === "active" && (
+                                      <Dialog>
+                                        <DialogTrigger asChild>
+                                          <Button size="sm" variant="outline">
+                                            <CheckCircle className="h-4 w-4 mr-1" />
+                                            Mark Answered
+                                          </Button>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                          <DialogHeader>
+                                            <DialogTitle>Mark Prayer as Answered</DialogTitle>
+                                            <DialogDescription>
+                                              Share how God has answered this prayer request.
+                                            </DialogDescription>
+                                          </DialogHeader>
+                                          <form onSubmit={(e) => {
+                                            e.preventDefault();
+                                            const formData = new FormData(e.currentTarget);
+                                            const description = formData.get("description") as string;
+                                            markAsAnswered(request.id, description);
+                                          }}>
+                                            <div className="space-y-4">
+                                              <div>
+                                                <Label htmlFor="description">Answer Description</Label>
+                                                <Textarea
+                                                    id="description"
+                                                    name="description"
+                                                    placeholder="Describe how this prayer was answered..."
+                                                    required
+                                                />
+                                              </div>
+                                            </div>
+                                            <DialogFooter className="mt-4">
+                                              <Button type="submit">Mark as Answered</Button>
+                                            </DialogFooter>
+                                          </form>
+                                        </DialogContent>
+                                      </Dialog>
+                                  )}
+
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
                                       <Button size="sm" variant="outline">
-                                        <CheckCircle className="h-4 w-4 mr-1" />
-                                        Mark Answered
+                                        <Trash2 className="h-4 w-4 mr-1" />
+                                        Delete
                                       </Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                      <DialogHeader>
-                                        <DialogTitle>Mark Prayer as Answered</DialogTitle>
-                                        <DialogDescription>
-                                          Share how God has answered this prayer request.
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <form onSubmit={(e) => {
-                                        e.preventDefault();
-                                        const formData = new FormData(e.currentTarget);
-                                        const description = formData.get("description") as string;
-                                        markAsAnswered(request.id, description);
-                                      }}>
-                                        <div className="space-y-4">
-                                          <div>
-                                            <Label htmlFor="description">Answer Description</Label>
-                                            <Textarea
-                                                id="description"
-                                                name="description"
-                                                placeholder="Describe how this prayer was answered..."
-                                                required
-                                            />
-                                          </div>
-                                        </div>
-                                        <DialogFooter className="mt-4">
-                                          <Button type="submit">Mark as Answered</Button>
-                                        </DialogFooter>
-                                      </form>
-                                    </DialogContent>
-                                  </Dialog>
-                              )}
-
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button size="sm" variant="outline">
-                                    <Trash2 className="h-4 w-4 mr-1" />
-                                    Delete
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>Delete Prayer Request</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Are you sure you want to delete this prayer request? This action cannot be undone.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => deletePrayerRequest(request.id)}>
-                                      Delete
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Delete Prayer Request</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Are you sure you want to delete this prayer request? This action cannot be undone.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => deletePrayerRequest(request.id)}>
+                                          Delete
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-              ))}
+                      </CardContent>
+                    </Card>
+                ))}
 
-              {/* Empty State */}
-              {prayerRequests.length === 0 && (
-                  <Card>
-                    <CardContent className="text-center py-12">
-                      <Praying className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">No prayer requests found</h3>
-                      <p className="text-gray-500">
-                        {searchTerm || categoryFilter !== "all" || statusFilter !== "all" || priorityFilter !== "all"
-                            ? "Try adjusting your filters to see more results"
-                            : "No prayer requests have been submitted yet"
-                        }
-                      </p>
-                    </CardContent>
-                  </Card>
-              )}
-            </div>
-        )}
-      </div>
+                {/* Empty State */}
+                {prayerRequests.length === 0 && (
+                    <Card>
+                      <CardContent className="text-center py-12">
+                        <Praying className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                        <h3 className="text-lg font-semibold mb-2">No prayer requests found</h3>
+                        <p className="text-gray-500">
+                          {searchTerm || categoryFilter !== "all" || statusFilter !== "all" || priorityFilter !== "all"
+                              ? "Try adjusting your filters to see more results"
+                              : "No prayer requests have been submitted yet"
+                          }
+                        </p>
+                      </CardContent>
+                    </Card>
+                )}
+              </div>
+          )}
+        </div>
+      </AdminLayout>
   );
 }

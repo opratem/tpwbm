@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -213,8 +214,8 @@ export default function AdminYouTubePage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <AdminLayout>
+      <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center">
             <Youtube className="h-8 w-8 mr-3 text-red-600" />
@@ -366,6 +367,6 @@ export default function AdminYouTubePage() {
           </div>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

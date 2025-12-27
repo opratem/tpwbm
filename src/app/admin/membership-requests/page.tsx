@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -258,7 +259,8 @@ export default function MembershipRequestsPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 space-y-6">
+    <AdminLayout>
+      <div className="container mx-auto py-8 px-4 space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
@@ -608,6 +610,7 @@ export default function MembershipRequestsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </AdminLayout>
   );
 }

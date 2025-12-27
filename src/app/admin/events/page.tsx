@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -876,7 +877,8 @@ export default function AdminEventsPage() {
   }
 
   return (
-      <div className="container mx-auto py-8 px-4">
+    <AdminLayout>
+      <div className="container max-w-7xl py-10 space-y-8">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Events Management</h1>
@@ -1206,5 +1208,6 @@ export default function AdminEventsPage() {
           </DialogContent>
         </Dialog>
       </div>
+    </AdminLayout>
   );
 }
