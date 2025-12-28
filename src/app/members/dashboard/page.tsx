@@ -172,6 +172,21 @@ export default function MemberDashboard() {
     }
   };
 
+  // Helper function to get display name (first name only)
+  const getDisplayName = (name: string | null | undefined): string => {
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+      return 'Member';
+    }
+    try {
+      const words = name.trim().split(' ').filter(word => word.length > 0);
+      if (words.length === 0) return 'Member';
+      return words[0];
+    } catch (error) {
+      console.error('Error getting display name:', error);
+      return 'Member';
+    }
+  };
+
   // Helper function to format ministry role
   const formatMinistryRole = (role: string | null | undefined) => {
     // More defensive checks
@@ -218,7 +233,7 @@ export default function MemberDashboard() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 flex-wrap">
                       <h1 className="text-2xl font-bold text-church-primary dark:text-white">
-                        Welcome back, {session.user.name ? session.user.name.split(' ')[0] : 'Member'}
+                        Welcome back, {getDisplayName(session.user.name)}
                       </h1>
                       <Badge
                         variant={getRoleVariant(session.user.role)}

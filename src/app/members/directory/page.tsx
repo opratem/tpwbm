@@ -105,8 +105,15 @@ export default function MemberDirectory() {
   };
 
   const getInitials = (name: string | null) => {
-    if (!name) return "?";
-    return name.split(" ").map(n => n[0]).join("").toUpperCase();
+    if (!name || typeof name !== 'string' || name.trim() === '') return "?";
+    try {
+      const words = name.trim().split(" ").filter(word => word.length > 0);
+      if (words.length === 0) return "?";
+      return words.map(n => n[0]).join("").toUpperCase();
+    } catch (error) {
+      console.error('Error getting initials:', error);
+      return "?";
+    }
   };
 
   const formatBirthday = (birthday: string | null) => {

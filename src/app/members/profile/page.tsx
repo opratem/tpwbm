@@ -155,21 +155,34 @@ export default function MemberProfile() {
   };
 
   const getUserInitials = () => {
-    if (session?.user?.name) {
-      const names = session.user.name.split(' ');
+    if (!session?.user?.name || typeof session.user.name !== 'string' || session.user.name.trim() === '') {
+      return session?.user?.email?.[0]?.toUpperCase() || 'U';
+    }
+    try {
+      const names = session.user.name.trim().split(' ').filter(word => word.length > 0);
       if (names.length >= 2) {
         return names[0][0] + names[names.length - 1][0];
       }
-      return session.user.name[0];
+      if (names.length === 1 && names[0].length > 0) {
+        return names[0][0];
+      }
+      return session?.user?.email?.[0]?.toUpperCase() || 'U';
+    } catch (error) {
+      console.error('Error getting user initials:', error);
+      return session?.user?.email?.[0]?.toUpperCase() || 'U';
     }
-    return session?.user?.email?.[0]?.toUpperCase() || 'U';
   };
 
   const formatMinistryRole = (role: string | null | undefined) => {
     if (!role || typeof role !== 'string' || role.trim().length === 0) return '';
-    return role.split('_').map(word =>
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    try {
+      return role.trim().split('_').map(word =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+    } catch (error) {
+      console.error('Error formatting ministry role:', error);
+      return '';
+    }
   };
 
   if (loading || status === "loading") {
