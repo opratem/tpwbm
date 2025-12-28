@@ -315,10 +315,10 @@ export const authOptions: NextAuthOptions = {
             // Properly handle null/undefined ministryRole and ministryLevel
             token.ministryRole = (dbUser.ministryRole && typeof dbUser.ministryRole === 'string' && dbUser.ministryRole.trim())
               ? dbUser.ministryRole.trim()
-              : null;
+              : undefined;
             token.ministryLevel = (dbUser.ministryLevel && typeof dbUser.ministryLevel === 'string' && dbUser.ministryLevel.trim())
               ? dbUser.ministryLevel.trim()
-              : null;
+              : undefined;
             token.email = dbUser.email;
             // Ensure name is always set with multiple fallbacks
             let userName = 'User';
@@ -346,8 +346,8 @@ export const authOptions: NextAuthOptions = {
           session.user.id = token.id as string;
           session.user.role = token.role as string || 'member';
           // Properly handle potentially undefined ministryRole and ministryLevel
-          session.user.ministryRole = (token.ministryRole && typeof token.ministryRole === 'string') ? token.ministryRole : null;
-          session.user.ministryLevel = (token.ministryLevel && typeof token.ministryLevel === 'string') ? token.ministryLevel : null;
+          session.user.ministryRole = (token.ministryRole && typeof token.ministryRole === 'string') ? token.ministryRole : undefined;
+          session.user.ministryLevel = (token.ministryLevel && typeof token.ministryLevel === 'string') ? token.ministryLevel : undefined;
           session.user.email = token.email as string;
           // Ensure name is always a string with multiple fallbacks
           let userName = 'User';
