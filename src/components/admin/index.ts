@@ -10,3 +10,6 @@ export { QuickActions } from "./quick-actions";
 
 export { ActivityFeed } from "./activity-feed";
 export type { Activity } from "./activity-feed";
+
+export { AdminSidebar } from "./admin-sidebar";
+export { AdminLayout } from "./admin-layout";

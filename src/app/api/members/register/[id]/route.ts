@@ -20,7 +20,7 @@ export async function PATCH(
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'super_admin')) {
       return NextResponse.json(
         { error: 'Unauthorized. Admin access required.' },
         { status: 401 }
@@ -28,7 +28,31 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { action, reviewNotes, password } = reviewSchema.parse(body);
+
+    // Validate the request with better error handling
+    let validatedData;
+    try {
+      validatedData = reviewSchema.parse(body);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const passwordError = error.issues.find(issue => issue.path.includes('password'));
+        if (passwordError) {
+          return NextResponse.json(
+            {
+              error: 'Password must be at least 8 characters long. Please enter a longer password or leave it empty to auto-generate one.'
+            },
+            { status: 400 }
+          );
+        }
+        return NextResponse.json(
+          { error: 'Invalid request data. Please check your input and try again.' },
+          { status: 400 }
+        );
+      }
+      throw error;
+    }
+
+    const { action, reviewNotes, password } = validatedData;
     const { id } = await props.params;
 
     // Get the membership request
@@ -65,9 +89,16 @@ export async function PATCH(
         );
       }
 
-      // Create user account
-      const tempPassword = password || `Welcome${Math.random().toString(36).slice(-8)}!`;
-      const hashedPassword = await bcrypt.hash(tempPassword, 10);
+      // Use the password the user chose during registration
+      // Admin can override if needed by providing a new password
+      let hashedPassword = membershipRequest.hashedPassword;
+      let tempPassword = null;
+
+      if (password) {
+        // Admin is overriding with a new password
+        hashedPassword = await bcrypt.hash(password, 10);
+        tempPassword = password;
+      }
 
       const [newUser] = await db.insert(users).values({
         name: `${membershipRequest.firstName} ${membershipRequest.lastName}`,
@@ -97,11 +128,13 @@ export async function PATCH(
 
       return NextResponse.json({
         success: true,
-        message: 'Membership request approved and user account created',
+        message: tempPassword
+          ? 'Membership approved with new password'
+          : 'Membership approved with user\'s chosen password',
         user: {
           id: newUser.id,
           email: newUser.email,
-          tempPassword: password ? undefined : tempPassword, // Only return if auto-generated
+          tempPassword, // Only present if admin provided override password
         },
       });
     } else {
@@ -146,7 +179,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'super_admin')) {
       return NextResponse.json(
         { error: 'Unauthorized. Admin access required.' },
         { status: 401 }

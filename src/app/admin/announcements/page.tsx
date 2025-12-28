@@ -1,5 +1,7 @@
 "use client";
 
+import { AdminLayout } from "@/components/admin/admin-layout";
+
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -355,6 +357,7 @@ export default function AdminAnnouncementsPage() {
   );
 
   return (
+    <AdminLayout>
       <div className="container max-w-7xl py-10 space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -586,5 +589,6 @@ export default function AdminAnnouncementsPage() {
           </DialogContent>
         </Dialog>
       </div>
+    </AdminLayout>
   );
 }

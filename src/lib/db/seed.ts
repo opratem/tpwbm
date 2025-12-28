@@ -33,8 +33,9 @@ async function seed() {
     const hashedMemberPassword = await hash('member123', 10);
     const hashedDemoPassword = await hash('demo123', 10);
 
+    console.log('🔐 Creating SUPER ADMIN accounts:');
+    console.log('   📧 Email: admin@tpwbm.org | Password: admin123 | Role: super_admin');
     console.log('🔐 Creating ADMIN accounts:');
-    console.log('   📧 Email: admin@tpwbm.org | Password: admin123');
     console.log('   📧 Email: pastor@tpwbm.org | Password: pastor123');
     console.log('👤 Creating MEMBER accounts:');
     console.log('   📧 Email: member@tpwbm.org | Password: member123');
@@ -44,7 +45,7 @@ async function seed() {
         email: 'admin@tpwbm.org',
         name: 'System Administrator',
         hashedPassword: hashedAdminPassword,
-        role: 'admin',
+        role: 'super_admin',
         emailVerified: new Date(),
         isActive: true,
         membershipDate: new Date('2020-01-01'),
