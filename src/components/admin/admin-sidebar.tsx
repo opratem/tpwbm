@@ -30,6 +30,12 @@ const adminNavItems = [
     description: "User management & overview",
   },
   {
+    title: "Users",
+    href: "/admin/users",
+    icon: Users,
+    description: "Manage all users",
+  },
+  {
     title: "Membership Requests",
     href: "/admin/membership-requests",
     icon: UserCheck,

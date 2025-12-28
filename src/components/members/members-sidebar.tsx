@@ -55,12 +55,6 @@ const memberNavItems = [
     description: "Sermons & materials",
   },
   {
-    title: "Member Directory",
-    href: "/members/directory",
-    icon: Users,
-    description: "Connect with members",
-  },
-  {
     title: "Announcements",
     href: "/announcements",
     icon: Megaphone,

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -120,6 +121,11 @@ export default function MemberDirectory() {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600" />
       </div>
     );
+  }
+
+  // Only admins can access member directory
+  if (session.user.role !== "admin") {
+    redirect("/members/dashboard");
   }
 
   return (

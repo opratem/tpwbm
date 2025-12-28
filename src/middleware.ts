@@ -78,6 +78,10 @@ export async function middleware(request: NextRequest) {
     "/members/events",
     "/members/groups",
     "/members/announcements",
+  ];
+
+  // Admin-only member routes (routes under /members that only admins can access)
+  const adminOnlyMemberRoutes = [
     "/members/directory",
   ];
 
@@ -114,6 +118,9 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = memberRoutes.some((route) =>
     pathname.startsWith(route)
   );
+  const isAdminOnlyMemberRoute = adminOnlyMemberRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
   const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
   const isMinistryRoute = Object.keys(ministryRoutes).some((route) =>
     pathname.startsWith(route)
@@ -124,6 +131,18 @@ export async function middleware(request: NextRequest) {
     const loginUrl = new URL("/members/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Handle admin-only member routes (e.g., /members/directory)
+  if (isAdminOnlyMemberRoute) {
+    if (!token) {
+      const loginUrl = new URL("/members/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (token.role !== "admin") {
+      return NextResponse.redirect(new URL("/members/dashboard", request.url));
+    }
   }
 
   // Handle admin routes

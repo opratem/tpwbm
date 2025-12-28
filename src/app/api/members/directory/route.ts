@@ -14,6 +14,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Only admins can access member directory
+    if (session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
+    }
+
     // Fetch all active members with limited information for privacy
     const allMembers = await db.select({
       id: users.id,
