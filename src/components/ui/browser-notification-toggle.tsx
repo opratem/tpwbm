@@ -13,7 +13,7 @@ import {
   setupBrowserNotifications,
   setNotificationPreference,
   getNotificationPreference,
-} from '@/lib/browser-notifications';
+} from '@/lib/browser-notification';
 
 export function BrowserNotificationToggle() {
   const [isSupported, setIsSupported] = useState(false);

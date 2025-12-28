@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { Bell, Calendar, MessageSquare, Users, BookOpen } from 'lucide-react';
+import { useRealTimeNotifications } from './useRealTimeNotifications';
 
 export interface NotificationToastData {
   title: string;
@@ -10,6 +12,15 @@ export interface NotificationToastData {
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   actionUrl?: string;
   actionLabel?: string;
+}
+
+export function useNotificationToasts() {
+  const { notifications } = useRealTimeNotifications();
+
+  useEffect(() => {
+    // This hook is initialized to work with the real-time notification system
+    // Toast notifications are handled by useRealTimeNotifications directly
+  }, [notifications]);
 }
 
 export function showNotificationToast(data: NotificationToastData) {

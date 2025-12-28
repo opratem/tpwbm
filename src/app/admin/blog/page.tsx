@@ -863,7 +863,7 @@ export default function AdminBlogPage() {
                 Update the blog post details below.
               </DialogDescription>
             </DialogHeader>
-            <BlogForm />
+            {renderBlogForm()}
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                 Cancel

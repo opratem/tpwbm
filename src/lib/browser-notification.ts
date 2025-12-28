@@ -80,7 +80,7 @@ export function showBrowserNotification(options: BrowserNotificationOptions): No
       requireInteraction: options.requireInteraction || false,
       silent: options.silent || false,
       data: options.data,
-      // @ts-ignore - actions are supported but TypeScript types might not include them
+      // @ts-expect-error - actions are supported but TypeScript types might not include them
       actions: options.actions,
     });
 
@@ -90,7 +90,7 @@ export function showBrowserNotification(options: BrowserNotificationOptions): No
       window.focus();
 
       // If there's a URL in the data, navigate to it
-      if (options.data?.url) {
+      if (options.data?.url && typeof options.data.url === 'string') {
         window.location.href = options.data.url;
       }
 

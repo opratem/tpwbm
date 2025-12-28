@@ -391,7 +391,7 @@ export default function AdminAnnouncementsPage() {
                     Create a new announcement to share with your church community.
                   </DialogDescription>
                 </DialogHeader>
-                <AnnouncementForm />
+                {renderAnnouncementForm()}
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                     Cancel

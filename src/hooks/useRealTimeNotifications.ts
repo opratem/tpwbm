@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import type { Notification } from '@/lib/notification';
 import { generateUUID, isEventSourceSupported } from '@/lib/utils';
-import { smartNotify, getNotificationPermission, getNotificationPreference } from '@/lib/browser-notifications';
+import { smartNotify, getNotificationPermission, getNotificationPreference } from '@/lib/browser-notification';
 
 interface NotificationState {
   notifications: Notification[];
