@@ -101,8 +101,35 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password. Please try again.");
-        toast.error("Login failed. Please check your credentials.");
+        // Parse the error to provide specific feedback
+        let errorMessage = "Login failed. Please try again.";
+        let specificError = "";
+
+        if (result.error.includes('EMAIL_NOT_FOUND')) {
+          specificError = "Email address not found";
+          errorMessage = "No account exists with this email address. Please check your email or register for a new account.";
+        } else if (result.error.includes('INCORRECT_PASSWORD')) {
+          specificError = "Incorrect password";
+          errorMessage = "The password you entered is incorrect. Please try again or use 'Forgot Password' to reset it.";
+        } else if (result.error.includes('ACCOUNT_INACTIVE')) {
+          specificError = "Account pending approval";
+          errorMessage = "Your account is awaiting admin approval. Please contact the church administrator for assistance.";
+        } else if (result.error.includes('NO_PASSWORD_SET')) {
+          specificError = "Use social login instead";
+          errorMessage = "This account was created with Google/Facebook. Please use the social login button instead.";
+        } else if (result.error.includes('MISSING_CREDENTIALS')) {
+          specificError = "Missing information";
+          errorMessage = "Please enter both email and password.";
+        } else {
+          specificError = "Authentication failed";
+          errorMessage = "Unable to log in. Please check your credentials and try again.";
+        }
+
+        setError(errorMessage);
+        toast.error(specificError, {
+          description: errorMessage,
+          duration: 6000,
+        });
       } else {
         toast.success("Successfully logged in!");
 

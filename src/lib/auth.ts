@@ -122,7 +122,7 @@ export const authOptions: NextAuthOptions = {
         try {
           if (!credentials?.email || !credentials?.password) {
             console.log("Missing credentials");
-            return null;
+            throw new Error("MISSING_CREDENTIALS");
           }
 
           console.log("Attempting to authenticate user:", credentials.email);
@@ -136,24 +136,24 @@ export const authOptions: NextAuthOptions = {
 
           if (!user) {
             console.log("User not found:", credentials.email);
-            return null;
+            throw new Error("EMAIL_NOT_FOUND");
           }
 
           if (!user.hashedPassword) {
-            console.log("User has no password set:", credentials.email);
-            return null;
+            console.log("User has no password set (OAuth account):", credentials.email);
+            throw new Error("NO_PASSWORD_SET");
           }
 
           if (!user.isActive) {
-            console.log("User is not active:", credentials.email);
-            return null;
+            console.log("User account is inactive:", credentials.email);
+            throw new Error("ACCOUNT_INACTIVE");
           }
 
           // Verify password
           const passwordMatch = await compare(credentials.password, user.hashedPassword);
           if (!passwordMatch) {
             console.log("Password mismatch for user:", credentials.email);
-            return null;
+            throw new Error("INCORRECT_PASSWORD");
           }
 
           console.log("Authentication successful for user:", credentials.email);
@@ -169,7 +169,11 @@ export const authOptions: NextAuthOptions = {
           };
         } catch (error) {
           console.error("Authorization error:", error);
-          return null;
+          // Re-throw custom errors for better handling
+          if (error instanceof Error && error.message.includes('_')) {
+            throw error;
+          }
+          throw new Error("AUTHENTICATION_FAILED");
         }
       },
     }),
