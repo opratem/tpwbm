@@ -353,7 +353,7 @@ export default function AdminBlogPage() {
     }
   };
 
-  const BlogForm = () => (
+  const renderBlogForm = () => (
       <div className="space-y-4 max-h-96 overflow-y-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -669,7 +669,7 @@ export default function AdminBlogPage() {
                     Fill in the details to create a new blog post.
                   </DialogDescription>
                 </DialogHeader>
-                <BlogForm />
+                {renderBlogForm()}
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                     Cancel

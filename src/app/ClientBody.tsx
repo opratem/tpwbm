@@ -8,6 +8,7 @@ import { SkipToContent } from "@/components/shared/skip-to-content";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { NotificationProvider } from "@/components/shared/notification-provider";
 
 export default function ClientBody({
   children,
@@ -21,8 +22,10 @@ export default function ClientBody({
         <ScrollProgress />
         <MediaPlayerProvider>
           <AuthProvider>
-            <MainLayout>{children}</MainLayout>
-            <MiniPlayer />
+            <NotificationProvider>
+              <MainLayout>{children}</MainLayout>
+              <MiniPlayer />
+            </NotificationProvider>
           </AuthProvider>
         </MediaPlayerProvider>
         <Toaster richColors position="top-right" />

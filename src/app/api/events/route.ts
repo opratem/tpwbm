@@ -10,6 +10,7 @@ import {
   getSecurityHeaders
 } from "@/lib/security";
 import { eventSchema, validateAndSanitize } from "@/lib/validations";
+import { notificationSender } from "@/lib/notification-broadcaster";
 
 // Fallback mock data for when database is unavailable - only recurring events
 const mockEvents = [
@@ -350,6 +351,20 @@ export async function POST(request: NextRequest) {
       price: validatedData.price || "0.00",
       registrationDeadline: validatedData.registrationDeadline ? new Date(validatedData.registrationDeadline) : null,
     }).returning() as any);
+
+    // Send notification to all members about new event
+    try {
+      await notificationSender.newEvent({
+        eventId: newEvent.id,
+        title: validatedData.title,
+        date: new Date(validatedData.startDate).toLocaleDateString(),
+        organizer: session.user.name || "Church Admin"
+      });
+      console.log(`[EVENT] Notification sent for new event: ${newEvent.id}`);
+    } catch (error) {
+      console.error("Failed to send event notification:", error);
+      // Don't fail the event creation if notification fails
+    }
 
     return NextResponse.json(newEvent, { status: 201 });
 

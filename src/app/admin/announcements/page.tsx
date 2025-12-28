@@ -284,7 +284,7 @@ export default function AdminAnnouncementsPage() {
     return matchesSearch && matchesCategory && matchesPriority;
   });
 
-  const AnnouncementForm = ({ isEdit = false }: { isEdit?: boolean }) => (
+  const renderAnnouncementForm = () => (
       <div className="grid gap-4 py-4">
         <div className="grid gap-2">
           <Label htmlFor="title">Title *</Label>
@@ -577,7 +577,7 @@ export default function AdminAnnouncementsPage() {
                 Make changes to the announcement details.
               </DialogDescription>
             </DialogHeader>
-            <AnnouncementForm isEdit />
+            {renderAnnouncementForm()}
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                 Cancel
