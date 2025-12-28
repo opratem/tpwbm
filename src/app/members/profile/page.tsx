@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardContent,
@@ -12,362 +14,378 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import {
-  Search,
+  User,
   Mail,
   Phone,
   MapPin,
   Calendar,
-  Users,
-  Filter,
-  Heart
+  Heart,
+  Edit,
+  Save,
+  X,
+  Shield,
+  CheckCircle,
+  Settings,
+  Users
 } from "lucide-react";
+import { toast } from "sonner";
 
-// Mock member data
-const mockMembers = [
-  {
-    id: 1,
-    name: "John Smith",
-    initials: "JS",
-    email: "john.smith@email.com",
-    phone: "(555) 123-4567",
-    address: "123 Oak Street",
-    memberSince: "2019-03-15",
-    ministries: ["Worship", "Youth"],
-    role: "member",
-    birthday: "June 15",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Sarah Johnson",
-    initials: "SJ",
-    email: "sarah.j@email.com",
-    phone: "(555) 234-5678",
-    address: "456 Pine Avenue",
-    memberSince: "2020-01-10",
-    ministries: ["Children", "Prayer"],
-    role: "member",
-    birthday: "March 22",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Pastor Michael Davis",
-    initials: "MD",
-    email: "pastor@tpwbm.org",
-    phone: "(555) 345-6789",
-    address: "789 Church Lane",
-    memberSince: "2015-08-01",
-    ministries: ["Pastoral", "Teaching"],
-    role: "admin",
-    birthday: "August 8",
-    status: "active",
-  },
-  {
-    id: 4,
-    name: "Emily Wilson",
-    initials: "EW",
-    email: "emily.w@email.com",
-    phone: "(555) 456-7890",
-    address: "321 Maple Drive",
-    memberSince: "2021-05-20",
-    ministries: ["Outreach", "Women"],
-    role: "member",
-    birthday: "November 3",
-    status: "active",
-  },
-  {
-    id: 5,
-    name: "David Brown",
-    initials: "DB",
-    email: "david.brown@email.com",
-    phone: "(555) 567-8901",
-    address: "654 Elm Street",
-    memberSince: "2018-12-03",
-    ministries: ["Men", "Finance"],
-    role: "member",
-    birthday: "February 14",
-    status: "active",
-  },
-  {
-    id: 6,
-    name: "Lisa Garcia",
-    initials: "LG",
-    email: "lisa.garcia@email.com",
-    phone: "(555) 678-9012",
-    address: "987 Birch Road",
-    memberSince: "2022-01-15",
-    ministries: ["Music", "Hospitality"],
-    role: "member",
-    birthday: "September 25",
-    status: "active",
-  },
-];
-
-export default function MemberDirectory() {
-  const { data: session } = useSession();
-  const [members] = useState(mockMembers);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedMinistry, setSelectedMinistry] = useState("all");
-  const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
-
-  // Get unique ministries for filter
-  const allMinistries = Array.from(
-      new Set(members.flatMap(member => member.ministries))
-  ).sort();
-
-  // Filter members based on search and ministry
-  const filteredMembers = members.filter(member => {
-    const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        member.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesMinistry = selectedMinistry === "all" ||
-        member.ministries.includes(selectedMinistry);
-    return matchesSearch && matchesMinistry;
+export default function MemberProfile() {
+  const { data: session, status } = useSession();
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    birthday: "",
+    interests: "",
+    bio: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const getMembershipYears = (memberSince: string) => {
-    const years = new Date().getFullYear() - new Date(memberSince).getFullYear();
-    return years;
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      redirect("/members/login");
+    }
+  }, [status]);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (session?.user?.id) {
+        try {
+          const response = await fetch("/api/profile");
+          if (response.ok) {
+            const data = await response.json();
+            if (data.user) {
+              setFormData({
+                name: data.user.name || session.user.name || "",
+                email: data.user.email || session.user.email || "",
+                phone: data.user.phone || "",
+                address: data.user.address || "",
+                birthday: data.user.birthday ? new Date(data.user.birthday).toISOString().split('T')[0] : "",
+                interests: data.user.interests || "",
+                bio: data.user.bio || "",
+              });
+            }
+          } else {
+            setFormData({
+              name: session.user.name || "",
+              email: session.user.email || "",
+              phone: "",
+              address: "",
+              birthday: "",
+              interests: "",
+              bio: "",
+            });
+          }
+        } catch (error) {
+          console.error('Error loading profile:', error);
+          setFormData({
+            name: session.user.name || "",
+            email: session.user.email || "",
+            phone: "",
+            address: "",
+            birthday: "",
+            interests: "",
+            bio: "",
+          });
+        }
+      }
+      setLoading(false);
+    };
+
+    if (session?.user) {
+      loadProfile();
+    }
+  }, [session]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const getRoleColor = (role: string) => {
-    return role === "admin"
-      ? "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400"
-      : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300";
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch("/api/profile/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast.success("Profile updated successfully!");
+        setIsEditing(false);
+      } else {
+        const error = await response.json();
+        toast.error(error.error || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error("An error occurred while updating your profile");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  if (!session) {
+  const handleCancel = () => {
+    setIsEditing(false);
+    if (session?.user) {
+      setFormData({
+        name: session.user.name || "",
+        email: session.user.email || "",
+        phone: "",
+        address: "",
+        birthday: "",
+        interests: "",
+        bio: "",
+      });
+    }
+  };
+
+  const getUserInitials = () => {
+    if (session?.user?.name) {
+      const names = session.user.name.split(' ');
+      if (names.length >= 2) {
+        return names[0][0] + names[names.length - 1][0];
+      }
+      return session.user.name[0];
+    }
+    return session?.user?.email?.[0]?.toUpperCase() || 'U';
+  };
+
+  const formatMinistryRole = (role: string | null | undefined) => {
+    if (!role || typeof role !== 'string' || role.trim().length === 0) return '';
+    return role.split('_').map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+
+  if (loading || status === "loading") {
     return (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[hsl(218,31%,18%)]" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/20 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-church-primary mx-auto mb-4" />
+          <p className="text-gray-500 dark:text-gray-400">Loading your profile...</p>
         </div>
+      </div>
     );
   }
 
+  if (!session) {
+    return null;
+  }
+
   return (
-      <>
-        {/* Breadcrumbs */}
-        <Breadcrumbs />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/20 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+      <Breadcrumbs />
 
-        <div className="container max-w-6xl py-10 space-y-8">
-          {/* Header */}
-        <div>
-          <h1 className="text-xl md:text-2xl font-bold text-[hsl(218,31%,18%)] dark:text-white">Member Directory</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
-            Connect with fellow members of our church family
-          </p>
-        </div>
-
-        {/* Search and Filters */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1">
-                <Label htmlFor="search">Search Members</Label>
-                <div className="relative mt-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                      id="search"
-                      placeholder="Search by name or email..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                  />
+      <div className="container max-w-4xl py-8 space-y-6">
+        <Card className="backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border border-church-primary/10 shadow-xl">
+          <CardContent className="p-8">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="relative">
+                <Avatar className="h-24 w-24 ring-4 ring-church-accent/30 shadow-lg">
+                  <div className="w-full h-full bg-gradient-to-br from-church-primary to-church-primary-light flex items-center justify-center text-3xl font-bold text-white">
+                    {getUserInitials()}
+                  </div>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 h-6 w-6 bg-church-accent border-2 border-white dark:border-gray-900 rounded-full flex items-center justify-center">
+                  <CheckCircle className="h-4 w-4 text-white" />
                 </div>
               </div>
 
-              <div className="w-full lg:w-48">
-                <Label htmlFor="ministry">Filter by Ministry</Label>
-                <select
-                    id="ministry"
-                    value={selectedMinistry}
-                    onChange={(e) => setSelectedMinistry(e.target.value)}
-                    className="w-full mt-1 p-2 border rounded-md"
-                >
-                  <option value="all">All Ministries</option>
-                  {allMinistries.map((ministry) => (
-                      <option key={ministry} value={ministry}>
-                        {ministry}
-                      </option>
-                  ))}
-                </select>
+              <div className="flex-1 text-center md:text-left">
+                <h1 className="text-2xl font-bold text-church-primary dark:text-white mb-2">
+                  {session.user.name || 'Member'}
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-3">{session.user.email}</p>
+                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                  <Badge variant="secondary" className="gap-1">
+                    {session.user.role === 'admin' ? <Shield className="h-3 w-3" /> : <Users className="h-3 w-3" />}
+                    {session.user.role === 'admin' ? 'Administrator' : 'Member'}
+                  </Badge>
+                  {session.user.ministryRole && (
+                    <Badge variant="outline" className="border-church-accent text-church-accent gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {formatMinistryRole(session.user.ministryRole)}
+                    </Badge>
+                  )}
+                </div>
               </div>
 
-              <div className="flex items-end gap-2">
-                <Button
-                    variant={viewMode === "cards" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setViewMode("cards")}
-                >
-                  Cards
-                </Button>
-                <Button
-                    variant={viewMode === "list" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setViewMode("list")}
-                >
-                  List
-                </Button>
+              <div className="flex gap-2">
+                {!isEditing ? (
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    className="gap-2 bg-church-primary hover:bg-church-primary/90"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit Profile
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className="gap-2 bg-church-accent hover:bg-church-accent/90"
+                    >
+                      <Save className="h-4 w-4" />
+                      {saving ? 'Saving...' : 'Save'}
+                    </Button>
+                    <Button
+                      onClick={handleCancel}
+                      variant="outline"
+                      disabled={saving}
+                      className="gap-2"
+                    >
+                      <X className="h-4 w-4" />
+                      Cancel
+                    </Button>
+                  </>
+                )}
               </div>
-            </div>
-
-            <div className="mt-4 flex items-center gap-4 text-sm text-gray-500">
-            <span className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
-              {filteredMembers.length} members found
-            </span>
             </div>
           </CardContent>
         </Card>
 
-        {/* Members Display */}
-        {viewMode === "cards" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredMembers.map((member) => (
-                  <Card key={member.id} className="hover:shadow-md transition-shadow border-gray-200 dark:border-gray-700">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-16 w-16">
-                          <div className="w-full h-full bg-[hsl(218,31%,95%)] dark:bg-[hsl(218,31%,25%)] flex items-center justify-center text-lg font-semibold text-[hsl(218,31%,18%)] dark:text-[hsl(45,56%,55%)]">
-                            {member.initials}
-                          </div>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-base text-[hsl(218,31%,18%)] dark:text-white">{member.name}</h3>
-                            <Badge className={getRoleColor(member.role)}>
-                              {member.role}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Member for {getMembershipYears(member.memberSince)} years
-                          </p>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Mail className="h-4 w-4 text-gray-500" />
-                        <span className="truncate">{member.email}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Phone className="h-4 w-4 text-gray-500" />
-                        <span>{member.phone}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <MapPin className="h-4 w-4 text-gray-500" />
-                        <span className="truncate">{member.address}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Calendar className="h-4 w-4 text-gray-500" />
-                        <span>Birthday: {member.birthday}</span>
-                      </div>
-
-                      <div className="pt-2">
-                        <Label className="text-xs font-medium text-gray-500">MINISTRIES</Label>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {member.ministries.map((ministry, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {ministry}
-                              </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-              ))}
+        <Card className="backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border border-church-primary/10 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-church-primary dark:text-white">
+              <Settings className="h-5 w-5" />
+              Personal Information
+            </CardTitle>
+            <CardDescription>
+              Update your personal details and contact information
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="flex items-center gap-2">
+                <User className="h-4 w-4 text-gray-500" />
+                Full Name
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                className="bg-white dark:bg-gray-800"
+              />
             </div>
-        ) : (
-            <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-900">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Member
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Contact
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Ministries
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Years
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {filteredMembers.map((member) => (
-                        <tr key={member.id} className="hover:bg-gray-50 dark:hover:bg-gray-900">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-10 w-10">
-                                <div className="w-full h-full bg-[hsl(218,31%,95%)] dark:bg-[hsl(218,31%,25%)] flex items-center justify-center text-sm font-semibold text-[hsl(218,31%,18%)] dark:text-[hsl(45,56%,55%)]">
-                                  {member.initials}
-                                </div>
-                              </Avatar>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium text-sm text-[hsl(218,31%,18%)] dark:text-white">{member.name}</span>
-                                  <Badge className={getRoleColor(member.role)}>
-                                    {member.role}
-                                  </Badge>
-                                </div>
-                                <p className="text-sm text-gray-500">Birthday: {member.birthday}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2 text-sm">
-                                <Mail className="h-3 w-3 text-gray-500" />
-                                <span>{member.email}</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-sm">
-                                <Phone className="h-3 w-3 text-gray-500" />
-                                <span>{member.phone}</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex flex-wrap gap-1">
-                              {member.ministries.map((ministry, index) => (
-                                  <Badge key={index} variant="outline" className="text-xs">
-                                    {ministry}
-                                  </Badge>
-                              ))}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            {getMembershipYears(member.memberSince)}
-                          </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-        )}
 
-        {filteredMembers.length === 0 && (
-            <Card>
-              <CardContent className="text-center py-12">
-                <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No members found</h3>
-                <p className="text-gray-500">
-                  Try adjusting your search terms or filters
-                </p>
-              </CardContent>
-            </Card>
-        )}
+            <div className="space-y-2">
+              <Label htmlFor="email" className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-gray-500" />
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                className="bg-white dark:bg-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-gray-500" />
+                Phone Number
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                placeholder="(555) 123-4567"
+                className="bg-white dark:bg-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address" className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gray-500" />
+                Address
+              </Label>
+              <Input
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                placeholder="123 Main St, City, State"
+                className="bg-white dark:bg-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="birthday" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-gray-500" />
+                Birthday
+              </Label>
+              <Input
+                id="birthday"
+                name="birthday"
+                type="date"
+                value={formData.birthday}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                className="bg-white dark:bg-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="interests" className="flex items-center gap-2">
+                <Heart className="h-4 w-4 text-gray-500" />
+                Interests & Hobbies
+              </Label>
+              <Input
+                id="interests"
+                name="interests"
+                value={formData.interests}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                placeholder="e.g., Music, Reading, Sports"
+                className="bg-white dark:bg-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bio" className="flex items-center gap-2">
+                <User className="h-4 w-4 text-gray-500" />
+                Bio
+              </Label>
+              <Textarea
+                id="bio"
+                name="bio"
+                value={formData.bio}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                placeholder="Tell us a little about yourself..."
+                rows={4}
+                className="bg-white dark:bg-gray-800 resize-none"
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </>
+    </div>
   );
 }

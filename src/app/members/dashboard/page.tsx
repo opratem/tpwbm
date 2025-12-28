@@ -209,7 +209,7 @@ export default function MemberDashboard() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 flex-wrap">
                       <h1 className="text-2xl font-bold text-church-primary dark:text-white">
-                        Welcome back, {session.user.name ? session.user.name.split(' ')[0] : 'Member'}
+                        Welcome back, {session.user.name && session.user.name.trim() ? session.user.name.split(' ')[0] : 'Member'}
                       </h1>
                       <Badge
                         variant={getRoleVariant(session.user.role)}
