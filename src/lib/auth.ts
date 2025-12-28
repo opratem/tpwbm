@@ -312,8 +312,13 @@ export const authOptions: NextAuthOptions = {
           if (dbUser) {
             token.id = dbUser.id;
             token.role = dbUser.role || "member";
-            token.ministryRole = dbUser.ministryRole || undefined;
-            token.ministryLevel = dbUser.ministryLevel || undefined;
+            // Properly handle null/undefined ministryRole and ministryLevel
+            token.ministryRole = (dbUser.ministryRole && typeof dbUser.ministryRole === 'string' && dbUser.ministryRole.trim())
+              ? dbUser.ministryRole.trim()
+              : null;
+            token.ministryLevel = (dbUser.ministryLevel && typeof dbUser.ministryLevel === 'string' && dbUser.ministryLevel.trim())
+              ? dbUser.ministryLevel.trim()
+              : null;
             token.email = dbUser.email;
             // Ensure name is always set with multiple fallbacks
             let userName = 'User';
@@ -326,7 +331,7 @@ export const authOptions: NextAuthOptions = {
               }
             }
             token.name = userName;
-            token.picture = dbUser.image;
+            token.picture = dbUser.image || null;
           }
         }
         return token;
@@ -339,9 +344,10 @@ export const authOptions: NextAuthOptions = {
       try {
         if (session.user && token) {
           session.user.id = token.id as string;
-          session.user.role = token.role as string;
-          session.user.ministryRole = token.ministryRole as string;
-          session.user.ministryLevel = token.ministryLevel as string;
+          session.user.role = token.role as string || 'member';
+          // Properly handle potentially undefined ministryRole and ministryLevel
+          session.user.ministryRole = (token.ministryRole && typeof token.ministryRole === 'string') ? token.ministryRole : null;
+          session.user.ministryLevel = (token.ministryLevel && typeof token.ministryLevel === 'string') ? token.ministryLevel : null;
           session.user.email = token.email as string;
           // Ensure name is always a string with multiple fallbacks
           let userName = 'User';
@@ -354,7 +360,7 @@ export const authOptions: NextAuthOptions = {
             }
           }
           session.user.name = userName;
-          session.user.image = token.picture as string;
+          session.user.image = token.picture as string || null;
         }
         return session;
       } catch (error) {

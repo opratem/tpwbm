@@ -193,13 +193,18 @@ export default function MemberDashboard() {
   const formatMinistryRole = (role: string | null | undefined) => {
     // More defensive checks
     if (!role || typeof role !== 'string') return '';
+    if (role === 'null' || role === 'undefined') return '';
     const trimmedRole = role.trim();
     if (!trimmedRole || trimmedRole.length === 0) return '';
 
     try {
-      return trimmedRole.split('_').map(word =>
-        word && word.length > 0 ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : ''
-      ).filter(word => word).join(' ');
+      const words = trimmedRole.split('_');
+      if (!words || !Array.isArray(words)) return '';
+
+      return words.map(word => {
+        if (!word || typeof word !== 'string' || word.length === 0) return '';
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }).filter(word => word && word.length > 0).join(' ');
     } catch (error) {
       console.error('Error formatting ministry role:', error, 'Role value:', role);
       return '';

@@ -69,22 +69,33 @@ export function MembersSidebar() {
 
   const handleLogout = async () => {
     try {
-      await signOut({ callbackUrl: "/" });
-      toast.success("Logged out successfully");
+      toast.success("Logging out...");
+      await signOut({ redirect: true, callbackUrl: "/" });
     } catch (error) {
-      toast.error("Failed to logout");
+      console.error("Logout error:", error);
+      toast.error("Failed to logout. Please try again.");
     }
   };
 
   // Get user initials for avatar
   const getInitials = (name?: string | null) => {
-    if (!name) return "M";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    if (!name || typeof name !== 'string') return "M";
+    const trimmedName = name.trim();
+    if (!trimmedName || trimmedName.length === 0) return "M";
+
+    try {
+      const words = trimmedName.split(" ").filter(word => word && word.length > 0);
+      if (words.length === 0) return "M";
+
+      return words
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    } catch (error) {
+      console.error("Error getting initials:", error);
+      return "M";
+    }
   };
 
   return (
