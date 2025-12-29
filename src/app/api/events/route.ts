@@ -324,7 +324,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new event
+    // Use organizer from form data if provided, otherwise use session user name
+    const organizerName = validatedData.organizer?.trim() || session.user.name || "Unknown Organizer";
+
     const [newEvent] = await (db.insert(events).values({
       title: validatedData.title,
       description: validatedData.description,
@@ -333,7 +335,7 @@ export async function POST(request: NextRequest) {
       endDate: new Date(validatedData.endDate),
       location: validatedData.location,
       address: validatedData.address || "",
-      organizer: session.user.name || "Unknown Organizer",
+      organizer: organizerName,
       organizerId: session.user.id,
       capacity: validatedData.capacity || 0,
       registeredCount: 0,
@@ -358,7 +360,7 @@ export async function POST(request: NextRequest) {
         eventId: newEvent.id,
         title: validatedData.title,
         date: new Date(validatedData.startDate).toLocaleDateString(),
-        organizer: session.user.name || "Church Admin"
+        organizer: organizerName || "Church Admin"
       });
       console.log(`[EVENT] Notification sent for new event: ${newEvent.id}`);
     } catch (error) {

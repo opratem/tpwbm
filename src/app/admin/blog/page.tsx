@@ -205,6 +205,17 @@ export default function AdminBlogPage() {
     setFilteredPosts(filtered);
   };
 
+  // Helper function to generate slug from title
+  const generateSlug = (title: string): string => {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+  };
+
   const resetForm = () => {
     setFormData({
       title: "",
@@ -231,12 +242,18 @@ export default function AdminBlogPage() {
         return;
       }
 
+      // Add slug to the payload
+      const payload = {
+        ...formData,
+        slug: generateSlug(formData.title),
+      };
+
       const response = await fetch("/api/admin/blog", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -263,12 +280,22 @@ export default function AdminBlogPage() {
     try {
       setSubmitting(true);
 
+      // Use existing slug if title unchanged, otherwise generate new one
+      const slug = editingPost.slug && formData.title === editingPost.title
+        ? editingPost.slug
+        : generateSlug(formData.title);
+
+      const payload = {
+        ...formData,
+        slug,
+      };
+
       const response = await fetch(`/api/admin/blog/${editingPost.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
