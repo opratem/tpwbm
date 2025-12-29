@@ -253,8 +253,8 @@ export async function POST(request: NextRequest) {
     // Apply security headers
     const securityHeaders = getSecurityHeaders();
 
-    // Rate limiting - 10 announcements per 10 minutes
-    const rateLimit = checkRateLimit(request, rateLimiters.forms);
+    // Rate limiting - 30 announcements per 10 minutes for admins
+    const rateLimit = checkRateLimit(request, rateLimiters.adminContent);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         {
@@ -291,11 +291,11 @@ export async function POST(request: NextRequest) {
     const [newAnnouncement] = await db.insert(announcements).values({
       title: validatedData.title,
       content: validatedData.content,
-      category: validatedData.type as 'general' | 'event' | 'schedule' | 'ministry' | 'outreach' | 'urgent',
+      category: validatedData.category as 'general' | 'event' | 'schedule' | 'ministry' | 'outreach' | 'urgent',
       priority: validatedData.priority as 'low' | 'normal' | 'high',
       author: session.user.name || "Admin",
       authorId: session.user.id,
-      status: validatedData.status as 'draft' | 'published' | 'archived',
+      status: validatedData.status as 'draft' | 'published' | 'expired' | 'archived',
       expiresAt: validatedData.expiresAt ? new Date(validatedData.expiresAt) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default 30 days
     }).returning();
 

@@ -282,8 +282,8 @@ export async function POST(request: NextRequest) {
     // Apply security headers
     const securityHeaders = getSecurityHeaders();
 
-    // Rate limiting - 10 event creations per 10 minutes
-    const rateLimit = checkRateLimit(request, rateLimiters.forms);
+    // Rate limiting - 30 event creations per 10 minutes for admins
+    const rateLimit = checkRateLimit(request, rateLimiters.adminContent);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         {

@@ -165,11 +165,11 @@ export const announcementSchema = z.object({
     .min(10, 'Content must be at least 10 characters')
     .max(2000, 'Content must be less than 2000 characters')
     .transform(sanitizeString),
-  type: z.enum(['general', 'urgent', 'event', 'reminder'])
+  category: z.enum(['general', 'event', 'schedule', 'ministry', 'outreach', 'urgent'])
     .default('general'),
-  priority: z.enum(['low', 'medium', 'high'])
-    .default('medium'),
-  status: z.enum(['draft', 'published', 'archived'])
+  priority: z.enum(['low', 'normal', 'high'])
+    .default('normal'),
+  status: z.enum(['draft', 'published', 'expired', 'archived'])
     .default('draft'),
   expiresAt: z.string()
     .datetime('Invalid expiration date format')
@@ -178,7 +178,8 @@ export const announcementSchema = z.object({
     .url('Invalid image URL')
     .optional(),
   targetAudience: z.enum(['all', 'members', 'visitors', 'admin'])
-    .default('all'),
+    .default('all')
+    .optional(),
 });
 
 export const announcementUpdateSchema = announcementSchema.partial();

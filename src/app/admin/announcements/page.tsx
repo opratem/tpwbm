@@ -231,6 +231,10 @@ export default function AdminAnnouncementsPage() {
         return Bell;
       case "ministry":
         return Users;
+      case "outreach":
+        return Users;
+      case "urgent":
+        return Bell;
       default:
         return Bell;
     }
@@ -246,6 +250,10 @@ export default function AdminAnnouncementsPage() {
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
       case "ministry":
         return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
+      case "outreach":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "urgent":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
@@ -322,6 +330,8 @@ export default function AdminAnnouncementsPage() {
                 <SelectItem value="event">Event</SelectItem>
                 <SelectItem value="schedule">Schedule</SelectItem>
                 <SelectItem value="ministry">Ministry</SelectItem>
+                <SelectItem value="outreach">Outreach</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -438,6 +448,8 @@ export default function AdminAnnouncementsPage() {
                     <SelectItem value="event">Event</SelectItem>
                     <SelectItem value="schedule">Schedule</SelectItem>
                     <SelectItem value="ministry">Ministry</SelectItem>
+                    <SelectItem value="outreach">Outreach</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

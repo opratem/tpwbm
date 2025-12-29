@@ -167,7 +167,7 @@ export default function AdminBlogPage() {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/blog");
+      const response = await fetch("/api/admin/blog");
       if (!response.ok) {
         throw new Error("Failed to fetch blog posts");
       }
@@ -231,7 +231,7 @@ export default function AdminBlogPage() {
         return;
       }
 
-      const response = await fetch("/api/blog", {
+      const response = await fetch("/api/admin/blog", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -263,7 +263,7 @@ export default function AdminBlogPage() {
     try {
       setSubmitting(true);
 
-      const response = await fetch(`/api/blog/${editingPost.id}`, {
+      const response = await fetch(`/api/admin/blog/${editingPost.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -292,7 +292,7 @@ export default function AdminBlogPage() {
 
   const handleDeletePost = async (postId: string) => {
     try {
-      const response = await fetch(`/api/blog/${postId}`, {
+      const response = await fetch(`/api/admin/blog/${postId}`, {
         method: "DELETE",
       });
 
