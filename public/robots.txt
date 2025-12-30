@@ -1,0 +1,47 @@
+# robots.txt for The Prevailing Word Believers Ministry Inc.
+
+# Host
+Host: https://www.tpwbm.com.ng
+
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Disallow admin and member-only areas
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /members/login
+Disallow: /members/register
+Disallow: /members/dashboard
+Disallow: /members/profile
+Disallow: /members/directory
+Disallow: /api/
+
+# Disallow payment pages
+Disallow: /payments/
+
+# Disallow authentication pages
+Disallow: /members/forgot-password
+
+# Allow important pages
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /pastor
+Allow: /leadership
+Allow: /ministries/
+Allow: /sermons
+Allow: /events
+Allow: /blog
+Allow: /giving
+Allow: /contact
+Allow: /gallery
+Allow: /live-streaming
+Allow: /audio-messages
+Allow: /announcements
+
+# Sitemap location
+Sitemap: https://www.tpwbm.com.ng/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
