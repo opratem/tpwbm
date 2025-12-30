@@ -383,13 +383,7 @@ export function CascadingText({
     const [visibleChars, setVisibleChars] = React.useState(new Set<number>());
     const { ref, isVisible } = useScrollAnimation({ threshold: 0.3 });
 
-    // Early return for null/undefined/empty text
-    if (!text || typeof text !== 'string' || text.trim() === '') {
-        return null;
-    }
-
-    const safeText = text.trim();
-    const words = safeText.split(' ');
+    const safeText = text && typeof text === 'string' ? text.trim() : '';
 
     React.useEffect(() => {
         if (isVisible && safeText) {
@@ -406,6 +400,13 @@ export function CascadingText({
             });
         }
     }, [isVisible, safeText, delay]);
+
+    // Early return for null/undefined/empty text
+    if (!safeText) {
+        return null;
+    }
+
+    const words = safeText.split(' ');
 
     const getCharAnimation = (wordIndex: number, charIndex: number, isVisible: boolean) => {
         const key = wordIndex * 100 + charIndex;

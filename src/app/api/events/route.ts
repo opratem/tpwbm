@@ -355,7 +355,7 @@ export async function POST(request: NextRequest) {
       contactEmail: validatedData.contactEmail || session.user.email || "",
       contactPhone: validatedData.contactPhone || "",
       tags: validatedData.tags || [],
-      price: validatedData.price || "0.00",
+      price: validatedData.price !== undefined ? String(validatedData.price) : "0.00",
       registrationDeadline: validatedData.registrationDeadline ? new Date(validatedData.registrationDeadline) : null,
     }).returning() as any);
 

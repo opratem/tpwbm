@@ -363,6 +363,7 @@
          })
          .catch(error => console.error('Error checking bookmarks:', error));
      }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [session, allSermons.length]);
 
    // Toggle bookmark
