@@ -89,10 +89,15 @@ export default function AdminAnnouncementsPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Helper function to check if user has admin privileges (admin or super_admin)
+  const isAdminUser = (role: string | undefined) => {
+    return role === "admin" || role === "super_admin";
+  };
+
   // Move useEffect before any conditional returns to follow Rules of Hooks
   useEffect(() => {
-    // Only fetch if user is authenticated and is admin
-    if (session && session.user.role === "admin") {
+    // Only fetch if user is authenticated and is admin or super_admin
+    if (session && isAdminUser(session.user.role)) {
       fetchAnnouncements();
     }
   }, [session]);
@@ -106,8 +111,8 @@ export default function AdminAnnouncementsPage() {
     );
   }
 
-  // Handle authentication
-  if (!session || session.user.role !== "admin") {
+  // Handle authentication - allow both admin and super_admin
+  if (!session || !isAdminUser(session.user.role)) {
     redirect("/members/dashboard");
   }
 

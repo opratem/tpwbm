@@ -72,7 +72,7 @@ export default function AdminEventsPage() {
     endDate: "",
     location: "",
     address: "",
-    organizer: "", // Add explicit organizer field
+    organizer: "",
     capacity: undefined,
     requiresRegistration: false,
     isRecurring: false,
@@ -85,7 +85,7 @@ export default function AdminEventsPage() {
     price: undefined,
     registrationDeadline: "",
     imageUrl: "",
-    imageUrls: [], // Add multiple images support
+    imageUrls: [],
   });
   const [filters, setFilters] = useState({
     category: "all" as EventCategory | "all",
@@ -96,6 +96,11 @@ export default function AdminEventsPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Helper function to check if user has admin privileges (admin or super_admin)
+  const isAdminUser = (role: string | undefined) => {
+    return role === "admin" || role === "super_admin";
+  };
 
   // Helper function to consolidate image handling (migrate single imageUrl to imageUrls array)
   const consolidateImages = (imageUrl?: string, imageUrls?: string[]) => {
@@ -206,16 +211,16 @@ export default function AdminEventsPage() {
     }
   };
 
-  // Redirect if not admin
+  // Redirect if not admin or super_admin
   useEffect(() => {
     if (status === "loading") return;
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       redirect("/");
     }
   }, [session, status]);
 
   useEffect(() => {
-    if (session?.user?.role === "admin") {
+    if (session?.user?.role && isAdminUser(session.user.role)) {
       fetchEvents();
     }
   }, [session]);
@@ -273,7 +278,7 @@ export default function AdminEventsPage() {
       endDate: "",
       location: "",
       address: "",
-      organizer: "", // Explicit organizer field
+      organizer: "",
       capacity: undefined,
       requiresRegistration: false,
       isRecurring: false,
@@ -285,8 +290,8 @@ export default function AdminEventsPage() {
       tags: [],
       price: undefined,
       registrationDeadline: "",
-      imageUrl: "", // Clear legacy image field
-      imageUrls: [], // Clear multiple images array
+      imageUrl: "",
+      imageUrls: [],
     });
   };
 
@@ -305,7 +310,7 @@ export default function AdminEventsPage() {
       const submitData = {
         ...formData,
         imageUrls: consolidatedImages,
-        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "", // Keep backward compatibility
+        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "",
       };
 
       const response = await fetch("/api/events", {
@@ -345,7 +350,7 @@ export default function AdminEventsPage() {
       const submitData = {
         ...formData,
         imageUrls: consolidatedImages,
-        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "", // Keep backward compatibility
+        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "",
       };
 
       const response = await fetch(`/api/events/${editingEvent.id}`, {
@@ -445,7 +450,7 @@ export default function AdminEventsPage() {
       tags: event.tags || [],
       price: event.price,
       registrationDeadline: formatDateForInput(event.registrationDeadline || ""),
-      imageUrl: "", // Clear legacy field - all images are now in imageUrls
+      imageUrl: "",
       imageUrls: consolidatedImages,
     });
     setIsEditDialogOpen(true);

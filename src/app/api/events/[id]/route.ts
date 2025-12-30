@@ -11,6 +11,11 @@ function isValidUUID(uuid: string): boolean {
   return uuidRegex.test(uuid);
 }
 
+// Helper function to check if user has admin privileges (admin or super_admin)
+const isAdminUser = (role: string | undefined) => {
+  return role === "admin" || role === "super_admin";
+};
+
 // GET /api/events/[id] - Get event by ID
 export async function GET(
   request: NextRequest,
@@ -77,7 +82,7 @@ export async function GET(
           { status: 403 }
         );
       }
-    } else if (session.user.role !== "admin") {
+    } else if (!isAdminUser(session.user.role)) {
       // Members can only see published events
       if (event.status !== "published") {
         return NextResponse.json(
@@ -86,7 +91,7 @@ export async function GET(
         );
       }
     }
-    // Admins can see all events
+    // Admins and super_admins can see all events
 
     // Get current user's registration status if authenticated
     let isRegistered = false;
@@ -117,7 +122,7 @@ export async function GET(
   }
 }
 
-// PUT /api/events/[id] - Update event
+// PUT /api/events/[id] - Update event (admin or super_admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -135,7 +140,7 @@ export async function PUT(
 
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
         { error: "Unauthorized - Admin access required" },
         { status: 401 }
@@ -238,7 +243,7 @@ export async function PUT(
   }
 }
 
-// PATCH /api/events/[id] - Partially update event
+// PATCH /api/events/[id] - Partially update event (admin or super_admin only)
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -256,7 +261,7 @@ export async function PATCH(
 
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
         { error: "Unauthorized - Admin access required" },
         { status: 401 }
@@ -359,7 +364,7 @@ export async function PATCH(
   }
 }
 
-// DELETE /api/events/[id] - Delete event
+// DELETE /api/events/[id] - Delete event (admin or super_admin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -377,7 +382,7 @@ export async function DELETE(
 
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
         { error: "Unauthorized - Admin access required" },
         { status: 401 }

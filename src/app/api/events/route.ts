@@ -12,6 +12,11 @@ import {
 import { eventSchema, validateAndSanitize } from "@/lib/validations";
 import { notificationSender } from "@/lib/notification-broadcaster";
 
+// Helper function to check if user has admin privileges (admin or super_admin)
+const isAdminUser = (role: string | undefined) => {
+  return role === "admin" || role === "super_admin";
+};
+
 // Fallback mock data for when database is unavailable - only recurring events
 const mockEvents = [
   {
@@ -95,11 +100,11 @@ export async function GET(request: NextRequest) {
     // Access control - non-authenticated users can only see published events
     if (!session) {
       conditions.push(eq(events.status, 'published'));
-    } else if (session.user.role !== "admin") {
+    } else if (!isAdminUser(session.user.role)) {
       // Members can only see published events
       conditions.push(eq(events.status, 'published'));
     }
-    // Admins can see all events (no additional filters)
+    // Admins and super_admins can see all events (no additional filters)
 
     // Apply filters
     if (category && category !== "all") {
@@ -267,12 +272,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/events - Create new event (admin only)
+// POST /api/events - Create new event (admin or super_admin only)
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }

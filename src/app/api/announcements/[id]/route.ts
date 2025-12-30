@@ -5,6 +5,11 @@ import { db } from "@/lib/db";
 import { announcements } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
+// Helper function to check if user has admin privileges (admin or super_admin)
+const isAdminUser = (role: string | undefined) => {
+  return role === "admin" || role === "super_admin";
+};
+
 // GET /api/announcements/[id] - Get specific announcement
 export async function GET(
     request: NextRequest,
@@ -36,7 +41,7 @@ export async function GET(
             { status: 403 }
         );
       }
-    } else if (session.user.role !== "admin") {
+    } else if (!isAdminUser(session.user.role)) {
       // Members can only see published announcements
       if (announcement.status !== "published") {
         return NextResponse.json(
@@ -45,7 +50,7 @@ export async function GET(
         );
       }
     }
-    // Admins can see all announcements
+    // Admins and super_admins can see all announcements
 
     return NextResponse.json(announcement);
 
@@ -58,7 +63,7 @@ export async function GET(
   }
 }
 
-// PUT /api/announcements/[id] - Update announcement (admin only)
+// PUT /api/announcements/[id] - Update announcement (admin or super_admin only)
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -66,7 +71,7 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }
@@ -121,7 +126,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/announcements/[id] - Delete announcement (admin only)
+// DELETE /api/announcements/[id] - Delete announcement (admin or super_admin only)
 export async function DELETE(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -129,7 +134,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }
