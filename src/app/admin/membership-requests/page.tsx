@@ -178,10 +178,20 @@ export default function MembershipRequestsPage() {
 
       toast.success(data.message);
 
-      if (reviewAction === 'approve' && data.user?.tempPassword) {
-        toast.success(`Temporary password: ${data.user.tempPassword}`, {
-          duration: 10000,
-        });
+      if (reviewAction === 'approve') {
+        if (data.user?.tempPassword) {
+          // Admin provided override password
+          toast.success(`Override password set: ${data.user.tempPassword}`, {
+            description: "Send this password to the user securely",
+            duration: 10000,
+          });
+        } else {
+          // Using user's original password
+          toast.success("User can login with their chosen password", {
+            description: "The password they entered during registration will work",
+            duration: 6000,
+          });
+        }
       }
 
       setReviewDialogOpen(false);
@@ -553,19 +563,21 @@ export default function MembershipRequestsPage() {
           <div className="space-y-4">
             {reviewAction === "approve" && (
               <div className="space-y-2">
-                <Label htmlFor="tempPassword">
-                  Temporary Password (optional - auto-generated if left empty)
+                <Label htmlFor="tempPassword" className="flex items-center gap-2">
+                  Override Password (optional)
+                  <span className="text-xs font-normal text-green-600 bg-green-50 px-2 py-0.5 rounded">User already set a password</span>
                 </Label>
                 <Input
                   id="tempPassword"
                   type="text"
                   value={tempPassword}
                   onChange={(e) => setTempPassword(e.target.value)}
-                  placeholder="Leave empty to auto-generate"
+                  placeholder="Leave empty to use the password they chose during registration"
                 />
-                <p className="text-sm text-muted-foreground">
-                  The user will use this password to log in. Make sure to send it to them securely.
-                </p>
+                <div className="text-sm text-muted-foreground space-y-1">
+                  <p className="font-medium text-green-600">✓ The user chose their password during registration</p>
+                  <p>Only enter a new password here if you need to override their choice. Otherwise, leave this field empty and they can login with the password they created.</p>
+                </div>
               </div>
             )}
             <div className="space-y-2">

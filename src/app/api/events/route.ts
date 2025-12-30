@@ -12,6 +12,11 @@ import {
 import { eventSchema, validateAndSanitize } from "@/lib/validations";
 import { notificationSender } from "@/lib/notification-broadcaster";
 
+// Helper function to check if user has admin privileges (admin or super_admin)
+const isAdminUser = (role: string | undefined) => {
+  return role === "admin" || role === "super_admin";
+};
+
 // Fallback mock data for when database is unavailable - only recurring events
 const mockEvents = [
   {
@@ -95,11 +100,11 @@ export async function GET(request: NextRequest) {
     // Access control - non-authenticated users can only see published events
     if (!session) {
       conditions.push(eq(events.status, 'published'));
-    } else if (session.user.role !== "admin") {
+    } else if (!isAdminUser(session.user.role)) {
       // Members can only see published events
       conditions.push(eq(events.status, 'published'));
     }
-    // Admins can see all events (no additional filters)
+    // Admins and super_admins can see all events (no additional filters)
 
     // Apply filters
     if (category && category !== "all") {
@@ -267,12 +272,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/events - Create new event (admin only)
+// POST /api/events - Create new event (admin or super_admin only)
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }
@@ -282,8 +287,8 @@ export async function POST(request: NextRequest) {
     // Apply security headers
     const securityHeaders = getSecurityHeaders();
 
-    // Rate limiting - 10 event creations per 10 minutes
-    const rateLimit = checkRateLimit(request, rateLimiters.forms);
+    // Rate limiting - 30 event creations per 10 minutes for admins
+    const rateLimit = checkRateLimit(request, rateLimiters.adminContent);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         {
@@ -324,7 +329,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new event
+    // Use organizer from form data if provided, otherwise use session user name
+    const organizerName = validatedData.organizer?.trim() || session.user.name || "Unknown Organizer";
+
     const [newEvent] = await (db.insert(events).values({
       title: validatedData.title,
       description: validatedData.description,
@@ -333,7 +340,7 @@ export async function POST(request: NextRequest) {
       endDate: new Date(validatedData.endDate),
       location: validatedData.location,
       address: validatedData.address || "",
-      organizer: session.user.name || "Unknown Organizer",
+      organizer: organizerName,
       organizerId: session.user.id,
       capacity: validatedData.capacity || 0,
       registeredCount: 0,
@@ -358,7 +365,7 @@ export async function POST(request: NextRequest) {
         eventId: newEvent.id,
         title: validatedData.title,
         date: new Date(validatedData.startDate).toLocaleDateString(),
-        organizer: session.user.name || "Church Admin"
+        organizer: organizerName || "Church Admin"
       });
       console.log(`[EVENT] Notification sent for new event: ${newEvent.id}`);
     } catch (error) {

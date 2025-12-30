@@ -1,7 +1,7 @@
 "use client";
 
 import { AdminLayout } from "@/components/admin/admin-layout";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -72,7 +72,7 @@ export default function AdminEventsPage() {
     endDate: "",
     location: "",
     address: "",
-    organizer: "", // Add explicit organizer field
+    organizer: "",
     capacity: undefined,
     requiresRegistration: false,
     isRecurring: false,
@@ -85,7 +85,7 @@ export default function AdminEventsPage() {
     price: undefined,
     registrationDeadline: "",
     imageUrl: "",
-    imageUrls: [], // Add multiple images support
+    imageUrls: [],
   });
   const [filters, setFilters] = useState({
     category: "all" as EventCategory | "all",
@@ -96,6 +96,11 @@ export default function AdminEventsPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Helper function to check if user has admin privileges (admin or super_admin)
+  const isAdminUser = (role: string | undefined) => {
+    return role === "admin" || role === "super_admin";
+  };
 
   // Helper function to consolidate image handling (migrate single imageUrl to imageUrls array)
   const consolidateImages = (imageUrl?: string, imageUrls?: string[]) => {
@@ -206,38 +211,21 @@ export default function AdminEventsPage() {
     }
   };
 
-  // Redirect if not admin
+  // Redirect if not admin or super_admin
   useEffect(() => {
     if (status === "loading") return;
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       redirect("/");
     }
   }, [session, status]);
 
   useEffect(() => {
-    if (session?.user?.role === "admin") {
+    if (session?.user?.role && isAdminUser(session.user.role)) {
       fetchEvents();
     }
   }, [session]);
 
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/events");
-      if (!response.ok) {
-        throw new Error("Failed to fetch events");
-      }
-      const data = await response.json();
-      setEvents(data);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-      toast.error("Failed to load events");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filterEvents = useCallback(() => {
+  useEffect(() => {
     let filtered = [...events];
 
     // Filter by category
@@ -264,9 +252,22 @@ export default function AdminEventsPage() {
     setFilteredEvents(filtered);
   }, [events, filters]);
 
-  useEffect(() => {
-    filterEvents();
-  }, [events, filters, filterEvents]);
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/events");
+      if (!response.ok) {
+        throw new Error("Failed to fetch events");
+      }
+      const data = await response.json();
+      setEvents(data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      toast.error("Failed to load events");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const resetForm = () => {
     setFormData({
@@ -277,7 +278,7 @@ export default function AdminEventsPage() {
       endDate: "",
       location: "",
       address: "",
-      organizer: "", // Explicit organizer field
+      organizer: "",
       capacity: undefined,
       requiresRegistration: false,
       isRecurring: false,
@@ -289,8 +290,8 @@ export default function AdminEventsPage() {
       tags: [],
       price: undefined,
       registrationDeadline: "",
-      imageUrl: "", // Clear legacy image field
-      imageUrls: [], // Clear multiple images array
+      imageUrl: "",
+      imageUrls: [],
     });
   };
 
@@ -309,7 +310,7 @@ export default function AdminEventsPage() {
       const submitData = {
         ...formData,
         imageUrls: consolidatedImages,
-        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "", // Keep backward compatibility
+        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "",
       };
 
       const response = await fetch("/api/events", {
@@ -349,7 +350,7 @@ export default function AdminEventsPage() {
       const submitData = {
         ...formData,
         imageUrls: consolidatedImages,
-        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "", // Keep backward compatibility
+        imageUrl: consolidatedImages.length > 0 ? consolidatedImages[0] : "",
       };
 
       const response = await fetch(`/api/events/${editingEvent.id}`, {
@@ -449,7 +450,7 @@ export default function AdminEventsPage() {
       tags: event.tags || [],
       price: event.price,
       registrationDeadline: formatDateForInput(event.registrationDeadline || ""),
-      imageUrl: "", // Clear legacy field - all images are now in imageUrls
+      imageUrl: "",
       imageUrls: consolidatedImages,
     });
     setIsEditDialogOpen(true);
@@ -695,13 +696,12 @@ export default function AdminEventsPage() {
         <div className="space-y-2">
           <Label>Event Images/Flyers</Label>
           <div className="space-y-4">
-            {/* Current Images Display */}
             {(formData.imageUrls && formData.imageUrls.length > 0) && (
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-700">Current Images</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {formData.imageUrls.map((imageUrl, index) => (
-                        <div key={index} className="relative group">
+                        <div key={`${imageUrl}-${index}`} className="relative group">
                           <div className="relative overflow-hidden rounded-lg border-2 border-dashed border-gray-200 hover:border-blue-400 transition-colors">
                             <img
                                 src={imageUrl?.trim() || '/images/event-default.jpg'}
@@ -733,7 +733,6 @@ export default function AdminEventsPage() {
                 </div>
             )}
 
-            {/* Enhanced Upload Interface */}
             <div
                 className={`border-2 border-dashed rounded-xl p-6 transition-all duration-300 relative overflow-hidden ${
                     isDragging
@@ -745,7 +744,6 @@ export default function AdminEventsPage() {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
             >
-              {/* Drag overlay */}
               {isDragging && (
                   <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm z-10 flex items-center justify-center">
                     <div className="text-center text-blue-600">
@@ -774,7 +772,6 @@ export default function AdminEventsPage() {
                   </p>
                 </div>
 
-                {/* File Upload Button */}
                 <div className="space-y-3">
                   <button
                       type="button"
@@ -797,7 +794,6 @@ export default function AdminEventsPage() {
                         const files = Array.from(e.target.files || []);
                         if (files.length > 0) {
                           await handleImageUpload(files);
-                          // Reset the input
                           if (fileInputRef.current) {
                             fileInputRef.current.value = '';
                           }
@@ -819,14 +815,12 @@ export default function AdminEventsPage() {
                   </div>
                 </div>
 
-                {/* Divider */}
                 <div className="flex items-center justify-center space-x-3">
                   <div className="flex-1 border-t border-gray-300" />
                   <span className="text-sm text-gray-500 font-medium">OR</span>
                   <div className="flex-1 border-t border-gray-300" />
                 </div>
 
-                {/* URL Input */}
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <Input
@@ -992,7 +986,6 @@ export default function AdminEventsPage() {
           </div>
         </div>
 
-        {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -1178,7 +1171,6 @@ export default function AdminEventsPage() {
             </div>
         )}
 
-        {/* Edit Event Dialog */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden flex flex-col">
             <DialogHeader className="flex-shrink-0 pb-4 border-b">

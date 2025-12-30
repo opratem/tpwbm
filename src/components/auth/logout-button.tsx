@@ -34,25 +34,33 @@ export function LogoutButton({
   redirectTo = "/"
 }: LogoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       setIsLoading(true);
+      toast.success("Signing out...");
 
+      // Close dialog first to prevent UI issues
+      setIsDialogOpen(false);
+
+      // Use signOut with redirect: true for reliable logout
+      // This ensures the session is fully cleared and user is redirected
       await signOut({
-        redirect: false,
-        callbackUrl: redirectTo
+        callbackUrl: redirectTo,
+        redirect: true
       });
 
-      toast.success("Successfully logged out!");
-      router.push(redirectTo);
-      router.refresh();
+      // The code below won't execute because redirect: true causes a full page redirect
+      // But we keep it as a fallback in case redirect doesn't work
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Failed to log out. Please try again.");
-    } finally {
       setIsLoading(false);
+
+      // Fallback: Force redirect to clear any stale state
+      window.location.href = redirectTo;
     }
   };
 
@@ -92,11 +100,11 @@ export function LogoutButton({
   }
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger asChild>
         <LogoutButtonContent />
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="z-[100]">
         <AlertDialogHeader>
           <AlertDialogTitle>Sign Out</AlertDialogTitle>
           <AlertDialogDescription>
@@ -104,8 +112,12 @@ export function LogoutButton({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleLogout} disabled={isLoading}>
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleLogout}
+            disabled={isLoading}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

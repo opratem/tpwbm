@@ -69,11 +69,17 @@ export function MembersSidebar() {
 
   const handleLogout = async () => {
     try {
-      toast.success("Logging out...");
-      await signOut({ redirect: true, callbackUrl: "/" });
+      toast.success("Signing out...");
+      // Use signOut with redirect: true for reliable logout
+      await signOut({
+        callbackUrl: "/",
+        redirect: true
+      });
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Failed to logout. Please try again.");
+      // Fallback: Force redirect
+      window.location.href = "/";
     }
   };
 

@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import type { Notification } from '@/lib/notification';
 import { generateUUID, isEventSourceSupported } from '@/lib/utils';
+import { smartNotify, getNotificationPermission, getNotificationPreference } from '@/lib/browser-notification';
 
 interface NotificationState {
   notifications: Notification[];
@@ -178,17 +179,63 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
                 };
               });
 
-              // Show toast notification for high priority
+              // Show browser/toast notification based on priority and user preference
+              const browserNotificationsEnabled = getNotificationPreference() &&
+                                                  getNotificationPermission() === 'granted';
+
               if (newNotification.priority === 'high' || newNotification.priority === 'urgent') {
-                toast.warning(newNotification.title, {
-                  description: newNotification.message,
-                  duration: 6000,
-                });
+                if (browserNotificationsEnabled) {
+                  // Use smart notification (browser if tab hidden, toast if visible)
+                  smartNotify(
+                    {
+                      title: newNotification.title,
+                      body: newNotification.message,
+                      tag: newNotification.id,
+                      requireInteraction: newNotification.priority === 'urgent',
+                      data: {
+                        url: newNotification.actionUrl,
+                        notificationId: newNotification.id,
+                      },
+                    },
+                    () => {
+                      // In-app toast fallback
+                      toast.warning(newNotification.title, {
+                        description: newNotification.message,
+                        duration: 6000,
+                      });
+                    }
+                  );
+                } else {
+                  toast.warning(newNotification.title, {
+                    description: newNotification.message,
+                    duration: 6000,
+                  });
+                }
               } else if (session.user.role === 'admin' && newNotification.targetAudience === 'admin') {
-                toast.info(newNotification.title, {
-                  description: newNotification.message,
-                  duration: 4000,
-                });
+                if (browserNotificationsEnabled) {
+                  smartNotify(
+                    {
+                      title: newNotification.title,
+                      body: newNotification.message,
+                      tag: newNotification.id,
+                      data: {
+                        url: newNotification.actionUrl,
+                        notificationId: newNotification.id,
+                      },
+                    },
+                    () => {
+                      toast.info(newNotification.title, {
+                        description: newNotification.message,
+                        duration: 4000,
+                      });
+                    }
+                  );
+                } else {
+                  toast.info(newNotification.title, {
+                    description: newNotification.message,
+                    duration: 4000,
+                  });
+                }
               }
               break;
             }

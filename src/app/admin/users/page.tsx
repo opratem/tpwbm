@@ -136,8 +136,11 @@ export default function AdminUsersPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Create User Form State
   const [createForm, setCreateForm] = useState({
@@ -335,6 +338,35 @@ export default function AdminUsersPage() {
     }
   };
 
+  // Delete user
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    setDeleteLoading(true);
+    try {
+      const response = await fetch(`/api/admin/users?userId=${userToDelete.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("User deleted successfully");
+        setShowDeleteDialog(false);
+        setUserToDelete(null);
+        fetchUsers();
+      } else {
+        toast.error(data.error || "Failed to delete user");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Error deleting user");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   // Bulk actions
   const handleBulkAction = async (action: "activate" | "deactivate" | "delete") => {
     if (selectedUsers.length === 0) {
@@ -354,13 +386,17 @@ export default function AdminUsersPage() {
               isActive: action === "activate",
             }),
           });
+        } else if (action === "delete") {
+          return fetch(`/api/admin/users?userId=${userId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          });
         }
-        // For delete, you'd implement a DELETE endpoint
         return Promise.resolve();
       });
 
       await Promise.all(promises);
-      toast.success(`${selectedUsers.length} user(s) ${action}d successfully`);
+      toast.success(`${selectedUsers.length} user(s) ${action === "delete" ? "deleted" : action + "d"} successfully`);
       setSelectedUsers([]);
       fetchUsers();
     } catch (error) {
@@ -821,64 +857,95 @@ export default function AdminUsersPage() {
                                 {new Date(user.createdAt).toLocaleDateString()}
                               </TableCell>
                               <TableCell className="text-right">
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="sm">
-                                      <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                          setSelectedUser(user);
-                                          setShowDetailsModal(true);
-                                        }}
-                                    >
-                                      <Eye className="h-4 w-4 mr-2" />
-                                      View Details
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                          setSelectedUser(user);
-                                          setEditForm({
-                                            name: user.name,
-                                            email: user.email,
-                                            phone: user.phone || "",
-                                            role: user.role,
-                                            ministryRole: (user.ministryRole as MinistryRole) || "none",
-                                            ministryLevel: (user.ministryLevel as MinistryLevel) || "none",
-                                            ministryDescription: user.ministryDescription || "",
-                                            isActive: user.isActive,
-                                          });
-                                          setShowEditModal(true);
-                                        }}
-                                    >
-                                      <Edit className="h-4 w-4 mr-2" />
-                                      Edit User
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                          setSelectedUsers([user.id]);
-                                          handleBulkAction(user.isActive ? "deactivate" : "activate");
-                                        }}
-                                        disabled={user.id === session.user.id}
-                                    >
-                                      {user.isActive ? (
-                                          <span>
-                                            <UserX className="h-4 w-4 mr-2" />
-                                            Deactivate
-                                          </span>
-                                      ) : (
-                                          <span>
-                                            <UserCheck className="h-4 w-4 mr-2" />
-                                            Activate
-                                          </span>
-                                      )}
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div className="flex items-center justify-end gap-1">
+                                  {/* Direct action buttons for quick access */}
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedUser(user);
+                                      setEditForm({
+                                        name: user.name,
+                                        email: user.email,
+                                        phone: user.phone || "",
+                                        role: user.role,
+                                        ministryRole: (user.ministryRole as MinistryRole) || "none",
+                                        ministryLevel: (user.ministryLevel as MinistryLevel) || "none",
+                                        ministryDescription: user.ministryDescription || "",
+                                        isActive: user.isActive,
+                                      });
+                                      setShowEditModal(true);
+                                    }}
+                                    className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                                    title="Edit user"
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setUserToDelete(user);
+                                      setShowDeleteDialog(true);
+                                    }}
+                                    disabled={user.id === session.user.id}
+                                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    title={user.id === session.user.id ? "Cannot delete yourself" : "Delete user"}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuLabel>More Actions</DropdownMenuLabel>
+                                      <DropdownMenuItem
+                                          onClick={() => {
+                                            setSelectedUser(user);
+                                            setShowDetailsModal(true);
+                                          }}
+                                      >
+                                        <Eye className="h-4 w-4 mr-2" />
+                                        View Details
+                                      </DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem
+                                          onClick={() => {
+                                            setSelectedUsers([user.id]);
+                                            handleBulkAction(user.isActive ? "deactivate" : "activate");
+                                          }}
+                                          disabled={user.id === session.user.id}
+                                      >
+                                        {user.isActive ? (
+                                            <span className="flex items-center">
+                                              <UserX className="h-4 w-4 mr-2" />
+                                              Deactivate
+                                            </span>
+                                        ) : (
+                                            <span className="flex items-center">
+                                              <UserCheck className="h-4 w-4 mr-2" />
+                                              Activate
+                                            </span>
+                                        )}
+                                      </DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem
+                                          onClick={() => {
+                                            setUserToDelete(user);
+                                            setShowDeleteDialog(true);
+                                          }}
+                                          disabled={user.id === session.user.id}
+                                          className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20"
+                                      >
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        Delete User
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
                               </TableCell>
                             </TableRow>
                         ))}
@@ -1298,6 +1365,63 @@ export default function AdminUsersPage() {
                     Edit User
                   </Button>
               )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete this user? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              {userToDelete && (
+                  <div className="space-y-2">
+                    <Label>Name</Label>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      {userToDelete.name}
+                    </div>
+                  </div>
+              )}
+              <div className="space-y-2">
+                <Label>Email</Label>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  {userToDelete?.email || "N/A"}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Role</Label>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  {userToDelete?.role || "N/A"}
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                  variant="outline"
+                  onClick={() => setShowDeleteDialog(false)}
+                  disabled={deleteLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                  onClick={handleDeleteUser}
+                  disabled={deleteLoading}
+              >
+                {deleteLoading ? (
+                    <span>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Deleting...
+                    </span>
+                ) : (
+                    <span>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete User
+                    </span>
+                )}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

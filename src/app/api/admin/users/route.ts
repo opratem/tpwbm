@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { users } from '@/lib/db/schema';
+import { users, accounts, sessions } from '@/lib/db/schema';
 import { hash } from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 
@@ -207,5 +207,67 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error('Error updating user:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json({
+        error: 'User ID is required'
+      }, { status: 400 });
+    }
+
+    // Prevent admin from deleting themselves
+    if (session.user.id === userId) {
+      return NextResponse.json({
+        error: 'You cannot delete your own account'
+      }, { status: 400 });
+    }
+
+    // Check if user exists
+    const [userToDelete] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    if (!userToDelete) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Delete associated accounts first (OAuth accounts)
+    await db.delete(accounts).where(eq(accounts.userId, userId));
+
+    // Delete associated sessions
+    await db.delete(sessions).where(eq(sessions.userId, userId));
+
+    // Delete the user
+    await db.delete(users).where(eq(users.id, userId));
+
+    return NextResponse.json({
+      message: 'User permanently deleted successfully',
+      deletedUser: {
+        id: userToDelete.id,
+        name: userToDelete.name,
+        email: userToDelete.email
+      }
+    }, { status: 200 });
+
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return NextResponse.json({
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }

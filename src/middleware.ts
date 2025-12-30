@@ -4,6 +4,11 @@ import { getToken } from "next-auth/jwt";
 import { hasMinistryPermission, type MinistryRole } from "@/lib/ministry";
 import { rateLimit, RATE_LIMITS, getIdentifier } from "@/lib/rate-limit";
 
+// Helper function to check if user has admin privileges (admin or super_admin)
+const isAdminUser = (role: string | undefined | null) => {
+  return role === "admin" || role === "super_admin";
+};
+
 export async function middleware(request: NextRequest) {
   // Validate NEXTAUTH_SECRET is configured
   const secret = process.env.NEXTAUTH_SECRET;
@@ -140,13 +145,13 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
-    if (token.role !== "admin") {
+    if (!isAdminUser(token.role as string | undefined)) {
       return NextResponse.redirect(new URL("/members/dashboard", request.url));
     }
   }
 
   // Handle admin routes
-  if (isAdminRoute && (!token || token.role !== "admin")) {
+  if (isAdminRoute && (!token || !isAdminUser(token.role as string | undefined))) {
     if (!token) {
       const loginUrl = new URL("/members/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
@@ -162,8 +167,8 @@ export async function middleware(request: NextRequest) {
     )?.[1];
 
     if (requiredPermission) {
-      // Admin users have access to all ministry routes
-      if (token.role === "admin") {
+      // Admin and super_admin users have access to all ministry routes
+      if (isAdminUser(token.role as string | undefined)) {
         return NextResponse.next();
       }
 
@@ -182,15 +187,15 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from login page based on their role
   if (pathname === "/members/login" && token) {
-    // Redirect admins to admin dashboard, regular users to members dashboard
-    if (token.role === "admin") {
+    // Redirect admins/super_admins to admin dashboard, regular users to members dashboard
+    if (isAdminUser(token.role as string | undefined)) {
       return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
     return NextResponse.redirect(new URL("/members/dashboard", request.url));
   }
 
   // Redirect /admin to admin dashboard
-  if (pathname === "/admin" && token && token.role === "admin") {
+  if (pathname === "/admin" && token && isAdminUser(token.role as string | undefined)) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 

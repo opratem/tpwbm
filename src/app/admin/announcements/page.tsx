@@ -67,6 +67,7 @@ interface AnnouncementFormData {
   content: string;
   category: string;
   priority: string;
+  status: string;
   expiresAt: string;
 }
 
@@ -85,14 +86,20 @@ export default function AdminAnnouncementsPage() {
     content: "",
     category: "general",
     priority: "normal",
+    status: "published",
     expiresAt: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Helper function to check if user has admin privileges (admin or super_admin)
+  const isAdminUser = (role: string | undefined) => {
+    return role === "admin" || role === "super_admin";
+  };
+
   // Move useEffect before any conditional returns to follow Rules of Hooks
   useEffect(() => {
-    // Only fetch if user is authenticated and is admin
-    if (session && session.user.role === "admin") {
+    // Only fetch if user is authenticated and is admin or super_admin
+    if (session && isAdminUser(session.user.role)) {
       fetchAnnouncements();
     }
   }, [session]);
@@ -106,8 +113,8 @@ export default function AdminAnnouncementsPage() {
     );
   }
 
-  // Handle authentication
-  if (!session || session.user.role !== "admin") {
+  // Handle authentication - allow both admin and super_admin
+  if (!session || !isAdminUser(session.user.role)) {
     redirect("/members/dashboard");
   }
 
@@ -183,7 +190,8 @@ export default function AdminAnnouncementsPage() {
       content: announcement.content,
       category: announcement.category,
       priority: announcement.priority,
-      expiresAt: announcement.expiresAt.split('T')[0], // Convert to date input format
+      status: announcement.status || "published",
+      expiresAt: announcement.expiresAt ? announcement.expiresAt.split('T')[0] : "", // Convert to date input format
     });
     setIsEditDialogOpen(true);
   };
@@ -216,6 +224,7 @@ export default function AdminAnnouncementsPage() {
       content: "",
       category: "general",
       priority: "normal",
+      status: "published",
       expiresAt: "",
     });
     setEditingAnnouncement(null);
@@ -231,6 +240,10 @@ export default function AdminAnnouncementsPage() {
         return Bell;
       case "ministry":
         return Users;
+      case "outreach":
+        return Users;
+      case "urgent":
+        return Bell;
       default:
         return Bell;
     }
@@ -246,6 +259,10 @@ export default function AdminAnnouncementsPage() {
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
       case "ministry":
         return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
+      case "outreach":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "urgent":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
@@ -322,6 +339,8 @@ export default function AdminAnnouncementsPage() {
                 <SelectItem value="event">Event</SelectItem>
                 <SelectItem value="schedule">Schedule</SelectItem>
                 <SelectItem value="ministry">Ministry</SelectItem>
+                <SelectItem value="outreach">Outreach</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -344,14 +363,33 @@ export default function AdminAnnouncementsPage() {
           </div>
         </div>
 
-        <div className="grid gap-2">
-          <Label htmlFor="expiresAt">Expires On</Label>
-          <Input
-              id="expiresAt"
-              type="date"
-              value={formData.expiresAt}
-              onChange={(e) => setFormData(prev => ({ ...prev, expiresAt: e.target.value }))}
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="status">Status</Label>
+            <Select
+                value={formData.status}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="published">Published</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="expiresAt">Expires On</Label>
+            <Input
+                id="expiresAt"
+                type="date"
+                value={formData.expiresAt}
+                onChange={(e) => setFormData(prev => ({ ...prev, expiresAt: e.target.value }))}
+            />
+          </div>
         </div>
       </div>
   );
@@ -391,7 +429,7 @@ export default function AdminAnnouncementsPage() {
                     Create a new announcement to share with your church community.
                   </DialogDescription>
                 </DialogHeader>
-                <AnnouncementForm />
+                {renderAnnouncementForm()}
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                     Cancel
@@ -438,6 +476,8 @@ export default function AdminAnnouncementsPage() {
                     <SelectItem value="event">Event</SelectItem>
                     <SelectItem value="schedule">Schedule</SelectItem>
                     <SelectItem value="ministry">Ministry</SelectItem>
+                    <SelectItem value="outreach">Outreach</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

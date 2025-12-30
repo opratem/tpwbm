@@ -60,6 +60,7 @@ export interface Notification {
   createdAt: Date;
   expiresAt?: Date;
   metadata?: NotificationMetadata;
+  actionUrl?: string;
 }
 
 export interface NotificationPreferences {

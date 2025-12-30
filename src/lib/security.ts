@@ -180,8 +180,11 @@ export const rateLimiters = {
   // General API - 100 requests per minute
   api: new RateLimiter(60 * 1000, 100),
 
-  // Form submissions - 5 per 10 minutes
-  forms: new RateLimiter(10 * 60 * 1000, 5),
+  // Form submissions - 10 per 10 minutes
+  forms: new RateLimiter(10 * 60 * 1000, 10),
+
+  // Admin content creation - 30 per 10 minutes
+  adminContent: new RateLimiter(10 * 60 * 1000, 30),
 };
 
 /**

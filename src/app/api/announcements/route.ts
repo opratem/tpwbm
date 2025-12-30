@@ -13,6 +13,11 @@ import {
 } from '@/lib/security';
 import { announcementSchema, validateAndSanitize } from '@/lib/validations';
 
+// Helper function to check if user has admin privileges (admin or super_admin)
+const isAdminUser = (role: string | undefined) => {
+  return role === "admin" || role === "super_admin";
+};
+
 // Fallback mock data for when database is unavailable
 const mockAnnouncements = [
   {
@@ -74,11 +79,11 @@ export async function GET(request: NextRequest) {
     // Access control - non-authenticated users can only see published announcements
     if (!session) {
       conditions.push(eq(announcements.status, 'published'));
-    } else if (session.user.role !== "admin") {
+    } else if (!isAdminUser(session.user.role)) {
       // Members can only see published announcements
       conditions.push(eq(announcements.status, 'published'));
     }
-    // Admins can see all announcements (no additional filters)
+    // Admins and super_admins can see all announcements (no additional filters)
 
     // Filter out expired announcements
     const now = new Date();
@@ -230,12 +235,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/announcements - Create new announcement (admin only)
+// POST /api/announcements - Create new announcement (admin or super_admin only)
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || !isAdminUser(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }
@@ -253,8 +258,8 @@ export async function POST(request: NextRequest) {
     // Apply security headers
     const securityHeaders = getSecurityHeaders();
 
-    // Rate limiting - 10 announcements per 10 minutes
-    const rateLimit = checkRateLimit(request, rateLimiters.forms);
+    // Rate limiting - 30 announcements per 10 minutes for admins
+    const rateLimit = checkRateLimit(request, rateLimiters.adminContent);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         {
@@ -291,11 +296,11 @@ export async function POST(request: NextRequest) {
     const [newAnnouncement] = await db.insert(announcements).values({
       title: validatedData.title,
       content: validatedData.content,
-      category: validatedData.type as 'general' | 'event' | 'schedule' | 'ministry' | 'outreach' | 'urgent',
+      category: validatedData.category as 'general' | 'event' | 'schedule' | 'ministry' | 'outreach' | 'urgent',
       priority: validatedData.priority as 'low' | 'normal' | 'high',
       author: session.user.name || "Admin",
       authorId: session.user.id,
-      status: validatedData.status as 'draft' | 'published' | 'archived',
+      status: validatedData.status as 'draft' | 'published' | 'expired' | 'archived',
       expiresAt: validatedData.expiresAt ? new Date(validatedData.expiresAt) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default 30 days
     }).returning();
 

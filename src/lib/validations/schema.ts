@@ -61,26 +61,36 @@ export type ContactFormData = z.infer<typeof contactFormSchema>;
 // ============================================================================
 
 export const prayerRequestSchema = z.object({
-  name: nameSchema,
-  email: emailSchema.optional(),
-  phone: phoneSchema,
+  title: z
+    .string()
+    .min(5, 'Title must be at least 5 characters')
+    .max(255, 'Title must be less than 255 characters')
+    .trim(),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(2000, 'Description must be less than 2000 characters')
+    .trim(),
   category: z.enum([
-    'personal',
-    'family',
     'health',
-    'financial',
-    'spiritual',
+    'family',
     'work',
+    'spiritual',
+    'financial',
+    'relationships',
+    'ministry',
+    'community',
+    'salvation',
+    'thanksgiving',
     'other',
   ]),
-  priority: z.enum(['low', 'medium', 'high', 'urgent']).optional().default('medium'),
-  request: z
-    .string()
-    .min(10, 'Prayer request must be at least 10 characters')
-    .max(2000, 'Prayer request must be less than 2000 characters')
-    .trim(),
+  priority: z.enum(['urgent', 'high', 'normal', 'low']).optional().default('normal'),
   isAnonymous: z.boolean().optional().default(false),
-  isPublic: z.boolean().optional().default(false),
+  isPublic: z.boolean().optional().default(true),
+  requestorName: z.string().optional(),
+  requestorEmail: z.string().email().optional().or(z.literal('')),
+  isUrgent: z.boolean().optional().default(false),
+  status: z.enum(['pending', 'approved', 'active', 'answered', 'expired', 'archived']).optional().default('pending'),
 });
 
 export type PrayerRequestData = z.infer<typeof prayerRequestSchema>;
@@ -181,13 +191,10 @@ export const announcementSchema = z.object({
     .min(10, 'Content must be at least 10 characters')
     .max(5000, 'Content must be less than 5000 characters')
     .trim(),
-  type: z.enum(['general', 'event', 'schedule', 'ministry', 'outreach', 'urgent']),
+  category: z.enum(['general', 'event', 'schedule', 'ministry', 'outreach', 'urgent']).default('general'),
   priority: z.enum(['low', 'normal', 'high']).default('normal'),
-  status: z.enum(['draft', 'published', 'archived']).default('draft'),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
+  status: z.enum(['draft', 'published', 'expired', 'archived']).default('published'),
   expiresAt: z.string().optional(),
-  isActive: z.boolean().optional().default(true),
   imageUrl: urlSchema,
 });
 
@@ -205,18 +212,25 @@ export const eventSchema = z.object({
     .min(10, 'Description must be at least 10 characters')
     .max(5000, 'Description must be less than 5000 characters')
     .trim(),
-  category: z.enum(['worship', 'conference', 'seminar', 'outreach', 'social', 'other']),
+  category: z.enum(['worship', 'fellowship', 'youth', 'workers', 'prayers', 'thanksgiving', 'outreach', 'ministry', 'special_program', 'community']),
   location: z.string().min(3, 'Location is required').max(200),
+  address: z.string().optional(),
   startDate: z.string().min(1, 'Start date is required'),
   endDate: z.string().min(1, 'End date is required'),
-  startTime: z.string().optional(),
-  endTime: z.string().optional(),
-  maxAttendees: z.number().int().positive().optional(),
-  registrationRequired: z.boolean().default(false),
+  organizer: z.string().optional(),
+  capacity: z.number().int().positive().optional(),
+  requiresRegistration: z.boolean().default(false),
+  isRecurring: z.boolean().default(false),
+  recurringPattern: z.enum(['daily', 'weekly', 'biweekly', 'monthly', 'yearly']).optional(),
+  recurringDays: z.array(z.string()).optional().default([]),
+  recurringEndDate: z.string().optional(),
   registrationDeadline: z.string().optional(),
-  fee: z.number().min(0).optional(),
+  price: z.string().optional(),
+  imageUrl: z.string().optional(),
   imageUrls: z.array(z.string()).optional().default([]),
-  isActive: z.boolean().default(true),
+  contactEmail: z.string().email().optional().or(z.literal('')),
+  contactPhone: z.string().optional(),
+  tags: z.array(z.string()).optional().default([]),
 });
 
 export type EventData = z.infer<typeof eventSchema>;
@@ -230,13 +244,12 @@ export const blogPostSchema = z.object({
     .trim(),
   slug: z
     .string()
-    .min(3, 'Slug must be at least 3 characters')
     .max(200, 'Slug must be less than 200 characters')
-    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
-    .trim(),
+    .regex(/^[a-z0-9-]*$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+    .optional(),
   content: z
     .string()
-    .min(50, 'Content must be at least 50 characters')
+    .min(10, 'Content must be at least 10 characters')
     .trim(),
   excerpt: z
     .string()
@@ -254,13 +267,14 @@ export const blogPostSchema = z.object({
     'devotional',
     'general',
   ]),
-  status: z.enum(['draft', 'published', 'archived']).default('draft'),
+  status: z.enum(['draft', 'published', 'scheduled', 'archived']).default('draft'),
   tags: z.array(z.string()).optional().default([]),
   imageUrl: urlSchema,
   author: z.string().optional(),
   publishedAt: z.string().optional(),
-  isPublished: z.boolean().optional().default(false),
+  scheduledFor: z.string().optional(),
   isFeatured: z.boolean().optional().default(false),
+  allowComments: z.boolean().optional().default(true),
   metaTitle: z.string().max(60).optional(),
   metaDescription: z.string().max(160).optional(),
 });

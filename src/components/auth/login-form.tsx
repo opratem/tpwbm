@@ -101,8 +101,35 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password. Please try again.");
-        toast.error("Login failed. Please check your credentials.");
+        // Parse the error to provide specific and helpful feedback
+        let errorMessage = "Login failed. Please try again.";
+        let specificError = "";
+
+        if (result.error.includes('EMAIL_NOT_FOUND')) {
+          specificError = "Email Not Found";
+          errorMessage = "We couldn't find an account with this email address. Please check your email or click 'Register' to create a new account.";
+        } else if (result.error.includes('INCORRECT_PASSWORD')) {
+          specificError = "Incorrect Password";
+          errorMessage = "The password you entered is incorrect. Please try again or click 'Forgot Password?' below to reset it.";
+        } else if (result.error.includes('ACCOUNT_INACTIVE')) {
+          specificError = "Account Pending Approval";
+          errorMessage = "Your account has been registered but is awaiting approval from the church administrator. Please contact the church office or wait for approval confirmation via email.";
+        } else if (result.error.includes('NO_PASSWORD_SET')) {
+          specificError = "Social Login Required";
+          errorMessage = "This account was created using Google or Facebook login. Please use the social login buttons above to sign in.";
+        } else if (result.error.includes('MISSING_CREDENTIALS')) {
+          specificError = "Missing Information";
+          errorMessage = "Please enter both your email address and password.";
+        } else {
+          specificError = "Login Failed";
+          errorMessage = "Unable to log in at this time. Please verify your email and password are correct, then try again.";
+        }
+
+        setError(errorMessage);
+        toast.error(specificError, {
+          description: errorMessage,
+          duration: 8000,
+        });
       } else {
         toast.success("Successfully logged in!");
 
