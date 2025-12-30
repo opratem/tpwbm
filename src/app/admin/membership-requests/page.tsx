@@ -112,6 +112,7 @@ export default function MembershipRequestsPage() {
 
   useEffect(() => {
     filterRequests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requests, searchTerm, statusFilter]);
 
   const fetchRequests = async () => {
