@@ -3,6 +3,20 @@ import { sanitizeString, sanitizeEmail, sanitizePhone } from '@/lib/security';
 
 // ==================== EVENT SCHEMAS ====================
 
+// Helper to validate date strings (accepts ISO 8601, datetime-local, and date formats)
+const dateStringSchema = z.string().refine((val) => {
+  if (!val) return false;
+  const date = new Date(val);
+  return !Number.isNaN(date.getTime());
+}, { message: 'Invalid date format' });
+
+// Optional date string schema
+const optionalDateStringSchema = z.string().refine((val) => {
+  if (!val) return true;
+  const date = new Date(val);
+  return !Number.isNaN(date.getTime());
+}, { message: 'Invalid date format' }).optional().or(z.literal(''));
+
 export const eventSchema = z.object({
   title: z.string()
     .min(3, 'Title must be at least 3 characters')
@@ -12,10 +26,8 @@ export const eventSchema = z.object({
     .min(10, 'Description must be at least 10 characters')
     .max(5000, 'Description must be less than 5000 characters')
     .transform(sanitizeString),
-  startDate: z.string()
-    .datetime('Invalid start date format'),
-  endDate: z.string()
-    .datetime('Invalid end date format'),
+  startDate: dateStringSchema,
+  endDate: dateStringSchema,
   location: z.string()
     .min(3, 'Location must be at least 3 characters')
     .max(300, 'Location must be less than 300 characters')
@@ -23,15 +35,22 @@ export const eventSchema = z.object({
   address: z.string()
     .max(500, 'Address must be less than 500 characters')
     .transform(sanitizeString)
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   category: z.enum(['worship', 'fellowship', 'youth', 'workers', 'prayers', 'thanksgiving', 'outreach', 'ministry', 'special_program', 'community']),
+  organizer: z.string()
+    .max(200, 'Organizer name must be less than 200 characters')
+    .transform(sanitizeString)
+    .optional()
+    .or(z.literal('')),
   capacity: z.number()
     .positive('Capacity must be positive')
     .int('Capacity must be a whole number')
-    .optional(),
+    .optional()
+    .or(z.undefined()),
   imageUrl: z.string()
-    .url('Invalid image URL')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   imageUrls: z.array(z.string())
     .default([]),
   status: z.enum(['draft', 'published', 'cancelled'])
@@ -42,28 +61,30 @@ export const eventSchema = z.object({
     .default(false),
   isRecurring: z.boolean()
     .default(false),
-  recurringPattern: z.enum(['daily', 'weekly', 'monthly', 'yearly'])
+  recurringPattern: z.enum(['daily', 'weekly', 'biweekly', 'monthly', 'yearly'])
     .optional(),
   recurringDays: z.array(z.string())
-    .optional(),
-  recurringEndDate: z.string()
-    .datetime('Invalid recurring end date format')
-    .optional(),
-  price: z.string()
-    .regex(/^\d+(\.\d{1,2})?$/, 'Invalid price format')
+    .optional()
+    .default([]),
+  recurringEndDate: optionalDateStringSchema,
+  price: z.union([
+    z.string().regex(/^\d+(\.\d{1,2})?$/, 'Invalid price format'),
+    z.number()
+  ])
+    .optional()
     .default('0.00'),
   contactEmail: z.string()
     .email('Invalid contact email')
     .transform(sanitizeEmail)
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   contactPhone: z.string()
     .transform(sanitizePhone)
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   tags: z.array(z.string())
     .default([]),
-  registrationDeadline: z.string()
-    .datetime('Invalid registration deadline format')
-    .optional(),
+  registrationDeadline: optionalDateStringSchema,
 });
 
 export const eventUpdateSchema = eventSchema.partial();
@@ -158,7 +179,7 @@ export type BlogPostUpdateInput = z.infer<typeof blogPostUpdateSchema>;
 
 export const announcementSchema = z.object({
   title: z.string()
-    .min(5, 'Title must be at least 5 characters')
+    .min(3, 'Title must be at least 3 characters')
     .max(200, 'Title must be less than 200 characters')
     .transform(sanitizeString),
   content: z.string()
@@ -170,13 +191,11 @@ export const announcementSchema = z.object({
   priority: z.enum(['low', 'normal', 'high'])
     .default('normal'),
   status: z.enum(['draft', 'published', 'expired', 'archived'])
-    .default('draft'),
-  expiresAt: z.string()
-    .datetime('Invalid expiration date format')
-    .optional(),
+    .default('published'),
+  expiresAt: optionalDateStringSchema,
   imageUrl: z.string()
-    .url('Invalid image URL')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   targetAudience: z.enum(['all', 'members', 'visitors', 'admin'])
     .default('all')
     .optional(),
