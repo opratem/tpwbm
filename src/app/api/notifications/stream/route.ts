@@ -277,7 +277,7 @@ export async function GET(request: NextRequest) {
               console.error(`[SSE] Error polling for notifications:`, error);
               // Don't close connection on polling error
             }
-          }, 10000); // Poll every 10 seconds
+          }, 5000); // Poll every 5 seconds for faster notification delivery
 
           // Send heartbeat every 30 seconds
           heartbeatInterval = setInterval(() => {
