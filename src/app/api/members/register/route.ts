@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { membershipRequests } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { z } from 'zod';
-import { notificationSender } from '@/lib/notification-broadcaster';
+import { notificationService } from '@/lib/notification-service';
 import bcrypt from 'bcryptjs';
 
 const membershipRequestSchema = z.object({
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
     // Send notification to admins about new membership request
     try {
-      notificationSender.newMembershipRequest({
+      await notificationService.newMembershipRequest({
         requestId: newRequest.id,
         name: `${validatedData.firstName} ${validatedData.lastName}`,
         email: validatedData.email

@@ -1,8 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from "@/lib/auth";
-import { filterNotificationsForUser, sortNotificationsByPriority, type Notification } from '@/lib/notification';
-import { setBroadcastFunction } from '@/lib/notification-broadcaster';
+import { getNotificationsForUser } from '@/lib/notification-service';
 import { generateUUID } from '@/lib/utils';
 
 // Configure runtime for edge or nodejs
@@ -12,74 +11,98 @@ export const runtime = 'nodejs';
 export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
-// Global notification store (in production, use Redis or a proper pub/sub system)
-const notificationStore = new Map<string, Notification[]>();
+// Active SSE connections for real-time broadcasting
+// Note: In serverless, this is per-instance and won't persist across cold starts
 const activeConnections = new Map<string, {
   controller: ReadableStreamDefaultController;
   userId: string;
   userRole: 'admin' | 'member' | 'visitor';
+  lastNotificationId?: string;
 }>();
 
-// Broadcast notification to all relevant connections
-function broadcastNotification(notification: Notification) {
-  console.log('Broadcasting notification:', notification.type, notification.title, `to ${activeConnections.size} connections`);
+/**
+ * Broadcast a notification to all relevant active connections
+ * This function is exported so other parts of the app can call it
+ */
+export function broadcastToConnections(notification: {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  priority: string;
+  targetAudience: string;
+  specificUserIds?: string[];
+  metadata?: Record<string, unknown>;
+  actionUrl?: string | null;
+  createdAt: Date;
+}) {
+  console.log(`[SSE] Broadcasting notification to ${activeConnections.size} connections:`, notification.title);
 
-  // Add to store
-  const currentNotifications = notificationStore.get('global') || [];
-  currentNotifications.unshift(notification);
-
-  // Keep only last 100 notifications
-  if (currentNotifications.length > 100) {
-    currentNotifications.splice(100);
-  }
-
-  notificationStore.set('global', currentNotifications);
-
-  // Track failed connections for cleanup
   const deadConnections: string[] = [];
 
-  // Send to relevant active connections
   for (const [connectionId, connection] of activeConnections) {
     try {
-      const userNotifications = filterNotificationsForUser(
-          [notification],
-          connection.userId,
-          connection.userRole
-      );
+      // Check if notification is relevant for this connection
+      let shouldSend = false;
 
-      if (userNotifications.length > 0) {
+      if (notification.targetAudience === 'all') {
+        shouldSend = true;
+      } else if (notification.targetAudience === 'admin' && connection.userRole === 'admin') {
+        shouldSend = true;
+      } else if (notification.targetAudience === 'members' && (connection.userRole === 'admin' || connection.userRole === 'member')) {
+        shouldSend = true;
+      } else if (notification.targetAudience === 'specific' && notification.specificUserIds?.includes(connection.userId)) {
+        shouldSend = true;
+      }
+
+      if (shouldSend) {
         const message = `data: ${JSON.stringify({
           type: 'notification',
-          payload: userNotifications[0]
+          payload: {
+            id: notification.id,
+            title: notification.title,
+            message: notification.message,
+            type: notification.type,
+            priority: notification.priority,
+            targetAudience: notification.targetAudience,
+            metadata: notification.metadata,
+            actionUrl: notification.actionUrl,
+            read: false,
+            createdAt: notification.createdAt,
+          }
         })}\n\n`;
 
         try {
           connection.controller.enqueue(new TextEncoder().encode(message));
-          console.log(`Notification sent to connection: ${connectionId}`);
+          console.log(`[SSE] Notification sent to connection: ${connectionId}`);
         } catch (error) {
-          console.error(`Failed to send notification to connection ${connectionId}:`, error);
+          console.error(`[SSE] Failed to send to connection ${connectionId}:`, error);
           deadConnections.push(connectionId);
         }
       }
     } catch (error) {
-      console.error('Error sending notification to connection:', connectionId, error);
+      console.error(`[SSE] Error processing connection ${connectionId}:`, error);
       deadConnections.push(connectionId);
     }
   }
 
   // Clean up dead connections
-  deadConnections.forEach(connectionId => {
-    console.log(`Removing dead connection: ${connectionId}`);
+  for (const connectionId of deadConnections) {
+    console.log(`[SSE] Removing dead connection: ${connectionId}`);
     activeConnections.delete(connectionId);
-  });
+  }
 
   if (deadConnections.length > 0) {
-    console.log(`Cleaned up ${deadConnections.length} dead connections. Active connections: ${activeConnections.size}`);
+    console.log(`[SSE] Cleaned up ${deadConnections.length} dead connections. Active: ${activeConnections.size}`);
   }
 }
 
-// Connect the broadcast function to the notification broadcaster
-setBroadcastFunction(broadcastNotification);
+/**
+ * Get the count of active SSE connections
+ */
+export function getActiveConnectionCount(): number {
+  return activeConnections.size;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -92,14 +115,16 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const connectionId = searchParams.get('connectionId') || generateUUID();
 
-    console.log(`New SSE connection request: ${connectionId} for user: ${session.user.id}`);
+    console.log(`[SSE] New connection request: ${connectionId} for user: ${session.user.id} (${session.user.role})`);
 
     // Create a readable stream for SSE
     const stream = new ReadableStream({
-      start(controller) {
+      async start(controller) {
         let heartbeatInterval: NodeJS.Timeout | null = null;
+        let pollingInterval: NodeJS.Timeout | null = null;
         let isConnectionClosed = false;
         let autoCloseTimeout: NodeJS.Timeout | null = null;
+        let lastSeenNotificationTime = new Date();
 
         const cleanupConnection = () => {
           if (isConnectionClosed) return;
@@ -110,13 +135,18 @@ export async function GET(request: NextRequest) {
             heartbeatInterval = null;
           }
 
+          if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+          }
+
           if (autoCloseTimeout) {
             clearTimeout(autoCloseTimeout);
             autoCloseTimeout = null;
           }
 
           activeConnections.delete(connectionId);
-          console.log(`Connection closed: ${connectionId}, active connections: ${activeConnections.size}`);
+          console.log(`[SSE] Connection closed: ${connectionId}, active: ${activeConnections.size}`);
 
           try {
             controller.close();
@@ -125,13 +155,12 @@ export async function GET(request: NextRequest) {
           }
         };
 
-        const sendMessage = (data: any) => {
+        const sendMessage = (data: unknown): boolean => {
           if (isConnectionClosed) return false;
 
           try {
-            // Validate data before sending
             if (!data || typeof data !== 'object') {
-              console.warn(`Invalid data for SSE message:`, data);
+              console.warn(`[SSE] Invalid data for message:`, data);
               return false;
             }
 
@@ -139,26 +168,25 @@ export async function GET(request: NextRequest) {
             controller.enqueue(new TextEncoder().encode(message));
             return true;
           } catch (error) {
-            console.error(`Error sending message to connection ${connectionId}:`, error);
+            console.error(`[SSE] Error sending message to ${connectionId}:`, error);
             cleanupConnection();
             return false;
           }
         };
 
         try {
-          // Store connection
+          // Store connection for broadcasting
           activeConnections.set(connectionId, {
             controller,
             userId: session.user.id,
             userRole: session.user.role as 'admin' | 'member' | 'visitor'
           });
 
-          console.log(`Connection established: ${connectionId}, active connections: ${activeConnections.size}`);
+          console.log(`[SSE] Connection established: ${connectionId}, active: ${activeConnections.size}`);
 
-          // Auto-close connection before maxDuration to prevent timeout
-          // Close at 290 seconds (10 seconds before the 300 second limit)
+          // Auto-close before timeout (290 seconds)
           autoCloseTimeout = setTimeout(() => {
-            console.log(`Auto-closing connection ${connectionId} to prevent timeout`);
+            console.log(`[SSE] Auto-closing connection ${connectionId} to prevent timeout`);
             cleanupConnection();
           }, 290000);
 
@@ -168,22 +196,88 @@ export async function GET(request: NextRequest) {
             payload: { connectionId, userId: session.user.id }
           })) return;
 
-          // Send existing notifications
-          const allNotifications = notificationStore.get('global') || [];
-          const userNotifications = filterNotificationsForUser(
-              allNotifications,
+          // Fetch initial notifications from database
+          try {
+            const initialNotifications = await getNotificationsForUser(
               session.user.id,
-              session.user.role as 'admin' | 'member' | 'visitor'
-          );
+              session.user.role as 'admin' | 'member' | 'visitor',
+              20,
+              true // Include read notifications
+            );
 
-          const sortedNotifications = sortNotificationsByPriority(userNotifications);
+            if (initialNotifications.length > 0) {
+              sendMessage({
+                type: 'initial_notifications',
+                payload: initialNotifications.map(n => ({
+                  id: n.id,
+                  title: n.title,
+                  message: n.message,
+                  type: n.type,
+                  priority: n.priority,
+                  targetAudience: n.targetAudience,
+                  metadata: n.metadata,
+                  actionUrl: n.actionUrl,
+                  read: n.read,
+                  createdAt: n.createdAt,
+                }))
+              });
 
-          if (sortedNotifications.length > 0) {
-            sendMessage({
-              type: 'initial_notifications',
-              payload: sortedNotifications.slice(0, 20) // Send last 20 notifications
-            });
+              // Track the latest notification time
+              const latestTime = initialNotifications[0]?.createdAt;
+              if (latestTime) {
+                lastSeenNotificationTime = new Date(latestTime);
+              }
+            }
+          } catch (error) {
+            console.error(`[SSE] Error fetching initial notifications:`, error);
+            // Continue even if we can't fetch initial notifications
           }
+
+          // Poll for new notifications every 10 seconds
+          // This ensures we catch notifications even if the broadcast didn't reach this instance
+          pollingInterval = setInterval(async () => {
+            if (isConnectionClosed) return;
+
+            try {
+              const newNotifications = await getNotificationsForUser(
+                session.user.id,
+                session.user.role as 'admin' | 'member' | 'visitor',
+                10,
+                false // Only unread
+              );
+
+              // Filter to only truly new notifications
+              const trulyNew = newNotifications.filter(n =>
+                new Date(n.createdAt) > lastSeenNotificationTime
+              );
+
+              for (const notification of trulyNew) {
+                sendMessage({
+                  type: 'notification',
+                  payload: {
+                    id: notification.id,
+                    title: notification.title,
+                    message: notification.message,
+                    type: notification.type,
+                    priority: notification.priority,
+                    targetAudience: notification.targetAudience,
+                    metadata: notification.metadata,
+                    actionUrl: notification.actionUrl,
+                    read: false,
+                    createdAt: notification.createdAt,
+                  }
+                });
+
+                // Update last seen time
+                if (new Date(notification.createdAt) > lastSeenNotificationTime) {
+                  lastSeenNotificationTime = new Date(notification.createdAt);
+                }
+              }
+            } catch (error) {
+              console.error(`[SSE] Error polling for notifications:`, error);
+              // Don't close connection on polling error
+            }
+          }, 10000); // Poll every 10 seconds
 
           // Send heartbeat every 30 seconds
           heartbeatInterval = setInterval(() => {
@@ -202,19 +296,18 @@ export async function GET(request: NextRequest) {
           });
 
         } catch (error) {
-          console.error(`Error setting up connection ${connectionId}:`, error);
+          console.error(`[SSE] Error setting up connection ${connectionId}:`, error);
           cleanupConnection();
         }
 
         // Cleanup on connection close
         request.signal.addEventListener('abort', cleanupConnection);
 
-        // Additional cleanup for stream cancellation
         return cleanupConnection;
       },
 
       cancel() {
-        console.log(`Stream cancelled for connection: ${connectionId}`);
+        console.log(`[SSE] Stream cancelled for connection: ${connectionId}`);
         activeConnections.delete(connectionId);
       }
     });
@@ -231,20 +324,18 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('SSE connection error:', error);
+    console.error('[SSE] Connection error:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
-// Health check endpoint
+// Health check / status endpoint
 export async function POST(request: NextRequest) {
   const activeConnectionCount = activeConnections.size;
-  const notificationCount = notificationStore.get('global')?.length || 0;
 
   return NextResponse.json({
     status: 'ok',
     activeConnections: activeConnectionCount,
-    totalNotifications: notificationCount,
     timestamp: new Date().toISOString()
   });
 }

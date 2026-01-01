@@ -322,43 +322,70 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         connectionTimeoutRef.current = null;
       }
     }
-  }, [session, status]); // Removed state.isConnected dependency
+  }, [session, status]);
 
-  const markAsRead = useCallback((notificationId: string) => {
+  // Mark notification as read - now calls the API
+  const markAsRead = useCallback(async (notificationId: string) => {
+    // Optimistically update local state
     setState(prev => {
-      const updatedNotifications = prev.notifications.map(notification =>
-        notification.id === notificationId
-          ? { ...notification, read: true }
-          : notification
-      );
+      const notification = prev.notifications.find(n => n.id === notificationId);
+      if (!notification || notification.read) return prev;
 
-      const unreadCount = updatedNotifications.filter(n => !n.read).length;
+      const updatedNotifications = prev.notifications.map(n =>
+        n.id === notificationId ? { ...n, read: true } : n
+      );
 
       return {
         ...prev,
         notifications: updatedNotifications,
-        unreadCount
+        unreadCount: Math.max(0, prev.unreadCount - 1)
       };
     });
+
+    // Call API to persist the read status
+    try {
+      await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'mark_read', notificationId }),
+      });
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error);
+      // Don't revert optimistic update - the local state is still useful
+    }
   }, []);
 
-  const markAllAsRead = useCallback(() => {
+  // Mark all notifications as read - now calls the API
+  const markAllAsRead = useCallback(async () => {
+    // Optimistically update local state
     setState(prev => ({
       ...prev,
       notifications: prev.notifications.map(n => ({ ...n, read: true })),
       unreadCount: 0
     }));
+
+    // Call API to persist
+    try {
+      await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'mark_all_read' }),
+      });
+    } catch (error) {
+      console.error('Failed to mark all notifications as read:', error);
+    }
   }, []);
 
   const removeNotification = useCallback((notificationId: string) => {
     setState(prev => {
+      const notification = prev.notifications.find(n => n.id === notificationId);
+      const wasUnread = notification && !notification.read;
       const updatedNotifications = prev.notifications.filter(n => n.id !== notificationId);
-      const unreadCount = updatedNotifications.filter(n => !n.read).length;
 
       return {
         ...prev,
         notifications: updatedNotifications,
-        unreadCount
+        unreadCount: wasUnread ? Math.max(0, prev.unreadCount - 1) : prev.unreadCount
       };
     });
   }, []);
@@ -406,7 +433,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
       mountedRef.current = false;
       disconnect();
     };
-  }, [session?.user, status, connect, disconnect]); // Include all dependencies
+  }, [session?.user, status, connect, disconnect]);
 
   return {
     notifications: state.notifications,

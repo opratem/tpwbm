@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { prayerRequests, prayerResponses, users } from "@/lib/db/schema";
 import { eq, and, or, like, desc, sql, count, inArray } from "drizzle-orm";
 import type { PrayerRequestFilter } from "@/types/prayer-requests";
-import { notificationSender } from "@/lib/notification-broadcaster";
+import { notificationService } from "@/lib/notification-service";
 import {
   sanitizeString,
   sanitizeEmail,
@@ -279,7 +279,7 @@ export async function POST(request: NextRequest) {
 
     // Send notification to admins about new prayer request
     try {
-      await notificationSender.newPrayerRequest({
+      await notificationService.newPrayerRequest({
         requestId: newRequest.id,
         requestTitle: validatedData.title,
         requesterName: requestedBy,

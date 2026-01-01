@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from "@/lib/auth";
-import { notificationSender, getBroadcasterStatus } from '@/lib/notification-broadcaster';
+import { notificationService } from '@/lib/notification-service';
+import { getActiveConnectionCount } from '@/app/api/notifications/stream/route';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,10 +15,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const status = getBroadcasterStatus();
     return NextResponse.json({
       message: 'Notification system status',
-      ...status
+      activeConnections: getActiveConnectionCount(),
+      timestamp: new Date().toISOString()
     });
 
   } catch (error) {
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
     let notification;
     switch (type) {
       case 'prayer_request':
-        notification = notificationSender.newPrayerRequest({
+        notification = await notificationService.newPrayerRequest({
           requestId: data.requestId || 'test-123',
           requestTitle: data.title || 'Test Prayer Request',
           requesterName: data.requester || 'Test User'
@@ -54,16 +55,33 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'announcement':
-        notification = notificationSender.newAnnouncement({
+        notification = await notificationService.newAnnouncement({
           announcementId: data.announcementId || 'test-456',
           title: data.title || 'Test Announcement',
           author: data.author || session.user.name || 'Admin'
         });
         break;
 
+      case 'event':
+        notification = await notificationService.newEvent({
+          eventId: data.eventId || 'test-789',
+          title: data.title || 'Test Event',
+          date: data.date || new Date().toLocaleDateString(),
+          organizer: data.organizer || session.user.name || 'Admin'
+        });
+        break;
+
+      case 'membership_request':
+        notification = await notificationService.newMembershipRequest({
+          requestId: data.requestId || 'test-member-123',
+          name: data.name || 'Test User',
+          email: data.email || 'test@example.com'
+        });
+        break;
+
       case 'system_alert':
       default:
-        notification = notificationSender.systemAlert({
+        notification = await notificationService.systemAlert({
           title: data.title || 'Test System Alert',
           message: data.message || 'This is a test notification from the admin panel.',
           priority: data.priority || 'normal',
@@ -72,8 +90,15 @@ export async function POST(request: NextRequest) {
         break;
     }
 
+    if (!notification) {
+      return NextResponse.json(
+        { error: 'Failed to create notification' },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({
-      message: 'Test notification sent successfully',
+      message: 'Test notification created successfully',
       notification: {
         id: notification.id,
         type: notification.type,

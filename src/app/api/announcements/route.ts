@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { announcements, users } from "@/lib/db/schema";
 import { eq, and, or, like, desc, asc, sql, gte, lte, isNull } from "drizzle-orm";
-import { notificationSender } from "@/lib/notification-broadcaster";
+import { notificationService } from "@/lib/notification-service";
 import {
   checkRateLimit,
   rateLimiters,
@@ -306,11 +306,12 @@ export async function POST(request: NextRequest) {
 
     // Send notification to all members about new announcement
     try {
-      notificationSender.newAnnouncement({
+      await notificationService.newAnnouncement({
         announcementId: newAnnouncement.id,
         title: validatedData.title,
         author: session.user.name || "Admin"
       });
+      console.log(`[ANNOUNCEMENT] Notification sent for new announcement: ${newAnnouncement.id}`);
     } catch (error) {
       console.error("Failed to send announcement notification:", error);
       // Don't fail the announcement creation if notification fails
