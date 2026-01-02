@@ -124,7 +124,9 @@ export async function GET(request: NextRequest) {
         let pollingInterval: NodeJS.Timeout | null = null;
         let isConnectionClosed = false;
         let autoCloseTimeout: NodeJS.Timeout | null = null;
-        let lastSeenNotificationTime = new Date();
+
+        // Track seen notification IDs to avoid duplicates
+        const seenNotificationIds = new Set<string>();
 
         const cleanupConnection = () => {
           if (isConnectionClosed) return;
@@ -222,37 +224,44 @@ export async function GET(request: NextRequest) {
                 }))
               });
 
-              // Track the latest notification time
-              const latestTime = initialNotifications[0]?.createdAt;
-              if (latestTime) {
-                lastSeenNotificationTime = new Date(latestTime);
+              // Mark all initial notifications as seen
+              for (const n of initialNotifications) {
+                seenNotificationIds.add(n.id);
               }
             }
+
+            console.log(`[SSE] Loaded ${initialNotifications.length} initial notifications, tracking ${seenNotificationIds.size} IDs`);
           } catch (error) {
             console.error(`[SSE] Error fetching initial notifications:`, error);
             // Continue even if we can't fetch initial notifications
           }
 
-          // Poll for new notifications every 10 seconds
+          // Poll for new notifications every 3 seconds
           // This ensures we catch notifications even if the broadcast didn't reach this instance
           pollingInterval = setInterval(async () => {
             if (isConnectionClosed) return;
 
             try {
-              const newNotifications = await getNotificationsForUser(
+              const allNotifications = await getNotificationsForUser(
                 session.user.id,
                 session.user.role as 'admin' | 'member' | 'visitor',
-                10,
-                false // Only unread
+                20,
+                true // Include read to have a complete picture
               );
 
-              // Filter to only truly new notifications
-              const trulyNew = newNotifications.filter(n =>
-                new Date(n.createdAt) > lastSeenNotificationTime
-              );
+              // Filter to only truly new notifications (by ID)
+              const trulyNew = allNotifications.filter(n => !seenNotificationIds.has(n.id));
+
+              if (trulyNew.length > 0) {
+                console.log(`[SSE] Found ${trulyNew.length} new notifications for user ${session.user.id}`);
+              }
 
               for (const notification of trulyNew) {
-                sendMessage({
+                // Mark as seen immediately
+                seenNotificationIds.add(notification.id);
+
+                // Send to client
+                const sent = sendMessage({
                   type: 'notification',
                   payload: {
                     id: notification.id,
@@ -263,21 +272,20 @@ export async function GET(request: NextRequest) {
                     targetAudience: notification.targetAudience,
                     metadata: notification.metadata,
                     actionUrl: notification.actionUrl,
-                    read: false,
+                    read: notification.read,
                     createdAt: notification.createdAt,
                   }
                 });
 
-                // Update last seen time
-                if (new Date(notification.createdAt) > lastSeenNotificationTime) {
-                  lastSeenNotificationTime = new Date(notification.createdAt);
+                if (sent) {
+                  console.log(`[SSE] Sent new notification ${notification.id}: ${notification.title}`);
                 }
               }
             } catch (error) {
               console.error(`[SSE] Error polling for notifications:`, error);
               // Don't close connection on polling error
             }
-          }, 5000); // Poll every 5 seconds for faster notification delivery
+          }, 3000); // Poll every 3 seconds for near real-time notifications
 
           // Send heartbeat every 30 seconds
           heartbeatInterval = setInterval(() => {

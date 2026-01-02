@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import type { Notification } from '@/lib/notification';
 import { generateUUID, isEventSourceSupported } from '@/lib/utils';
-import { smartNotify, getNotificationPermission, getNotificationPreference } from '@/lib/browser-notification';
+import { smartNotify, getNotificationPermission, getNotificationPreference, showBrowserNotification } from '@/lib/browser-notification';
 
 interface NotificationState {
   notifications: Notification[];
@@ -22,6 +22,18 @@ export interface UseRealTimeNotificationsResult {
   removeNotification: (notificationId: string) => void;
   clearAll: () => void;
   reconnect: () => void;
+}
+
+// Get icon for notification type
+function getNotificationIcon(type: string): string {
+  switch (type) {
+    case 'announcement': return '📢';
+    case 'event': return '📅';
+    case 'prayer_request': return '🙏';
+    case 'admin': return '⚙️';
+    case 'system': return '🔔';
+    default: return '🔔';
+  }
 }
 
 export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
@@ -63,6 +75,54 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
     }
 
     setState(prev => ({ ...prev, isConnected: false }));
+  }, []);
+
+  /**
+   * Show notification toast and browser notification
+   */
+  const showNotificationAlert = useCallback((notification: Notification, userRole: string) => {
+    const icon = getNotificationIcon(notification.type);
+    const browserNotificationsEnabled = getNotificationPreference() &&
+                                        getNotificationPermission() === 'granted';
+
+    console.log(`[NOTIFICATION] Showing alert for: ${notification.title} (priority: ${notification.priority})`);
+
+    // Determine if this is a high-priority notification
+    const isHighPriority = notification.priority === 'high' || notification.priority === 'urgent';
+    const isAdminNotification = userRole === 'admin' && notification.targetAudience === 'admin';
+
+    // Always show toast for new notifications
+    const toastOptions = {
+      duration: isHighPriority ? 8000 : 5000,
+      description: notification.message,
+    };
+
+    if (notification.priority === 'urgent') {
+      toast.error(`${icon} ${notification.title}`, toastOptions);
+    } else if (notification.priority === 'high') {
+      toast.warning(`${icon} ${notification.title}`, toastOptions);
+    } else if (isAdminNotification) {
+      toast.info(`${icon} ${notification.title}`, toastOptions);
+    } else {
+      toast.success(`${icon} ${notification.title}`, toastOptions);
+    }
+
+    // Show browser notification for high priority or admin notifications when tab is hidden
+    if (browserNotificationsEnabled && (isHighPriority || isAdminNotification)) {
+      // Use smartNotify which shows browser notification only when tab is hidden
+      if (document.hidden) {
+        showBrowserNotification({
+          title: notification.title,
+          body: notification.message,
+          tag: notification.id,
+          requireInteraction: notification.priority === 'urgent',
+          data: {
+            url: notification.actionUrl,
+            notificationId: notification.id,
+          },
+        });
+      }
+    }
   }, []);
 
   const connect = useCallback(() => {
@@ -118,7 +178,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         connectionIdRef.current = generateUUID();
       }
 
-      console.log('Attempting SSE connection...');
+      console.log('[SSE] Attempting connection...');
       const eventSource = new EventSource(
         `/api/notifications/stream?connectionId=${connectionIdRef.current}`,
         {
@@ -129,12 +189,12 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
       // Longer timeout to account for server auto-close at 290s
       const connectionTimeout = 295000; // 295 seconds (just under 5 minutes)
       connectionTimeoutRef.current = setTimeout(() => {
-        console.log('SSE connection timeout - server will auto-close, preparing for reconnect');
+        console.log('[SSE] Connection timeout - server will auto-close, preparing for reconnect');
         // Don't close manually, let server close and trigger reconnect
       }, connectionTimeout);
 
       eventSource.onopen = () => {
-        console.log('SSE connection established');
+        console.log('[SSE] Connection established');
         setState(prev => ({ ...prev, isConnected: true, lastActivity: new Date() }));
         reconnectAttemptsRef.current = 0;
         isReconnectingRef.current = false;
@@ -149,7 +209,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
       eventSource.onmessage = (event) => {
         try {
           if (!event.data || event.data.trim() === '') {
-            console.warn('Received empty SSE message');
+            console.warn('[SSE] Received empty message');
             return;
           }
 
@@ -159,16 +219,19 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
 
           switch (data.type) {
             case 'connected':
-              console.log('SSE connection confirmed:', data.payload);
+              console.log('[SSE] Connection confirmed:', data.payload);
               break;
 
             case 'notification': {
               const newNotification = data.payload as Notification;
-              console.log('New notification received:', newNotification);
+              console.log('[SSE] New notification received:', newNotification.id, newNotification.title);
 
               setState(prev => {
                 const exists = prev.notifications.some(n => n.id === newNotification.id);
-                if (exists) return prev;
+                if (exists) {
+                  console.log('[SSE] Notification already exists, skipping');
+                  return prev;
+                }
 
                 const updatedNotifications = [newNotification, ...prev.notifications];
 
@@ -179,70 +242,17 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
                 };
               });
 
-              // Show browser/toast notification based on priority and user preference
-              const browserNotificationsEnabled = getNotificationPreference() &&
-                                                  getNotificationPermission() === 'granted';
-
-              if (newNotification.priority === 'high' || newNotification.priority === 'urgent') {
-                if (browserNotificationsEnabled) {
-                  // Use smart notification (browser if tab hidden, toast if visible)
-                  smartNotify(
-                    {
-                      title: newNotification.title,
-                      body: newNotification.message,
-                      tag: newNotification.id,
-                      requireInteraction: newNotification.priority === 'urgent',
-                      data: {
-                        url: newNotification.actionUrl,
-                        notificationId: newNotification.id,
-                      },
-                    },
-                    () => {
-                      // In-app toast fallback
-                      toast.warning(newNotification.title, {
-                        description: newNotification.message,
-                        duration: 6000,
-                      });
-                    }
-                  );
-                } else {
-                  toast.warning(newNotification.title, {
-                    description: newNotification.message,
-                    duration: 6000,
-                  });
-                }
-              } else if (session.user.role === 'admin' && newNotification.targetAudience === 'admin') {
-                if (browserNotificationsEnabled) {
-                  smartNotify(
-                    {
-                      title: newNotification.title,
-                      body: newNotification.message,
-                      tag: newNotification.id,
-                      data: {
-                        url: newNotification.actionUrl,
-                        notificationId: newNotification.id,
-                      },
-                    },
-                    () => {
-                      toast.info(newNotification.title, {
-                        description: newNotification.message,
-                        duration: 4000,
-                      });
-                    }
-                  );
-                } else {
-                  toast.info(newNotification.title, {
-                    description: newNotification.message,
-                    duration: 4000,
-                  });
-                }
+              // Show toast and browser notification for new notifications
+              // Only show if not already read
+              if (!newNotification.read) {
+                showNotificationAlert(newNotification, session.user.role);
               }
               break;
             }
 
             case 'initial_notifications': {
               const initialNotifications = data.payload as Notification[];
-              console.log('Initial notifications loaded:', initialNotifications.length);
+              console.log('[SSE] Initial notifications loaded:', initialNotifications.length);
 
               setState(prev => ({
                 ...prev,
@@ -258,15 +268,15 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
               break;
 
             default:
-              console.log('Unknown SSE message type:', data.type);
+              console.log('[SSE] Unknown message type:', data.type);
           }
         } catch (error) {
-          console.error('Error parsing SSE message:', error, 'Raw data:', event.data);
+          console.error('[SSE] Error parsing message:', error, 'Raw data:', event.data);
         }
       };
 
       eventSource.onerror = (error) => {
-        console.error('SSE connection error:', error);
+        console.error('[SSE] Connection error:', error);
         setState(prev => ({ ...prev, isConnected: false }));
         isReconnectingRef.current = false;
 
@@ -284,7 +294,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
 
         // Only attempt reconnection if authenticated and haven't exceeded max attempts
         if (!mountedRef.current) {
-          console.log('Component unmounted, skipping reconnection');
+          console.log('[SSE] Component unmounted, skipping reconnection');
           return;
         }
 
@@ -292,7 +302,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
           const delay = Math.min(3000 * 2 ** reconnectAttemptsRef.current, 30000); // Exponential backoff, max 30s
           reconnectAttemptsRef.current++;
 
-          console.log(`Will reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
+          console.log(`[SSE] Will reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
 
           reconnectTimeoutRef.current = setTimeout(() => {
             if (session?.user && status === 'authenticated' && mountedRef.current) {
@@ -300,7 +310,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
             }
           }, delay);
         } else if (reconnectAttemptsRef.current >= maxReconnectAttempts) {
-          console.error('Max reconnection attempts reached');
+          console.error('[SSE] Max reconnection attempts reached');
           if (process.env.NODE_ENV === 'production' && !hasShownErrorToastRef.current) {
             hasShownErrorToastRef.current = true;
             toast.error('Lost connection to real-time notifications', {
@@ -313,7 +323,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
 
       eventSourceRef.current = eventSource;
     } catch (error) {
-      console.error('Failed to establish SSE connection:', error);
+      console.error('[SSE] Failed to establish connection:', error);
       setState(prev => ({ ...prev, isConnected: false }));
       isReconnectingRef.current = false;
 
@@ -322,7 +332,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         connectionTimeoutRef.current = null;
       }
     }
-  }, [session, status]);
+  }, [session, status, showNotificationAlert]);
 
   // Mark notification as read - now calls the API
   const markAsRead = useCallback(async (notificationId: string) => {
@@ -350,7 +360,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         body: JSON.stringify({ action: 'mark_read', notificationId }),
       });
     } catch (error) {
-      console.error('Failed to mark notification as read:', error);
+      console.error('[NOTIFICATION] Failed to mark as read:', error);
       // Don't revert optimistic update - the local state is still useful
     }
   }, []);
@@ -372,7 +382,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         body: JSON.stringify({ action: 'mark_all_read' }),
       });
     } catch (error) {
-      console.error('Failed to mark all notifications as read:', error);
+      console.error('[NOTIFICATION] Failed to mark all as read:', error);
     }
   }, []);
 
@@ -447,3 +457,4 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
     reconnect
   };
 }
+
