@@ -436,6 +436,54 @@ export const verificationTokens = pgTable('verification_tokens', {
   expires: timestamp('expires', { mode: 'date' }).notNull(),
 });
 
+// Notification Type Enum
+export const notificationTypeEnum = pgEnum('notification_type', [
+  'announcement',
+  'event',
+  'prayer_request',
+  'system',
+  'admin'
+]);
+
+// Notification Priority Enum
+export const notificationPriorityEnum = pgEnum('notification_priority', [
+  'low',
+  'medium',
+  'high',
+  'urgent'
+]);
+
+// Notification Target Audience Enum
+export const notificationTargetAudienceEnum = pgEnum('notification_target_audience', [
+  'all',
+  'members',
+  'admin',
+  'specific'
+]);
+
+// Notifications table - for persistent real-time notifications
+export const notifications = pgTable('notifications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  title: varchar('title', { length: 255 }).notNull(),
+  message: text('message').notNull(),
+  type: notificationTypeEnum('type').notNull(),
+  priority: notificationPriorityEnum('priority').default('medium').notNull(),
+  targetAudience: notificationTargetAudienceEnum('target_audience').default('all').notNull(),
+  specificUserIds: jsonb('specific_user_ids').$type<string[]>().default([]),
+  metadata: jsonb('metadata').$type<Record<string, unknown>>().default({}),
+  actionUrl: text('action_url'),
+  expiresAt: timestamp('expires_at', { mode: 'date' }),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
+// User notification reads - tracks which notifications each user has read
+export const notificationReads = pgTable('notification_reads', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  notificationId: uuid('notification_id').references(() => notifications.id, { onDelete: 'cascade' }).notNull(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  readAt: timestamp('read_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
 // Bookmarks/Saved Resources table
 export const bookmarks = pgTable('bookmarks', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -486,3 +534,9 @@ export type Bookmark = typeof bookmarks.$inferSelect;
 export type NewBookmark = typeof bookmarks.$inferInsert;
 export type MembershipRequest = typeof membershipRequests.$inferSelect;
 export type NewMembershipRequest = typeof membershipRequests.$inferInsert;
+
+export type DbNotification = typeof notifications.$inferSelect;
+export type NewDbNotification = typeof notifications.$inferInsert;
+
+export type NotificationRead = typeof notificationReads.$inferSelect;
+export type NewNotificationRead = typeof notificationReads.$inferInsert;

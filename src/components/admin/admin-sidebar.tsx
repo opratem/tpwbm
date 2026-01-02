@@ -18,8 +18,10 @@ import {
   Shield,
   ChevronLeft,
   ChevronRight,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LiveNotifications } from "@/components/ui/live-notifications";
 import { useState } from "react";
 
 const adminNavItems = [
@@ -78,6 +80,12 @@ const adminNavItems = [
     description: "Manage YouTube content",
   },
   {
+    title: "Notifications",
+    href: "/admin/notifications",
+    icon: Bell,
+    description: "Manage & send notifications",
+  },
+  {
     title: "My Profile",
     href: "/admin/profile",
     icon: Settings,
@@ -115,18 +123,21 @@ export function AdminSidebar() {
             </div>
           </div>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-slate-400 hover:text-white hover:bg-slate-700/50"
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-5 w-5" />
-          ) : (
-            <ChevronLeft className="h-5 w-5" />
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <LiveNotifications className="text-slate-400 hover:text-white" showConnectionStatus={!isCollapsed} />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="text-slate-400 hover:text-white hover:bg-slate-700/50"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Navigation */}

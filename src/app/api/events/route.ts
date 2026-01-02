@@ -10,7 +10,7 @@ import {
   getSecurityHeaders
 } from "@/lib/security";
 import { eventSchema, validateAndSanitize } from "@/lib/validations";
-import { notificationSender } from "@/lib/notification-broadcaster";
+import { notificationService } from "@/lib/notification-service";
 
 // Helper function to check if user has admin privileges (admin or super_admin)
 const isAdminUser = (role: string | undefined) => {
@@ -361,7 +361,7 @@ export async function POST(request: NextRequest) {
 
     // Send notification to all members about new event
     try {
-      await notificationSender.newEvent({
+      await notificationService.newEvent({
         eventId: newEvent.id,
         title: validatedData.title,
         date: new Date(validatedData.startDate).toLocaleDateString(),

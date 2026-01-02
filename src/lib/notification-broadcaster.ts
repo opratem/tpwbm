@@ -1,6 +1,21 @@
-import { type Notification, createNotification, createNotificationHelpers } from './notification';
+/**
+ * Notification Broadcaster
+ *
+ * This module provides a unified interface for sending notifications.
+ * It combines database persistence (for reliability) with real-time SSE broadcasting (for speed).
+ *
+ * Key design decisions:
+ * 1. Database is the source of truth - notifications are always persisted first
+ * 2. SSE broadcast is optional enhancement for real-time delivery
+ * 3. SSE polling (in stream/route.ts) serves as fallback for serverless function isolation
+ */
+
+import { notificationService } from './notification-service';
+import type { Notification } from './notification';
 
 // Store reference to the broadcast function from SSE route
+// Note: This only works within the same serverless function instance
+// For cross-instance communication, the SSE polling mechanism in stream/route.ts handles it
 let broadcastFunction: ((notification: Notification) => void) | null = null;
 
 /**
@@ -9,101 +24,206 @@ let broadcastFunction: ((notification: Notification) => void) | null = null;
  */
 export function setBroadcastFunction(fn: (notification: Notification) => void) {
   broadcastFunction = fn;
-  console.log('Notification broadcaster connected to SSE route');
+  console.log('[BROADCASTER] SSE broadcast function connected');
 }
 
 /**
- * Broadcast a notification to all connected clients
- * Falls back gracefully if broadcast function is not available
+ * Try to broadcast via SSE if available (same-instance only)
+ * This is a best-effort enhancement, not guaranteed to work across serverless instances
  */
-export function broadcastNotification(notification: Notification) {
+function trySSEBroadcast(notification: Notification) {
   if (broadcastFunction) {
     try {
       broadcastFunction(notification);
-      console.log('Notification broadcasted:', notification.type, notification.title);
+      console.log('[BROADCASTER] SSE broadcast sent:', notification.type, notification.title);
     } catch (error) {
-      console.error('Error broadcasting notification:', error);
+      console.warn('[BROADCASTER] SSE broadcast failed (non-critical):', error);
     }
   } else {
-    console.warn('Broadcast function not available, notification not sent:', notification.title);
-    // In production, you might want to queue notifications or use a different strategy
+    console.log('[BROADCASTER] No SSE connection in this instance - notification will be delivered via polling');
   }
 }
 
 /**
- * Convenience functions for sending specific notification types
+ * Send a notification - persists to database and attempts SSE broadcast
+ * The SSE stream route polls the database every 10 seconds as a fallback
  */
 export const notificationSender = {
   /**
-   * Send notification for new prayer request
+   * Send notification for new prayer request (for admins)
    */
-  newPrayerRequest: (data: { requestId: string; requestTitle: string; requesterName: string; isGuest?: boolean }) => {
-    const notification = createNotificationHelpers.newPrayerRequest(data);
-    broadcastNotification(notification);
-    return notification;
+  async newPrayerRequest(data: { requestId: string; requestTitle: string; requesterName: string; isGuest?: boolean }) {
+    const dbNotification = await notificationService.newPrayerRequest(data);
+
+    if (dbNotification) {
+      // Try SSE broadcast as enhancement
+      trySSEBroadcast({
+        id: dbNotification.id,
+        title: dbNotification.title,
+        message: dbNotification.message,
+        type: dbNotification.type as Notification['type'],
+        priority: dbNotification.priority as Notification['priority'],
+        targetAudience: dbNotification.targetAudience as Notification['targetAudience'],
+        read: false,
+        createdAt: dbNotification.createdAt,
+        expiresAt: dbNotification.expiresAt || undefined,
+        metadata: dbNotification.metadata as Notification['metadata'],
+        actionUrl: dbNotification.actionUrl || undefined,
+      });
+    }
+
+    return dbNotification;
   },
 
   /**
-   * Send notification for new user registration
+   * Send notification for new user registration (for admins)
    */
-  newUserRegistration: (data: { userId: string; userName: string; userEmail: string }) => {
-    const notification = createNotificationHelpers.newUserRegistration(data);
-    broadcastNotification(notification);
-    return notification;
+  async newUserRegistration(data: { userId: string; userName: string; userEmail: string }) {
+    const dbNotification = await notificationService.newUserRegistration(data);
+
+    if (dbNotification) {
+      trySSEBroadcast({
+        id: dbNotification.id,
+        title: dbNotification.title,
+        message: dbNotification.message,
+        type: dbNotification.type as Notification['type'],
+        priority: dbNotification.priority as Notification['priority'],
+        targetAudience: dbNotification.targetAudience as Notification['targetAudience'],
+        read: false,
+        createdAt: dbNotification.createdAt,
+        expiresAt: dbNotification.expiresAt || undefined,
+        metadata: dbNotification.metadata as Notification['metadata'],
+        actionUrl: dbNotification.actionUrl || undefined,
+      });
+    }
+
+    return dbNotification;
   },
 
   /**
-   * Send notification for new membership request
+   * Send notification for new membership request (for admins)
    */
-  newMembershipRequest: (data: { requestId: string; name: string; email: string }) => {
-    const notification = createNotificationHelpers.newMembershipRequest(data);
-    broadcastNotification(notification);
-    return notification;
+  async newMembershipRequest(data: { requestId: string; name: string; email: string }) {
+    const dbNotification = await notificationService.newMembershipRequest(data);
+
+    if (dbNotification) {
+      trySSEBroadcast({
+        id: dbNotification.id,
+        title: dbNotification.title,
+        message: dbNotification.message,
+        type: dbNotification.type as Notification['type'],
+        priority: dbNotification.priority as Notification['priority'],
+        targetAudience: dbNotification.targetAudience as Notification['targetAudience'],
+        read: false,
+        createdAt: dbNotification.createdAt,
+        expiresAt: dbNotification.expiresAt || undefined,
+        metadata: dbNotification.metadata as Notification['metadata'],
+        actionUrl: dbNotification.actionUrl || undefined,
+      });
+    }
+
+    return dbNotification;
   },
 
   /**
-   * Send notification for new announcement
+   * Send notification for new announcement (for all members)
    */
-  newAnnouncement: (data: { announcementId: string; title: string; author: string }) => {
-    const notification = createNotificationHelpers.newAnnouncement(data);
-    broadcastNotification(notification);
-    return notification;
+  async newAnnouncement(data: { announcementId: string; title: string; author: string }) {
+    const dbNotification = await notificationService.newAnnouncement(data);
+
+    if (dbNotification) {
+      trySSEBroadcast({
+        id: dbNotification.id,
+        title: dbNotification.title,
+        message: dbNotification.message,
+        type: dbNotification.type as Notification['type'],
+        priority: dbNotification.priority as Notification['priority'],
+        targetAudience: dbNotification.targetAudience as Notification['targetAudience'],
+        read: false,
+        createdAt: dbNotification.createdAt,
+        expiresAt: dbNotification.expiresAt || undefined,
+        metadata: dbNotification.metadata as Notification['metadata'],
+        actionUrl: dbNotification.actionUrl || undefined,
+      });
+    }
+
+    return dbNotification;
   },
 
   /**
-   * Send notification for new event
+   * Send notification for new event (for all members)
    */
-  newEvent: (data: { eventId: string; title: string; date: string; organizer: string }) => {
-    const notification = createNotificationHelpers.newEvent(data);
-    broadcastNotification(notification);
-    return notification;
+  async newEvent(data: { eventId: string; title: string; date: string; organizer: string }) {
+    const dbNotification = await notificationService.newEvent(data);
+
+    if (dbNotification) {
+      trySSEBroadcast({
+        id: dbNotification.id,
+        title: dbNotification.title,
+        message: dbNotification.message,
+        type: dbNotification.type as Notification['type'],
+        priority: dbNotification.priority as Notification['priority'],
+        targetAudience: dbNotification.targetAudience as Notification['targetAudience'],
+        read: false,
+        createdAt: dbNotification.createdAt,
+        expiresAt: dbNotification.expiresAt || undefined,
+        metadata: dbNotification.metadata as Notification['metadata'],
+        actionUrl: dbNotification.actionUrl || undefined,
+      });
+    }
+
+    return dbNotification;
   },
 
   /**
-   * Send notification for user status change
+   * Send notification for user status change (for admins)
    */
-  userStatusChange: (data: { userId: string; userName: string; status: string; changedBy: string }) => {
-    const notification = createNotificationHelpers.userStatusChange(data);
-    broadcastNotification(notification);
-    return notification;
+  async userStatusChange(data: { userId: string; userName: string; status: string; changedBy: string }) {
+    const dbNotification = await notificationService.userStatusChange(data);
+
+    if (dbNotification) {
+      trySSEBroadcast({
+        id: dbNotification.id,
+        title: dbNotification.title,
+        message: dbNotification.message,
+        type: dbNotification.type as Notification['type'],
+        priority: dbNotification.priority as Notification['priority'],
+        targetAudience: dbNotification.targetAudience as Notification['targetAudience'],
+        read: false,
+        createdAt: dbNotification.createdAt,
+        expiresAt: dbNotification.expiresAt || undefined,
+        metadata: dbNotification.metadata as Notification['metadata'],
+        actionUrl: dbNotification.actionUrl || undefined,
+      });
+    }
+
+    return dbNotification;
   },
 
   /**
-   * Send system alert notification
+   * Send system alert notification (for admins)
    */
-  systemAlert: (data: { title: string; message: string; priority: 'low' | 'normal' | 'high' | 'urgent'; url?: string }) => {
-    const notification = createNotificationHelpers.systemAlert(data);
-    broadcastNotification(notification);
-    return notification;
-  },
+  async systemAlert(data: { title: string; message: string; priority: 'low' | 'normal' | 'high' | 'urgent'; url?: string }) {
+    const dbNotification = await notificationService.systemAlert(data);
 
-  /**
-   * Send a custom notification
-   */
-  custom: (notification: Notification) => {
-    broadcastNotification(notification);
-    return notification;
-  }
+    if (dbNotification) {
+      trySSEBroadcast({
+        id: dbNotification.id,
+        title: dbNotification.title,
+        message: dbNotification.message,
+        type: dbNotification.type as Notification['type'],
+        priority: dbNotification.priority as Notification['priority'],
+        targetAudience: dbNotification.targetAudience as Notification['targetAudience'],
+        read: false,
+        createdAt: dbNotification.createdAt,
+        expiresAt: dbNotification.expiresAt || undefined,
+        metadata: dbNotification.metadata as Notification['metadata'],
+        actionUrl: dbNotification.actionUrl || undefined,
+      });
+    }
+
+    return dbNotification;
+  },
 };
 
 /**
@@ -111,8 +231,11 @@ export const notificationSender = {
  */
 export function getBroadcasterStatus() {
   return {
-    isConnected: broadcastFunction !== null,
-    timestamp: new Date().toISOString()
+    hasSSEConnection: broadcastFunction !== null,
+    timestamp: new Date().toISOString(),
+    note: broadcastFunction
+      ? 'SSE broadcast available in this instance'
+      : 'SSE broadcast not available - using database polling fallback'
   };
 }
 
@@ -121,5 +244,5 @@ export function getBroadcasterStatus() {
  */
 export function resetBroadcastFunction() {
   broadcastFunction = null;
-  console.log('Notification broadcaster disconnected');
+  console.log('[BROADCASTER] SSE broadcast function disconnected');
 }
