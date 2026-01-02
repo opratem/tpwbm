@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import type { Notification } from '@/lib/notification';
 import { generateUUID, isEventSourceSupported } from '@/lib/utils';
-import { smartNotify, getNotificationPermission, getNotificationPreference, showBrowserNotification } from '@/lib/browser-notification';
+import { getNotificationPermission, getNotificationPreference, showBrowserNotification } from '@/lib/browser-notification';
 
 interface NotificationState {
   notifications: Notification[];
@@ -48,13 +48,15 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
   const eventSourceRef = useRef<EventSource | null>(null);
   const connectionIdRef = useRef<string | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const maxReconnectAttempts = 3;
+  const maxReconnectAttempts = 5;
   const reconnectAttemptsRef = useRef(0);
   const isReconnectingRef = useRef(false);
   const connectionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasShownErrorToastRef = useRef(false);
   const sessionErrorCountRef = useRef(0);
   const mountedRef = useRef(true);
+  const httpPollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const seenNotificationIdsRef = useRef<Set<string>>(new Set());
 
   const disconnect = useCallback(() => {
     isReconnectingRef.current = false;
@@ -72,6 +74,11 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
     if (connectionTimeoutRef.current) {
       clearTimeout(connectionTimeoutRef.current);
       connectionTimeoutRef.current = null;
+    }
+
+    if (httpPollingIntervalRef.current) {
+      clearInterval(httpPollingIntervalRef.current);
+      httpPollingIntervalRef.current = null;
     }
 
     setState(prev => ({ ...prev, isConnected: false }));
@@ -107,23 +114,97 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
       toast.success(`${icon} ${notification.title}`, toastOptions);
     }
 
-    // Show browser notification for high priority or admin notifications when tab is hidden
-    if (browserNotificationsEnabled && (isHighPriority || isAdminNotification)) {
-      // Use smartNotify which shows browser notification only when tab is hidden
-      if (document.hidden) {
-        showBrowserNotification({
-          title: notification.title,
-          body: notification.message,
-          tag: notification.id,
-          requireInteraction: notification.priority === 'urgent',
-          data: {
-            url: notification.actionUrl,
-            notificationId: notification.id,
-          },
-        });
-      }
+    // Show browser notification for ALL new notifications when browser notifications are enabled
+    // Not just when tab is hidden - users want to know even if on another tab
+    if (browserNotificationsEnabled) {
+      showBrowserNotification({
+        title: notification.title,
+        body: notification.message,
+        tag: notification.id,
+        requireInteraction: notification.priority === 'urgent',
+        data: {
+          url: notification.actionUrl,
+          notificationId: notification.id,
+        },
+      });
     }
   }, []);
+
+  /**
+   * HTTP polling fallback for when SSE doesn't work
+   */
+  const pollNotifications = useCallback(async () => {
+    if (!session?.user || !mountedRef.current) return;
+
+    try {
+      const response = await fetch('/api/notifications?includeRead=true&limit=50');
+      if (!response.ok) {
+        console.error('[HTTP POLL] Failed to fetch notifications:', response.status);
+        return;
+      }
+
+      const data = await response.json();
+      const fetchedNotifications = data.notifications || [];
+
+      // Find new notifications that we haven't seen
+      const newNotifications = fetchedNotifications.filter(
+        (n: Notification) => !seenNotificationIdsRef.current.has(n.id)
+      );
+
+      if (newNotifications.length > 0) {
+        console.log(`[HTTP POLL] Found ${newNotifications.length} new notifications`);
+
+        // Add new notification IDs to seen set
+        for (const n of newNotifications) {
+          seenNotificationIdsRef.current.add(n.id);
+        }
+
+        setState(prev => {
+          const existingIds = new Set(prev.notifications.map(n => n.id));
+          const trulyNew = newNotifications.filter((n: Notification) => !existingIds.has(n.id));
+
+          if (trulyNew.length === 0) return prev;
+
+          // Show alerts for truly new unread notifications
+          for (const notification of trulyNew) {
+            if (!notification.read) {
+              showNotificationAlert(notification, session.user.role);
+            }
+          }
+
+          return {
+            ...prev,
+            notifications: [...trulyNew, ...prev.notifications],
+            unreadCount: prev.unreadCount + trulyNew.filter((n: Notification) => !n.read).length,
+            lastActivity: new Date()
+          };
+        });
+      }
+    } catch (error) {
+      console.error('[HTTP POLL] Error polling notifications:', error);
+    }
+  }, [session, showNotificationAlert]);
+
+  /**
+   * Start HTTP polling as fallback
+   */
+  const startHttpPolling = useCallback(() => {
+    if (httpPollingIntervalRef.current) {
+      clearInterval(httpPollingIntervalRef.current);
+    }
+
+    console.log('[HTTP POLL] Starting HTTP polling fallback (every 5 seconds)');
+
+    // Poll immediately
+    pollNotifications();
+
+    // Then poll every 5 seconds
+    httpPollingIntervalRef.current = setInterval(() => {
+      if (mountedRef.current) {
+        pollNotifications();
+      }
+    }, 5000);
+  }, [pollNotifications]);
 
   const connect = useCallback(() => {
     // Check if component is still mounted
@@ -133,7 +214,8 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
 
     // Check if SSE is supported
     if (!isEventSourceSupported()) {
-      console.warn('EventSource not supported in this environment');
+      console.warn('EventSource not supported, using HTTP polling fallback');
+      startHttpPolling();
       return;
     }
 
@@ -199,6 +281,13 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         reconnectAttemptsRef.current = 0;
         isReconnectingRef.current = false;
 
+        // Stop HTTP polling if SSE is connected
+        if (httpPollingIntervalRef.current) {
+          clearInterval(httpPollingIntervalRef.current);
+          httpPollingIntervalRef.current = null;
+          console.log('[SSE] Stopped HTTP polling fallback');
+        }
+
         // Clear connection timeout since we're connected
         if (connectionTimeoutRef.current) {
           clearTimeout(connectionTimeoutRef.current);
@@ -225,6 +314,9 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
             case 'notification': {
               const newNotification = data.payload as Notification;
               console.log('[SSE] New notification received:', newNotification.id, newNotification.title);
+
+              // Add to seen set
+              seenNotificationIdsRef.current.add(newNotification.id);
 
               setState(prev => {
                 const exists = prev.notifications.some(n => n.id === newNotification.id);
@@ -253,6 +345,11 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
             case 'initial_notifications': {
               const initialNotifications = data.payload as Notification[];
               console.log('[SSE] Initial notifications loaded:', initialNotifications.length);
+
+              // Add all to seen set
+              for (const n of initialNotifications) {
+                seenNotificationIdsRef.current.add(n.id);
+              }
 
               setState(prev => ({
                 ...prev,
@@ -292,6 +389,12 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
           eventSourceRef.current = null;
         }
 
+        // Start HTTP polling as fallback
+        if (mountedRef.current && !httpPollingIntervalRef.current) {
+          console.log('[SSE] SSE failed, starting HTTP polling fallback');
+          startHttpPolling();
+        }
+
         // Only attempt reconnection if authenticated and haven't exceeded max attempts
         if (!mountedRef.current) {
           console.log('[SSE] Component unmounted, skipping reconnection');
@@ -299,7 +402,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         }
 
         if (session?.user && status === 'authenticated' && reconnectAttemptsRef.current < maxReconnectAttempts) {
-          const delay = Math.min(3000 * 2 ** reconnectAttemptsRef.current, 30000); // Exponential backoff, max 30s
+          const delay = Math.min(5000 * 2 ** reconnectAttemptsRef.current, 60000); // Exponential backoff, max 60s
           reconnectAttemptsRef.current++;
 
           console.log(`[SSE] Will reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
@@ -310,14 +413,8 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
             }
           }, delay);
         } else if (reconnectAttemptsRef.current >= maxReconnectAttempts) {
-          console.error('[SSE] Max reconnection attempts reached');
-          if (process.env.NODE_ENV === 'production' && !hasShownErrorToastRef.current) {
-            hasShownErrorToastRef.current = true;
-            toast.error('Lost connection to real-time notifications', {
-              description: 'Please refresh the page to reconnect',
-              duration: 10000,
-            });
-          }
+          console.error('[SSE] Max reconnection attempts reached, using HTTP polling only');
+          // HTTP polling is already running as fallback
         }
       };
 
@@ -331,8 +428,13 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
         clearTimeout(connectionTimeoutRef.current);
         connectionTimeoutRef.current = null;
       }
+
+      // Start HTTP polling as fallback
+      if (mountedRef.current && !httpPollingIntervalRef.current) {
+        startHttpPolling();
+      }
     }
-  }, [session, status, showNotificationAlert]);
+  }, [session, status, showNotificationAlert, startHttpPolling]);
 
   // Mark notification as read - now calls the API
   const markAsRead = useCallback(async (notificationId: string) => {
@@ -420,7 +522,7 @@ export function useRealTimeNotifications(): UseRealTimeNotificationsResult {
   useEffect(() => {
     mountedRef.current = true;
 
-    if (status === 'authenticated' && session?.user && isEventSourceSupported()) {
+    if (status === 'authenticated' && session?.user) {
       // Small delay to ensure session is fully established
       const initTimeout = setTimeout(() => {
         if (mountedRef.current) {

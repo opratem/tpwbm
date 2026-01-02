@@ -16,12 +16,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { LiveNotifications } from "@/components/ui/live-notifications";
 
 const memberNavItems = [
   {
@@ -29,6 +31,12 @@ const memberNavItems = [
     href: "/members/dashboard",
     icon: LayoutDashboard,
     description: "Overview & quick access",
+  },
+  {
+    title: "Notifications",
+    href: "/members/notifications",
+    icon: Bell,
+    description: "View all notifications",
   },
   {
     title: "My Profile",
@@ -130,18 +138,21 @@ export function MembersSidebar() {
             </div>
           </div>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-slate-400 hover:text-white hover:bg-slate-700/50 flex-shrink-0"
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-5 w-5" />
-          ) : (
-            <ChevronLeft className="h-5 w-5" />
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <LiveNotifications className="text-slate-400 hover:text-white" showConnectionStatus={!isCollapsed} />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="text-slate-400 hover:text-white hover:bg-slate-700/50 flex-shrink-0"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Navigation */}

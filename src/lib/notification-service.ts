@@ -416,6 +416,112 @@ export const notificationService = {
   },
 
   /**
+   * Create notification for new blog post (for all members)
+   */
+  async newBlogPost(data: {
+    postId: string;
+    title: string;
+    author: string;
+    category: string;
+  }) {
+    return createNotification({
+      title: 'New Blog Post',
+      message: `${data.author} published a new article: "${data.title}"`,
+      type: 'announcement',
+      priority: 'medium',
+      targetAudience: 'all',
+      metadata: {
+        postId: data.postId,
+        author: data.author,
+        category: data.category,
+      },
+      actionUrl: `/blog/${data.postId}`,
+    });
+  },
+
+  /**
+   * Create notification for new sermon/audio upload (for all members)
+   */
+  async newSermon(data: {
+    sermonId: string;
+    title: string;
+    speaker: string;
+    type: 'video' | 'audio';
+  }) {
+    return createNotification({
+      title: data.type === 'video' ? 'New Video Sermon' : 'New Audio Message',
+      message: `A new ${data.type === 'video' ? 'video sermon' : 'audio message'} "${data.title}" by ${data.speaker} is now available`,
+      type: 'announcement',
+      priority: 'medium',
+      targetAudience: 'all',
+      metadata: {
+        sermonId: data.sermonId,
+        speaker: data.speaker,
+        type: data.type,
+      },
+      actionUrl: data.type === 'video' ? '/sermons' : '/audio-messages',
+    });
+  },
+
+  /**
+   * Create notification for membership request approval/rejection (for the user)
+   */
+  async membershipRequestProcessed(data: {
+    requestId: string;
+    userId: string;
+    userName: string;
+    status: 'approved' | 'rejected';
+    processedBy: string;
+  }) {
+    return createNotification({
+      title: data.status === 'approved' ? 'Membership Approved!' : 'Membership Request Update',
+      message: data.status === 'approved'
+        ? `Welcome to the church, ${data.userName}! Your membership has been approved.`
+        : `Your membership request has been reviewed. Please contact the church for more information.`,
+      type: 'system',
+      priority: data.status === 'approved' ? 'high' : 'medium',
+      targetAudience: 'specific',
+      specificUserIds: [data.userId],
+      metadata: {
+        requestId: data.requestId,
+        status: data.status,
+        processedBy: data.processedBy,
+      },
+      actionUrl: '/members/dashboard',
+    });
+  },
+
+  /**
+   * Create notification for prayer request status update (for the requester)
+   */
+  async prayerRequestStatusUpdate(data: {
+    requestId: string;
+    userId: string;
+    requestTitle: string;
+    status: 'approved' | 'answered' | 'archived';
+  }) {
+    const messages = {
+      approved: `Your prayer request "${data.requestTitle}" has been approved and is now visible to the church.`,
+      answered: `Praise God! Your prayer request "${data.requestTitle}" has been marked as answered.`,
+      archived: `Your prayer request "${data.requestTitle}" has been archived.`,
+    };
+
+    return createNotification({
+      title: data.status === 'answered' ? 'Prayer Answered!' : 'Prayer Request Update',
+      message: messages[data.status],
+      type: 'prayer_request',
+      priority: data.status === 'answered' ? 'high' : 'medium',
+      targetAudience: 'specific',
+      specificUserIds: [data.userId],
+      metadata: {
+        requestId: data.requestId,
+        status: data.status,
+      },
+      actionUrl: '/members/prayer',
+    });
+  },
+
+  /**
    * Create a custom notification
    */
   async custom(data: CreateNotificationData) {

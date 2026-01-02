@@ -18,6 +18,7 @@ import {
   Shield,
   ChevronLeft,
   ChevronRight,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LiveNotifications } from "@/components/ui/live-notifications";
@@ -77,6 +78,12 @@ const adminNavItems = [
     href: "/admin/youtube",
     icon: Youtube,
     description: "Manage YouTube content",
+  },
+  {
+    title: "Notifications",
+    href: "/admin/notifications",
+    icon: Bell,
+    description: "Manage & send notifications",
   },
   {
     title: "My Profile",

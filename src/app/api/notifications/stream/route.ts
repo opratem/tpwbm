@@ -285,7 +285,7 @@ export async function GET(request: NextRequest) {
               console.error(`[SSE] Error polling for notifications:`, error);
               // Don't close connection on polling error
             }
-          }, 3000); // Poll every 3 seconds for near real-time notifications
+          }, 2000); // Poll every 2 seconds for near real-time notifications
 
           // Send heartbeat every 30 seconds
           heartbeatInterval = setInterval(() => {
