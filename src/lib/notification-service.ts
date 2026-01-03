@@ -6,11 +6,20 @@
  *
  * The service works across serverless function boundaries by persisting
  * notifications in the database instead of relying on in-memory state.
+ *
+ * It also integrates with Web Push for sending push notifications to
+ * subscribed devices.
  */
 
 import { db } from '@/lib/db';
 import { notifications, notificationReads, type DbNotification, type NewDbNotification } from '@/lib/db/schema';
-import { eq, and, or, desc, notInArray, gte, isNull } from 'drizzle-orm';
+import { eq, and, or, desc, notInArray, gte, isNull, sql } from 'drizzle-orm';
+import {
+  sendPushToAudience,
+  sendPushToUsers,
+  isWebPushConfigured,
+  type PushPayload,
+} from '@/lib/web-push-service';
 
 export type NotificationType = 'announcement' | 'event' | 'prayer_request' | 'system' | 'admin';
 export type NotificationPriority = 'low' | 'medium' | 'high' | 'urgent';
@@ -26,10 +35,12 @@ export interface CreateNotificationData {
   metadata?: Record<string, unknown>;
   actionUrl?: string;
   expiresAt?: Date;
+  sendPush?: boolean; // Whether to also send as push notification
 }
 
 /**
  * Create and persist a notification to the database
+ * Optionally sends a push notification to subscribed devices
  */
 export async function createNotification(data: CreateNotificationData): Promise<DbNotification | null> {
   try {
@@ -47,10 +58,65 @@ export async function createNotification(data: CreateNotificationData): Promise<
 
     console.log(`[NOTIFICATION] Created: ${notification.id} - ${notification.type} - ${notification.title}`);
 
+    // Send push notification if enabled and configured
+    const shouldSendPush = data.sendPush !== false; // Default to true
+    if (shouldSendPush && isWebPushConfigured()) {
+      await sendPushNotificationForDbNotification(notification, data);
+    }
+
     return notification;
   } catch (error) {
     console.error('[NOTIFICATION] Failed to create notification:', error);
     return null;
+  }
+}
+
+/**
+ * Send push notification for a database notification
+ */
+async function sendPushNotificationForDbNotification(
+  notification: DbNotification,
+  data: CreateNotificationData
+): Promise<void> {
+  try {
+    const pushPayload: PushPayload = {
+      title: notification.title,
+      body: notification.message,
+      icon: '/favicon.ico',
+      badge: '/favicon.ico',
+      tag: `notification-${notification.id}`,
+      data: {
+        url: notification.actionUrl || '/',
+        notificationId: notification.id,
+        type: notification.type,
+      },
+      requireInteraction: notification.priority === 'high' || notification.priority === 'urgent',
+      actions: [
+        { action: 'view', title: 'View' },
+        { action: 'dismiss', title: 'Dismiss' },
+      ],
+    };
+
+    if (data.targetAudience === 'specific' && data.specificUserIds?.length) {
+      // Send to specific users
+      const result = await sendPushToUsers(
+        data.specificUserIds,
+        pushPayload,
+        notification.type as NotificationType
+      );
+      console.log(`[NOTIFICATION] Push sent to specific users: ${result.totalSent} sent, ${result.totalFailed} failed`);
+    } else {
+      // Send to audience
+      const result = await sendPushToAudience(
+        data.targetAudience || 'all',
+        pushPayload,
+        notification.type as NotificationType
+      );
+      console.log(`[NOTIFICATION] Push sent to ${data.targetAudience || 'all'}: ${result.totalSent} sent, ${result.totalFailed} failed`);
+    }
+  } catch (error) {
+    console.error('[NOTIFICATION] Failed to send push notification:', error);
+    // Don't throw - push failure shouldn't prevent the notification from being created
   }
 }
 
@@ -84,26 +150,39 @@ export async function getNotificationsForUser(
     ];
 
     // Filter by audience based on user role
+    // Also include notifications specifically targeted to this user
+    const specificUserCondition = and(
+      eq(notifications.targetAudience, 'specific'),
+      sql`${notifications.specificUserIds}::jsonb @> ${JSON.stringify([userId])}::jsonb`
+    );
+
     if (userRole === 'admin') {
-      // Admins see all notifications (for admin or all audiences)
+      // Admins see all notifications (for admin or all audiences) + their specific notifications
       conditions.push(
         or(
           eq(notifications.targetAudience, 'all'),
           eq(notifications.targetAudience, 'admin'),
-          eq(notifications.targetAudience, 'members')
+          eq(notifications.targetAudience, 'members'),
+          specificUserCondition
         )
       );
     } else if (userRole === 'member') {
-      // Members see notifications targeted at members or all
+      // Members see notifications targeted at members or all + their specific notifications
       conditions.push(
         or(
           eq(notifications.targetAudience, 'all'),
-          eq(notifications.targetAudience, 'members')
+          eq(notifications.targetAudience, 'members'),
+          specificUserCondition
         )
       );
     } else {
-      // Visitors only see public notifications
-      conditions.push(eq(notifications.targetAudience, 'all'));
+      // Visitors only see public notifications + their specific notifications (if they have a userId)
+      conditions.push(
+        or(
+          eq(notifications.targetAudience, 'all'),
+          specificUserCondition
+        )
+      );
     }
 
     // Optionally filter out already read notifications

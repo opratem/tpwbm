@@ -11,6 +11,7 @@ import {
   validateOrigin
 } from '@/lib/security';
 import { blogPostSchema, validateAndSanitize } from '@/lib/validations';
+import { notificationService } from '@/lib/notification-service';
 
 // GET /api/blog - Get all blog posts
 export async function GET(request: NextRequest) {
@@ -141,6 +142,22 @@ export async function POST(request: NextRequest) {
     };
 
     const [blogPost] = await db.insert(blogPosts).values(newPost).returning();
+
+    // Send notification for published blog posts
+    if (blogPost.status === 'published') {
+      try {
+        await notificationService.newBlogPost({
+          postId: blogPost.slug,
+          title: blogPost.title,
+          author: blogPost.author,
+          category: blogPost.category,
+        });
+        console.log(`[BLOG-CREATE] Notification sent for new published blog post: ${blogPost.id}`);
+      } catch (notificationError) {
+        console.error('[BLOG-CREATE] Failed to send notification:', notificationError);
+        // Don't fail the blog creation if notification fails
+      }
+    }
 
     return NextResponse.json(blogPost, { status: 201, headers: securityHeaders });
   } catch (error) {

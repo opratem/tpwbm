@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import { notificationService } from '@/lib/notification-service';
 
 const reviewSchema = z.object({
   action: z.enum(['approve', 'reject']),
@@ -124,6 +125,15 @@ export async function PATCH(
         })
         .where(eq(membershipRequests.id, id));
 
+      // Send notification to the user about their membership approval
+      await notificationService.membershipRequestProcessed({
+        requestId: id,
+        userId: newUser.id,
+        userName: newUser.name || 'Member',
+        status: 'approved',
+        processedBy: session.user.name || 'Admin',
+      });
+
       // TODO: Send welcome email to the user with login credentials
 
       return NextResponse.json({
@@ -148,6 +158,19 @@ export async function PATCH(
           updatedAt: new Date(),
         })
         .where(eq(membershipRequests.id, id));
+
+      // Send notification to the user about their membership rejection
+      // Note: We can only notify if there's a linked user account
+      // For rejected requests without a user account, we might need to send an email instead
+      if (membershipRequest.userId) {
+        await notificationService.membershipRequestProcessed({
+          requestId: id,
+          userId: membershipRequest.userId,
+          userName: `${membershipRequest.firstName || ''} ${membershipRequest.lastName || ''}`.trim() || 'Applicant',
+          status: 'rejected',
+          processedBy: session.user.name || 'Admin',
+        });
+      }
 
       return NextResponse.json({
         success: true,

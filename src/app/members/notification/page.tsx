@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { MembersLayout } from "@/components/members/members-layout";
 import { useRealTimeNotifications } from "@/hooks/useRealTimeNotifications";
-import { BrowserNotificationToggle } from "@/components/ui/browser-notification-toggle";
+import { NotificationSettings } from "@/components/ui/notification-settings";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -524,107 +524,7 @@ export default function NotificationsPage() {
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Notification Preferences</CardTitle>
-                <CardDescription>
-                  Customize how you receive notifications from the church
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Browser Notifications */}
-                <BrowserNotificationToggle />
-
-                {/* Notification Types */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Filter className="h-5 w-5" />
-                      Notification Types
-                    </CardTitle>
-                    <CardDescription>
-                      Choose which types of notifications you want to receive
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 rounded-lg border">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                            <Megaphone className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">Announcements</p>
-                            <p className="text-sm text-gray-500">
-                              Church-wide announcements and updates
-                            </p>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-green-600">
-                          Enabled
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center justify-between p-3 rounded-lg border">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                            <Calendar className="h-5 w-5 text-green-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">Events</p>
-                            <p className="text-sm text-gray-500">
-                              New events and event reminders
-                            </p>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-green-600">
-                          Enabled
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center justify-between p-3 rounded-lg border">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
-                            <MessageSquare className="h-5 w-5 text-purple-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">Prayer Requests</p>
-                            <p className="text-sm text-gray-500">
-                              Updates on prayer requests
-                            </p>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-green-600">
-                          Enabled
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center justify-between p-3 rounded-lg border">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg">
-                            <AlertTriangle className="h-5 w-5 text-yellow-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">System Notifications</p>
-                            <p className="text-sm text-gray-500">
-                              Important system updates
-                            </p>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-green-600">
-                          Enabled
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Note: Notification preferences are stored locally in your
-                      browser.
-                    </p>
-                  </CardContent>
-                </Card>
-              </CardContent>
-            </Card>
+            <NotificationSettings />
           </TabsContent>
         </Tabs>
       </div>

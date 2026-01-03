@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { blogPosts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { notificationService } from '@/lib/notification-service';
 
 // GET /api/blog/[id] - Get single blog post
 export async function GET(
@@ -130,6 +131,22 @@ export async function PUT(
         .set(updateData)
         .where(eq(blogPosts.id, id))
         .returning();
+
+    // Send notification when post is newly published
+    if (status === 'published' && existingPost.status !== 'published') {
+      try {
+        await notificationService.newBlogPost({
+          postId: updatedPost.slug,
+          title: updatedPost.title,
+          author: updatedPost.author,
+          category: updatedPost.category,
+        });
+        console.log(`[BLOG-UPDATE] Notification sent for newly published blog post: ${updatedPost.id}`);
+      } catch (notificationError) {
+        console.error('[BLOG-UPDATE] Failed to send notification:', notificationError);
+        // Don't fail the blog update if notification fails
+      }
+    }
 
     return NextResponse.json(updatedPost);
   } catch (error) {
