@@ -305,17 +305,17 @@ export async function sendPushNotificationToRole(
       if (preferences && notificationType) {
         switch (notificationType) {
           case 'announcement':
-            if (!preferences.announcements) continue;
+            if (!preferences.pushAnnouncements) continue;
             break;
           case 'event':
-            if (!preferences.events) continue;
+            if (!preferences.pushEvents) continue;
             break;
           case 'prayer_request':
-            if (!preferences.prayerRequests) continue;
+            if (!preferences.pushPrayerRequests) continue;
             break;
           case 'system':
           case 'admin':
-            if (!preferences.systemNotifications) continue;
+            if (!preferences.pushSystemAlerts) continue;
             break;
         }
       }

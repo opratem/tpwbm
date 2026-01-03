@@ -106,13 +106,14 @@ async function sendPushNotificationForDbNotification(
       );
       console.log(`[NOTIFICATION] Push sent to specific users: ${result.totalSent} sent, ${result.totalFailed} failed`);
     } else {
-      // Send to audience
+      // Send to audience (only if not 'specific')
+      const audience = data.targetAudience === 'specific' ? 'all' : (data.targetAudience || 'all');
       const result = await sendPushToAudience(
-        data.targetAudience || 'all',
+        audience as 'all' | 'members' | 'admin',
         pushPayload,
         notification.type as NotificationType
       );
-      console.log(`[NOTIFICATION] Push sent to ${data.targetAudience || 'all'}: ${result.totalSent} sent, ${result.totalFailed} failed`);
+      console.log(`[NOTIFICATION] Push sent to ${audience}: ${result.totalSent} sent, ${result.totalFailed} failed`);
     }
   } catch (error) {
     console.error('[NOTIFICATION] Failed to send push notification:', error);

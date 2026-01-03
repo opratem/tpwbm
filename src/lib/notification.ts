@@ -64,10 +64,10 @@ export interface Notification {
 }
 
 export interface NotificationPreferences {
-  announcements: boolean;
-  events: boolean;
-  prayerRequests: boolean;
-  systemNotifications: boolean;
+  inAppAnnouncements: boolean;
+  inAppEvents: boolean;
+  inAppPrayerRequests: boolean;
+  inAppSystemAlerts: boolean;
   emailNotifications: boolean;
 }
 
@@ -136,16 +136,16 @@ export function filterNotificationsForUser(
     if (preferences && userRole !== 'admin') {
       switch (notification.type) {
         case 'announcement':
-          if (!preferences.announcements) return false;
+          if (!preferences.inAppAnnouncements) return false;
           break;
         case 'event':
-          if (!preferences.events) return false;
+          if (!preferences.inAppEvents) return false;
           break;
         case 'prayer_request':
-          if (!preferences.prayerRequests) return false;
+          if (!preferences.inAppPrayerRequests) return false;
           break;
         case 'system':
-          if (!preferences.systemNotifications) return false;
+          if (!preferences.inAppSystemAlerts) return false;
           break;
       }
     }
@@ -207,10 +207,10 @@ export function getNotificationColor(priority: Notification['priority']): string
  * Default notification preferences
  */
 export const defaultNotificationPreferences: NotificationPreferences = {
-  announcements: true,
-  events: true,
-  prayerRequests: true,
-  systemNotifications: true,
+  inAppAnnouncements: true,
+  inAppEvents: true,
+  inAppPrayerRequests: true,
+  inAppSystemAlerts: true,
   emailNotifications: false
 };
 
