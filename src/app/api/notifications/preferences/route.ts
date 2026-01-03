@@ -5,22 +5,31 @@
  * Manages user notification preferences.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { userNotificationPreferences } from '@/lib/db/schema';
+import { notificationPreferences } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
-// Default preferences
+// Default preferences matching schema
 const defaultPreferences = {
-  pushEnabled: false,
-  announcements: true,
-  events: true,
-  prayerRequests: true,
-  systemNotifications: true,
-  emailEnabled: false,
-  emailDigestFrequency: 'never',
+  emailEnabled: true,
+  emailAnnouncements: true,
+  emailEvents: true,
+  emailPrayerRequests: true,
+  emailSystemAlerts: true,
+  pushEnabled: true,
+  pushAnnouncements: true,
+  pushEvents: true,
+  pushPrayerRequests: true,
+  pushSystemAlerts: true,
+  inAppEnabled: true,
+  inAppAnnouncements: true,
+  inAppEvents: true,
+  inAppPrayerRequests: true,
+  inAppSystemAlerts: true,
+  digestFrequency: 'instant',
   quietHoursEnabled: false,
   quietHoursStart: null,
   quietHoursEnd: null,
@@ -40,8 +49,8 @@ export async function GET() {
 
     const preferences = await db
       .select()
-      .from(userNotificationPreferences)
-      .where(eq(userNotificationPreferences.userId, session.user.id))
+      .from(notificationPreferences)
+      .where(eq(notificationPreferences.userId, session.user.id))
       .limit(1);
 
     if (preferences.length === 0) {
@@ -82,13 +91,22 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json();
     const {
-      pushEnabled,
-      announcements,
-      events,
-      prayerRequests,
-      systemNotifications,
       emailEnabled,
-      emailDigestFrequency,
+      emailAnnouncements,
+      emailEvents,
+      emailPrayerRequests,
+      emailSystemAlerts,
+      pushEnabled,
+      pushAnnouncements,
+      pushEvents,
+      pushPrayerRequests,
+      pushSystemAlerts,
+      inAppEnabled,
+      inAppAnnouncements,
+      inAppEvents,
+      inAppPrayerRequests,
+      inAppSystemAlerts,
+      digestFrequency,
       quietHoursEnabled,
       quietHoursStart,
       quietHoursEnd,
@@ -108,41 +126,59 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Validate email digest frequency
-    const validFrequencies = ['never', 'daily', 'weekly'];
-    if (emailDigestFrequency && !validFrequencies.includes(emailDigestFrequency)) {
+    // Validate digest frequency
+    const validFrequencies = ['instant', 'daily', 'weekly'];
+    if (digestFrequency && !validFrequencies.includes(digestFrequency)) {
       return NextResponse.json(
-        { error: 'Invalid email digest frequency' },
+        { error: 'Invalid digest frequency' },
         { status: 400 }
       );
     }
 
     // Upsert preferences
     const result = await db
-      .insert(userNotificationPreferences)
+      .insert(notificationPreferences)
       .values({
         userId: session.user.id,
-        pushEnabled: pushEnabled ?? defaultPreferences.pushEnabled,
-        announcements: announcements ?? defaultPreferences.announcements,
-        events: events ?? defaultPreferences.events,
-        prayerRequests: prayerRequests ?? defaultPreferences.prayerRequests,
-        systemNotifications: systemNotifications ?? defaultPreferences.systemNotifications,
         emailEnabled: emailEnabled ?? defaultPreferences.emailEnabled,
-        emailDigestFrequency: emailDigestFrequency ?? defaultPreferences.emailDigestFrequency,
+        emailAnnouncements: emailAnnouncements ?? defaultPreferences.emailAnnouncements,
+        emailEvents: emailEvents ?? defaultPreferences.emailEvents,
+        emailPrayerRequests: emailPrayerRequests ?? defaultPreferences.emailPrayerRequests,
+        emailSystemAlerts: emailSystemAlerts ?? defaultPreferences.emailSystemAlerts,
+        pushEnabled: pushEnabled ?? defaultPreferences.pushEnabled,
+        pushAnnouncements: pushAnnouncements ?? defaultPreferences.pushAnnouncements,
+        pushEvents: pushEvents ?? defaultPreferences.pushEvents,
+        pushPrayerRequests: pushPrayerRequests ?? defaultPreferences.pushPrayerRequests,
+        pushSystemAlerts: pushSystemAlerts ?? defaultPreferences.pushSystemAlerts,
+        inAppEnabled: inAppEnabled ?? defaultPreferences.inAppEnabled,
+        inAppAnnouncements: inAppAnnouncements ?? defaultPreferences.inAppAnnouncements,
+        inAppEvents: inAppEvents ?? defaultPreferences.inAppEvents,
+        inAppPrayerRequests: inAppPrayerRequests ?? defaultPreferences.inAppPrayerRequests,
+        inAppSystemAlerts: inAppSystemAlerts ?? defaultPreferences.inAppSystemAlerts,
+        digestFrequency: digestFrequency ?? defaultPreferences.digestFrequency,
         quietHoursEnabled: quietHoursEnabled ?? defaultPreferences.quietHoursEnabled,
         quietHoursStart: quietHoursStart ?? defaultPreferences.quietHoursStart,
         quietHoursEnd: quietHoursEnd ?? defaultPreferences.quietHoursEnd,
       })
       .onConflictDoUpdate({
-        target: userNotificationPreferences.userId,
+        target: notificationPreferences.userId,
         set: {
-          ...(pushEnabled !== undefined && { pushEnabled }),
-          ...(announcements !== undefined && { announcements }),
-          ...(events !== undefined && { events }),
-          ...(prayerRequests !== undefined && { prayerRequests }),
-          ...(systemNotifications !== undefined && { systemNotifications }),
           ...(emailEnabled !== undefined && { emailEnabled }),
-          ...(emailDigestFrequency !== undefined && { emailDigestFrequency }),
+          ...(emailAnnouncements !== undefined && { emailAnnouncements }),
+          ...(emailEvents !== undefined && { emailEvents }),
+          ...(emailPrayerRequests !== undefined && { emailPrayerRequests }),
+          ...(emailSystemAlerts !== undefined && { emailSystemAlerts }),
+          ...(pushEnabled !== undefined && { pushEnabled }),
+          ...(pushAnnouncements !== undefined && { pushAnnouncements }),
+          ...(pushEvents !== undefined && { pushEvents }),
+          ...(pushPrayerRequests !== undefined && { pushPrayerRequests }),
+          ...(pushSystemAlerts !== undefined && { pushSystemAlerts }),
+          ...(inAppEnabled !== undefined && { inAppEnabled }),
+          ...(inAppAnnouncements !== undefined && { inAppAnnouncements }),
+          ...(inAppEvents !== undefined && { inAppEvents }),
+          ...(inAppPrayerRequests !== undefined && { inAppPrayerRequests }),
+          ...(inAppSystemAlerts !== undefined && { inAppSystemAlerts }),
+          ...(digestFrequency !== undefined && { digestFrequency }),
           ...(quietHoursEnabled !== undefined && { quietHoursEnabled }),
           ...(quietHoursStart !== undefined && { quietHoursStart }),
           ...(quietHoursEnd !== undefined && { quietHoursEnd }),
