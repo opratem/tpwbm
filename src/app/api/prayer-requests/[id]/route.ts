@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { prayerRequests, prayerResponses, users } from "@/lib/db/schema";
 import { eq, and, or, sql } from "drizzle-orm";
+import { notificationService } from "@/lib/notification-service";
 
 // GET /api/prayer-requests/[id] - Get specific prayer request
 export async function GET(
@@ -157,6 +158,21 @@ export async function PUT(
         .set(updateData)
         .where(eq(prayerRequests.id, id))
         .returning();
+
+    // Send notification if status changed and the requester has a user ID
+    if (
+      body.status &&
+      body.status !== existingRequest.status &&
+      existingRequest.requestedById &&
+      ['approved', 'answered', 'archived'].includes(body.status)
+    ) {
+      await notificationService.prayerRequestStatusUpdate({
+        requestId: id,
+        userId: existingRequest.requestedById,
+        requestTitle: existingRequest.title,
+        status: body.status as 'approved' | 'answered' | 'archived',
+      });
+    }
 
     return NextResponse.json(updatedRequest);
 

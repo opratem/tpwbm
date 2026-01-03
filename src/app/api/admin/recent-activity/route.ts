@@ -104,57 +104,59 @@ export async function GET(request: NextRequest) {
 
       // Add prayer request activities
       for (const request of recentPrayerRequests) {
-        const timeAgo = getTimeAgo(request.createdAt);
         activities.push({
           id: `prayer-${request.id}`,
           type: "prayer",
-          description: `Prayer request "${request.title}" submitted by ${request.requestedBy}`,
-          timestamp: timeAgo,
-          status: request.status,
-          priority: request.priority,
+          title: `Prayer Request: ${request.title}`,
+          description: `Prayer request submitted with ${request.priority} priority`,
+          timestamp: request.createdAt.toISOString(),
+          user: request.requestedBy,
+          actionUrl: "/admin/prayer-requests",
           createdAt: request.createdAt,
         });
       }
 
       // Add event activities
       for (const event of recentEvents) {
-        const timeAgo = getTimeAgo(event.createdAt);
         const registrationText = event.registeredCount > 0
-          ? ` (${event.registeredCount} registered)`
+          ? ` - ${event.registeredCount} registered`
           : '';
         activities.push({
           id: `event-${event.id}`,
           type: "event",
-          description: `Event "${event.title}" created by ${event.organizer}${registrationText}`,
-          timestamp: timeAgo,
-          status: event.status,
+          title: `Event Created: ${event.title}`,
+          description: `New event scheduled${registrationText}`,
+          timestamp: event.createdAt.toISOString(),
+          user: event.organizer,
+          actionUrl: "/admin/events",
           createdAt: event.createdAt,
         });
       }
 
       // Add announcement activities
       for (const announcement of recentAnnouncements) {
-        const timeAgo = getTimeAgo(announcement.createdAt);
         activities.push({
           id: `announcement-${announcement.id}`,
-          type: "content",
-          description: `Announcement "${announcement.title}" published by ${announcement.author}`,
-          timestamp: timeAgo,
-          status: announcement.status,
-          priority: announcement.priority,
+          type: "announcement",
+          title: `Announcement: ${announcement.title}`,
+          description: `New ${announcement.priority} priority announcement published`,
+          timestamp: announcement.createdAt.toISOString(),
+          user: announcement.author,
+          actionUrl: "/admin/announcements",
           createdAt: announcement.createdAt,
         });
       }
 
       // Add member activities
       for (const member of recentMembers) {
-        const timeAgo = getTimeAgo(member.membershipDate || member.createdAt);
         activities.push({
           id: `member-${member.id}`,
-          type: "member",
-          description: `New member registration: ${member.name}`,
-          timestamp: timeAgo,
-          status: member.role === 'admin' ? 'admin' : 'active',
+          type: "membership",
+          title: `New Member: ${member.name}`,
+          description: `${member.email} joined as ${member.role}`,
+          timestamp: (member.membershipDate || member.createdAt).toISOString(),
+          user: member.name || "Unknown",
+          actionUrl: "/admin/users",
           createdAt: member.membershipDate || member.createdAt,
         });
       }
@@ -166,21 +168,13 @@ export async function GET(request: NextRequest) {
 
       console.log(`[RECENT-ACTIVITY] Successfully processed ${sortedActivities.length} activities from database`);
 
-      // If no activities found from database, create some helpful default activities
+      // If no activities found from database, return empty activities array
       if (sortedActivities.length === 0) {
-        console.log("[RECENT-ACTIVITY] No activities found in database, returning empty state message");
-        return NextResponse.json([
-          {
-            id: "empty-state",
-            type: "system",
-            description: "No recent activities found. Activity will appear here as members join, events are created, and prayer requests are submitted.",
-            timestamp: "Just now",
-            status: "info",
-          }
-        ]);
+        console.log("[RECENT-ACTIVITY] No activities found in database, returning empty state");
+        return NextResponse.json({ activities: [] });
       }
 
-      return NextResponse.json(sortedActivities);
+      return NextResponse.json({ activities: sortedActivities });
 
     } catch (dbError) {
       console.error("[RECENT-ACTIVITY] Database error:", dbError);

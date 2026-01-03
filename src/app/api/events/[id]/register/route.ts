@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { events, eventRegistrations } from "@/lib/db/schema";
 import { eq, and, count, sql } from "drizzle-orm";
+import { notificationService } from '@/lib/notification-service';
 
 // Helper function to validate UUID format
 function isValidUUID(uuid: string): boolean {
@@ -147,6 +148,20 @@ export async function POST(
                 eq(eventRegistrations.userId, session.user.id)
             )
         );
+
+    // Send notification to admins about new event registration
+    try {
+      await notificationService.newEventRegistration({
+        eventId: event.id,
+        eventTitle: event.title,
+        userName: session.user.name || "Unknown User",
+        userEmail: session.user.email || "",
+      });
+      console.log(`[EVENT-REGISTRATION] Notification sent for event: ${event.id}`);
+    } catch (notificationError) {
+      console.error('[EVENT-REGISTRATION] Failed to send notification:', notificationError);
+      // Don't fail the registration if notification fails
+    }
 
     return NextResponse.json({
       message: "Successfully registered for event",

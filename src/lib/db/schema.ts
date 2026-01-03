@@ -484,6 +484,57 @@ export const notificationReads = pgTable('notification_reads', {
   readAt: timestamp('read_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
+// Push Subscriptions table - for VAPID-based Web Push
+export const pushSubscriptions = pgTable('push_subscriptions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  endpoint: text('endpoint').notNull(),
+  p256dh: text('p256dh').notNull(), // Client public key
+  auth: text('auth').notNull(), // Authentication secret
+  userAgent: text('user_agent'),
+  deviceName: varchar('device_name', { length: 255 }),
+  isActive: boolean('is_active').default(true).notNull(),
+  lastUsed: timestamp('last_used', { mode: 'date' }),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
+// Notification Preferences table - user notification settings
+export const notificationPreferences = pgTable('notification_preferences', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull().unique(),
+
+  // Email notification preferences
+  emailEnabled: boolean('email_enabled').default(true).notNull(),
+  emailAnnouncements: boolean('email_announcements').default(true).notNull(),
+  emailEvents: boolean('email_events').default(true).notNull(),
+  emailPrayerRequests: boolean('email_prayer_requests').default(true).notNull(),
+  emailSystemAlerts: boolean('email_system_alerts').default(true).notNull(),
+
+  // Push notification preferences
+  pushEnabled: boolean('push_enabled').default(true).notNull(),
+  pushAnnouncements: boolean('push_announcements').default(true).notNull(),
+  pushEvents: boolean('push_events').default(true).notNull(),
+  pushPrayerRequests: boolean('push_prayer_requests').default(true).notNull(),
+  pushSystemAlerts: boolean('push_system_alerts').default(true).notNull(),
+
+  // In-app notification preferences
+  inAppEnabled: boolean('in_app_enabled').default(true).notNull(),
+  inAppAnnouncements: boolean('in_app_announcements').default(true).notNull(),
+  inAppEvents: boolean('in_app_events').default(true).notNull(),
+  inAppPrayerRequests: boolean('in_app_prayer_requests').default(true).notNull(),
+  inAppSystemAlerts: boolean('in_app_system_alerts').default(true).notNull(),
+
+  // Frequency settings
+  digestFrequency: varchar('digest_frequency', { length: 20 }).default('instant').notNull(), // instant, daily, weekly
+  quietHoursEnabled: boolean('quiet_hours_enabled').default(false).notNull(),
+  quietHoursStart: varchar('quiet_hours_start', { length: 5 }), // HH:MM format
+  quietHoursEnd: varchar('quiet_hours_end', { length: 5 }), // HH:MM format
+
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
 // Bookmarks/Saved Resources table
 export const bookmarks = pgTable('bookmarks', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -540,3 +591,9 @@ export type NewDbNotification = typeof notifications.$inferInsert;
 
 export type NotificationRead = typeof notificationReads.$inferSelect;
 export type NewNotificationRead = typeof notificationReads.$inferInsert;
+
+export type PushSubscription = typeof pushSubscriptions.$inferSelect;
+export type NewPushSubscription = typeof pushSubscriptions.$inferInsert;
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type NewNotificationPreference = typeof notificationPreferences.$inferInsert;

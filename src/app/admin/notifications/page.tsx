@@ -379,14 +379,26 @@ export default function AdminNotificationsPage() {
 
     setIsSending(true);
     try {
+      // Format the request to match what the API expects
+      const requestBody = {
+        type: 'custom',
+        data: {
+          title: newNotification.title,
+          message: newNotification.message,
+          notificationType: newNotification.type,
+          priority: newNotification.priority,
+          targetAudience: newNotification.targetAudience,
+        },
+      };
+
       const response = await fetch("/api/notifications/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newNotification),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
-        toast.success("Notification sent successfully!");
+        toast.success("Notification sent successfully! Push notifications will be delivered to subscribed devices.");
         setIsCreateDialogOpen(false);
         setNewNotification({
           title: "",
@@ -395,11 +407,14 @@ export default function AdminNotificationsPage() {
           priority: "medium",
           targetAudience: "all",
         });
+        // Refresh the page to show the new notification
+        reconnect();
       } else {
         const error = await response.json();
-        toast.error(error.message || "Failed to send notification");
+        toast.error(error.error || error.message || "Failed to send notification");
       }
     } catch (error) {
+      console.error("Error sending notification:", error);
       toast.error("Failed to send notification");
     } finally {
       setIsSending(false);
@@ -1363,4 +1378,3 @@ export default function AdminNotificationsPage() {
     </AdminLayout>
   );
 }
-
