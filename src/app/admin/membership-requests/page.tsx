@@ -167,7 +167,9 @@ export default function MembershipRequestsPage() {
         body: JSON.stringify({
           action: reviewAction,
           reviewNotes,
-          password: reviewAction === 'approve' ? tempPassword : undefined,
+          // Only send password if admin actually entered one (for override)
+          // Empty string should not be sent - let the API use the user's chosen password
+          password: reviewAction === 'approve' && tempPassword?.trim() ? tempPassword.trim() : undefined,
         }),
       });
 

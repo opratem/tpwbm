@@ -11,7 +11,9 @@ import { notificationService } from '@/lib/notification-service';
 const reviewSchema = z.object({
   action: z.enum(['approve', 'reject']),
   reviewNotes: z.string().optional(),
-  password: z.string().min(8).optional(), // For approved users
+  // Password is optional - if not provided, the user's chosen password from registration is used
+  // If provided, it must be at least 8 characters (admin override)
+  password: z.string().min(8).optional(),
 });
 
 export async function PATCH(
@@ -40,7 +42,7 @@ export async function PATCH(
         if (passwordError) {
           return NextResponse.json(
             {
-              error: 'Password must be at least 8 characters long. Please enter a longer password or leave it empty to auto-generate one.'
+              error: 'Override password must be at least 8 characters. Leave the password field empty to use the password the member chose during registration.'
             },
             { status: 400 }
           );

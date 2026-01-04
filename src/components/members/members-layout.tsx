@@ -9,9 +9,9 @@ interface MembersLayoutProps {
 
 export function MembersLayout({ children }: MembersLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 mobile-firm-page overflow-x-hidden">
       <MembersSidebar />
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden">
         {children}
       </main>
     </div>
