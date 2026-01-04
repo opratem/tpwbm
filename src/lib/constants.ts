@@ -54,12 +54,16 @@ export const LIMITS = {
 // ==================== USER ROLES ====================
 
 export const ROLES = {
+  SUPER_ADMIN: "super_admin",
   ADMIN: "admin",
   MEMBER: "member",
   VISITOR: "visitor",
 } as const;
 
 export type UserRole = (typeof ROLES)[keyof typeof ROLES];
+
+// Super admin email - only this email can have super_admin role
+export const SUPER_ADMIN_EMAIL = "superadmin@tpwbm.org";
 
 // ==================== CONTENT STATUS ====================
 

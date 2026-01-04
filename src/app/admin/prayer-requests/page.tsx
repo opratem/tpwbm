@@ -272,7 +272,7 @@ export default function AdminPrayerRequestsPage() {
     fetchPrayerRequests();
   }, [categoryFilter, statusFilter, priorityFilter, searchTerm, fetchPrayerRequests]);
 
-  if (!session || session.user.role !== "admin") {
+  if (!session || (session.user.role !== "admin" && session.user.role !== "super_admin")) {
     return (
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">

@@ -169,3 +169,37 @@ export function getClientIp(request: Request): string {
 
   return 'unknown';
 }
+
+/**
+ * Super Admin Constants
+ */
+export const SUPER_ADMIN_EMAIL = "superadmin@tpwbm.org";
+
+/**
+ * Check if a user is a super admin
+ */
+export function isSuperAdmin(email: string | null | undefined, role: string | null | undefined): boolean {
+  return email?.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && role === 'super_admin';
+}
+
+/**
+ * Check if a user has admin or super admin privileges
+ */
+export function hasAdminPrivileges(role: string | null | undefined): boolean {
+  return role === 'admin' || role === 'super_admin';
+}
+
+/**
+ * Generate a memorable temporary password
+ * Easy to read and communicate to elderly members
+ */
+export function generateTemporaryPassword(): string {
+  const adjectives = ['Happy', 'Blessed', 'Faithful', 'Joyful', 'Peaceful', 'Grace', 'Love', 'Hope'];
+  const nouns = ['Church', 'Faith', 'Prayer', 'Heart', 'Soul', 'Spirit', 'Light', 'Word'];
+  const numbers = Math.floor(Math.random() * 900) + 100; // 3-digit number
+
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+
+  return `${adj}${noun}${numbers}`;
+}

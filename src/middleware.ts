@@ -104,6 +104,14 @@ export async function middleware(request: NextRequest) {
     "/admin/blog",
     "/admin/youtube",
     "/admin/profile",
+    "/admin/membership-requests",
+    "/admin/notifications",
+    "/admin/reset-password",
+  ];
+
+  // Super admin only routes - require super_admin role specifically
+  const superAdminRoutes = [
+    "/admin/super-admin",
   ];
 
   // Ministry-specific routes with required permissions
@@ -127,6 +135,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith(route)
   );
   const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
+  const isSuperAdminRoute = superAdminRoutes.some((route) => pathname.startsWith(route));
   const isMinistryRoute = Object.keys(ministryRoutes).some((route) =>
     pathname.startsWith(route)
   );
@@ -147,6 +156,19 @@ export async function middleware(request: NextRequest) {
     }
     if (!isAdminUser(token.role as string | undefined)) {
       return NextResponse.redirect(new URL("/members/dashboard", request.url));
+    }
+  }
+
+  // Handle super admin only routes - require super_admin role specifically
+  if (isSuperAdminRoute) {
+    if (!token) {
+      const loginUrl = new URL("/members/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    // Only super_admin can access, not regular admins
+    if (token.role !== 'super_admin') {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
   }
 

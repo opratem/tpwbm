@@ -6,7 +6,7 @@ import { SkipToContent } from "@/components/shared/skip-to-content";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col mobile-firm-page overflow-x-hidden">
       {/* Skip to main content for accessibility */}
       <SkipToContent />
 
@@ -16,7 +16,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       {/* Main Content Area with proper landmark and ID for skip link */}
       <main
         id="main-content"
-        className="flex-1"
+        className="flex-1 overflow-x-hidden"
         role="main"
         aria-label="Main content"
         tabIndex={-1}

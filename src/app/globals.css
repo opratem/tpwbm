@@ -86,12 +86,50 @@
     border-color: hsl(var(--border));
   }
 
+  /* ==================== MOBILE FIRM PAGE - PREVENT HORIZONTAL SWIPE/DRAG ==================== */
+  html, body {
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
     /* Optimized system font stack for better performance */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    /* Prevent horizontal overscroll/bounce on mobile */
+    position: relative;
+    min-height: 100vh;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* Prevent pull-to-refresh and horizontal overscroll on mobile */
+  @media (max-width: 768px) {
+    html {
+      overscroll-behavior: none;
+    }
+
+    body {
+      overscroll-behavior-y: auto;
+      overscroll-behavior-x: none;
+    }
+
+    /* Prevent horizontal scroll on main content areas */
+    main, #__next, #root, .page-content {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
+    /* Firm page container - prevents any horizontal movement */
+    .mobile-firm-page {
+      position: relative;
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      touch-action: pan-y pinch-zoom;
+    }
   }
 
   /* ==================== ACCESSIBILITY ENHANCEMENTS ==================== */
