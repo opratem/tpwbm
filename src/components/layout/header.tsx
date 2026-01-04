@@ -322,7 +322,10 @@ export function Header() {
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator className="bg-gray-700/50" />
-                      <DropdownMenuItem className="p-0 focus:bg-transparent">
+                      <DropdownMenuItem
+                        className="p-0 focus:bg-transparent"
+                        onSelect={(e) => e.preventDefault()}
+                      >
                         <LogoutButton
                             variant="ghost"
                             size="sm"
