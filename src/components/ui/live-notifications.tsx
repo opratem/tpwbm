@@ -57,7 +57,7 @@ export function LiveNotifications({
   const [isOpen, setIsOpen] = useState(false);
 
   const isAdmin = session?.user?.role === "admin" || session?.user?.role === "super_admin";
-  const notificationsPageUrl = isAdmin ? "/admin/notifications" : "/members/notification";
+  const notificationsPageUrl = isAdmin ? "/admin/notifications" : "/members/notifications";
 
   const displayedNotifications = notifications.slice(0, maxNotifications);
 
@@ -144,7 +144,7 @@ export function LiveNotifications({
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
             <Bell className="h-5 w-5 text-gray-600" />
-            <h3 className="font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
               Notifications
             </h3>
             {unreadCount > 0 && (
