@@ -75,9 +75,16 @@ export function MembersSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { data: session } = useSession();
 
-  const handleLogout = async () => {
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     try {
       toast.success("Signing out...");
+
+      // Small delay to allow UI to update
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Use signOut with redirect: true for reliable logout
       await signOut({
         callbackUrl: "/",

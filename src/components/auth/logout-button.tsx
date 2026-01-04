@@ -1,19 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LogOut, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -35,25 +32,28 @@ export function LogoutButton({
 }: LogoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const router = useRouter();
 
-  const handleLogout = async () => {
+  const performSignOut = useCallback(async () => {
     try {
       setIsLoading(true);
-      toast.success("Signing out...");
 
-      // Close dialog first to prevent UI issues
+      // Close dialog immediately to prevent UI issues
       setIsDialogOpen(false);
 
-      // Use signOut with redirect: true for reliable logout
-      // This ensures the session is fully cleared and user is redirected
+      // Show toast notification
+      toast.success("Signing out...");
+
+      // Small delay to allow dialog to close and UI to update
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Perform the sign out - this will redirect
       await signOut({
         callbackUrl: redirectTo,
         redirect: true
       });
 
-      // The code below won't execute because redirect: true causes a full page redirect
-      // But we keep it as a fallback in case redirect doesn't work
+      // This code won't execute because redirect: true causes a full page redirect
+      // But we keep it as a fallback
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Failed to log out. Please try again.");
@@ -62,32 +62,40 @@ export function LogoutButton({
       // Fallback: Force redirect to clear any stale state
       window.location.href = redirectTo;
     }
-  };
+  }, [redirectTo]);
 
-  const LogoutButtonContent = () => (
-    <Button
-      variant={variant}
-      size={size}
-      className={className}
-      disabled={isLoading}
-    >
-      {isLoading ? (
-        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-      ) : (
-        <LogOut className="h-4 w-4 mr-2" />
-      )}
-      {isLoading ? "Signing out..." : "Sign Out"}
-    </Button>
-  );
+  const handleButtonClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  if (!showConfirmation) {
-    return (
+    if (showConfirmation) {
+      setIsDialogOpen(true);
+    } else {
+      performSignOut();
+    }
+  }, [showConfirmation, performSignOut]);
+
+  const handleConfirmLogout = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    performSignOut();
+  }, [performSignOut]);
+
+  const handleCancelClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDialogOpen(false);
+  }, []);
+
+  return (
+    <>
       <Button
         variant={variant}
         size={size}
         className={className}
         disabled={isLoading}
-        onClick={handleLogout}
+        onClick={handleButtonClick}
+        type="button"
       >
         {isLoading ? (
           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -96,39 +104,42 @@ export function LogoutButton({
         )}
         {isLoading ? "Signing out..." : "Sign Out"}
       </Button>
-    );
-  }
 
-  return (
-    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <AlertDialogTrigger asChild>
-        <LogoutButtonContent />
-      </AlertDialogTrigger>
-      <AlertDialogContent className="z-[100]">
-        <AlertDialogHeader>
-          <AlertDialogTitle>Sign Out</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to sign out? You'll need to sign in again to access your account.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleLogout}
-            disabled={isLoading}
-            className="bg-red-600 hover:bg-red-700 text-white"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Signing out...
-              </>
-            ) : (
-              "Sign Out"
-            )}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent className="z-[100] bg-white dark:bg-gray-900">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sign Out</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to sign out? You'll need to sign in again to access your account.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleCancelClick}
+              disabled={isLoading}
+              type="button"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmLogout}
+              disabled={isLoading}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              type="button"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Signing out...
+                </>
+              ) : (
+                "Sign Out"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
