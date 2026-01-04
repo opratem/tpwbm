@@ -269,10 +269,6 @@ export default function MemberDashboard() {
                       Profile Settings
                     </Button>
                   </Link>
-                  <Button variant="outline" size="icon" className="relative border-church-primary text-church-primary">
-                    <Bell className="h-4 w-4" />
-                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-church-accent rounded-full animate-pulse" />
-                  </Button>
                 </div>
               </div>
             </CardContent>

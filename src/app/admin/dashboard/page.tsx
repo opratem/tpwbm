@@ -32,6 +32,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -138,7 +148,10 @@ export default function AdminDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
 
   // Create User Form State
@@ -329,6 +342,35 @@ export default function AdminDashboard() {
     }
   };
 
+  // Delete user
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    setDeleteLoading(true);
+    try {
+      const response = await fetch(`/api/admin/users?userId=${userToDelete.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("User deleted successfully");
+        setShowDeleteDialog(false);
+        setUserToDelete(null);
+        fetchUsers();
+      } else {
+        toast.error(data.error || "Failed to delete user");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Error deleting user");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   // Bulk actions
   const handleBulkAction = async (action: "activate" | "deactivate" | "delete") => {
     if (selectedUsers.length === 0) {
@@ -349,12 +391,17 @@ export default function AdminDashboard() {
             }),
           });
         }
-        // For delete, you'd implement a DELETE endpoint
+        if (action === "delete") {
+          return fetch(`/api/admin/users?userId=${userId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          });
+        }
         return Promise.resolve();
       });
 
       await Promise.all(promises);
-      toast.success(`${selectedUsers.length} user(s) ${action}d successfully`);
+      toast.success(`${selectedUsers.length} user(s) ${action === "delete" ? "deleted" : `${action}d`} successfully`);
       setSelectedUsers([]);
       fetchUsers();
     } catch (error) {
@@ -870,6 +917,17 @@ export default function AdminDashboard() {
                                           </span>
                                       )}
                                     </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={() => {
+                                          setUserToDelete(user);
+                                          setShowDeleteDialog(true);
+                                        }}
+                                        disabled={user.id === session.user.id}
+                                        className="text-destructive focus:text-destructive"
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Delete User
+                                    </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </TableCell>
@@ -1294,6 +1352,49 @@ export default function AdminDashboard() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-destructive">Delete User Permanently</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to permanently delete{" "}
+                <span className="font-semibold">{userToDelete?.name}</span> ({userToDelete?.email})?
+                <br /><br />
+                This action cannot be undone. All user data, including their account, sessions, and related information will be permanently removed.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                onClick={() => {
+                  setShowDeleteDialog(false);
+                  setUserToDelete(null);
+                }}
+                disabled={deleteLoading}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteUser}
+                disabled={deleteLoading}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deleteLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Permanently
+                  </>
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AdminLayout>
   );
