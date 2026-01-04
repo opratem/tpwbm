@@ -56,7 +56,8 @@ export default function PrayerRequestsDashboard({
     fetchPrayerRequests();
   }, [fetchPrayerRequests]);
 
-  const getInitials = (name: string) => {
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return "??";
     return name
         .split(" ")
         .map((word) => word.charAt(0))
