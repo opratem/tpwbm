@@ -30,7 +30,8 @@ import {
   Shield,
   CheckCircle,
   Settings,
-  Users
+  Users,
+  Crown
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -225,9 +226,12 @@ export default function MemberProfile() {
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mb-3">{session.user.email}</p>
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                  <Badge variant="secondary" className="gap-1">
-                    {session.user.role === 'admin' ? <Shield className="h-3 w-3" /> : <Users className="h-3 w-3" />}
-                    {session.user.role === 'admin' ? 'Administrator' : 'Member'}
+                  <Badge
+                    variant="secondary"
+                    className={`gap-1 ${session.user.role === 'super_admin' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white border-0' : ''}`}
+                  >
+                    {session.user.role === 'super_admin' ? <Crown className="h-3 w-3" /> : session.user.role === 'admin' ? <Shield className="h-3 w-3" /> : <Users className="h-3 w-3" />}
+                    {session.user.role === 'super_admin' ? 'Super Admin' : session.user.role === 'admin' ? 'Administrator' : 'Member'}
                   </Badge>
                   {session.user.ministryRole && (
                     <Badge variant="outline" className="border-church-accent text-church-accent gap-1">

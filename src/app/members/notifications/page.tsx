@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { MembersLayout } from "@/components/members/members-layout";
 import { useRealTimeNotifications } from "@/hooks/useRealTimeNotifications";
 import { NotificationSettings } from "@/components/ui/notification-settings";
 import { Button } from "@/components/ui/button";
@@ -71,11 +70,9 @@ export default function NotificationsPage() {
 
   if (status === "loading") {
     return (
-      <MembersLayout>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary" />
-        </div>
-      </MembersLayout>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary" />
+      </div>
     );
   }
 
@@ -188,7 +185,6 @@ export default function NotificationsPage() {
   };
 
   return (
-    <MembersLayout>
       <div className="container mx-auto py-8 px-4 max-w-5xl">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
@@ -528,6 +524,5 @@ export default function NotificationsPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </MembersLayout>
   );
 }
