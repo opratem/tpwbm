@@ -35,7 +35,8 @@ import {
   UserPlus,
   Megaphone,
   Image as ImageIcon,
-  Youtube
+  Youtube,
+  Crown
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -84,7 +85,8 @@ export default function MemberDashboard() {
   const [bookmarks, setBookmarks] = useState<any[]>([]);
   const [bookmarksLoading, setBookmarksLoading] = useState(true);
 
-  const isAdmin = session?.user?.role === 'admin';
+  const isAdmin = session?.user?.role === 'admin' || session?.user?.role === 'super_admin';
+  const isSuperAdmin = session?.user?.role === 'super_admin';
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -166,9 +168,20 @@ export default function MemberDashboard() {
   // Helper function to get role color
   const getRoleVariant = (role: string) => {
     switch (role) {
+      case 'super_admin': return 'destructive';
       case 'admin': return 'destructive';
       case 'member': return 'secondary';
       default: return 'outline';
+    }
+  };
+
+  // Helper function to get role display label
+  const getRoleLabel = (role: string) => {
+    switch (role) {
+      case 'super_admin': return 'Super Admin';
+      case 'admin': return 'Administrator';
+      case 'member': return 'Member';
+      default: return 'Visitor';
     }
   };
 
@@ -243,10 +256,10 @@ export default function MemberDashboard() {
                       </h1>
                       <Badge
                         variant={getRoleVariant(session.user.role)}
-                        className="px-3 py-1 gap-1"
+                        className={`px-3 py-1 gap-1 ${isSuperAdmin ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white border-0' : ''}`}
                       >
-                        {session.user.role === 'admin' ? <Shield className="h-3 w-3" /> : <Users className="h-3 w-3" />}
-                        {session.user.role === 'admin' ? 'Administrator' : 'Member'}
+                        {isSuperAdmin ? <Crown className="h-3 w-3" /> : isAdmin ? <Shield className="h-3 w-3" /> : <Users className="h-3 w-3" />}
+                        {getRoleLabel(session.user.role)}
                       </Badge>
                       {session.user.ministryRole && (
                         <Badge variant="outline" className="px-3 py-1 gap-1 border-church-accent text-church-accent">
@@ -257,7 +270,7 @@ export default function MemberDashboard() {
                     </div>
                     <p className="text-church-text-muted dark:text-gray-400 flex items-center gap-2">
                       <Sparkles className="h-4 w-4 text-church-accent" />
-                      {session.user.role === 'admin' ? 'Full system access' : 'Welcome to your member dashboard'}
+                      {isSuperAdmin ? 'Super Admin - Complete system control' : isAdmin ? 'Full system access' : 'Welcome to your member dashboard'}
                     </p>
                   </div>
                 </div>

@@ -303,7 +303,7 @@ export function Header() {
                     >
                       <DropdownMenuItem asChild>
                         <Link
-                          href={session.user.role === 'admin' ? "/admin/dashboard" : "/members/dashboard"}
+                          href={(session.user.role === 'admin' || session.user.role === 'super_admin') ? "/admin/dashboard" : "/members/dashboard"}
                           className="flex items-center gap-3 text-gray-200 hover:text-white focus:text-white rounded-lg font-medium"
                           role="menuitem"
                         >
@@ -313,7 +313,7 @@ export function Header() {
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link
-                          href={session.user.role === 'admin' ? "/admin/profile" : "/members/profile"}
+                          href={(session.user.role === 'admin' || session.user.role === 'super_admin') ? "/admin/profile" : "/members/profile"}
                           className="flex items-center gap-3 text-gray-200 hover:text-white focus:text-white rounded-lg font-medium"
                           role="menuitem"
                         >
@@ -474,7 +474,7 @@ export function Header() {
                           </div>
 
                           <Link
-                              href={session.user.role === 'admin' ? "/admin/dashboard" : "/members/dashboard"}
+                              href={(session.user.role === 'admin' || session.user.role === 'super_admin') ? "/admin/dashboard" : "/members/dashboard"}
                               className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/10 text-gray-200 hover:text-white transition-all duration-200"
                               onClick={() => setIsMenuOpen(false)}
                               aria-label="Go to dashboard"
@@ -484,7 +484,7 @@ export function Header() {
                           </Link>
 
                           <Link
-                              href={session.user.role === 'admin' ? "/admin/profile" : "/members/profile"}
+                              href={(session.user.role === 'admin' || session.user.role === 'super_admin') ? "/admin/profile" : "/members/profile"}
                               className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/10 text-gray-200 hover:text-white transition-all duration-200"
                               onClick={() => setIsMenuOpen(false)}
                               aria-label="Go to profile"
