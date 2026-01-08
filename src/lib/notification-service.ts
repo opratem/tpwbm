@@ -615,20 +615,24 @@ export const notificationService = {
     eventId: string;
     title: string;
     date: string;
+    time?: string;
     location?: string;
-    reminderType: '1_day' | '1_hour' | '30_min';
-    registrantUserIds?: string[];
+    reminderType: '24h' | '1h' | 'day_of' | 'custom';
+    registeredUserIds?: string[];
   }) {
+    const timeInfo = data.time ? ` at ${data.time}` : '';
     const reminderMessages = {
-      '1_day': `Reminder: "${data.title}" is happening tomorrow at ${data.date}`,
-      '1_hour': `Reminder: "${data.title}" starts in 1 hour at ${data.date}`,
-      '30_min': `Reminder: "${data.title}" starts in 30 minutes!`,
+      '24h': `Reminder: "${data.title}" is happening tomorrow${timeInfo}`,
+      '1h': `Reminder: "${data.title}" starts in 1 hour${timeInfo}`,
+      'day_of': `Reminder: "${data.title}" is happening today${timeInfo}`,
+      'custom': `Reminder: "${data.title}" on ${data.date}${timeInfo}`,
     };
 
     const priorityMap = {
-      '1_day': 'medium' as const,
-      '1_hour': 'high' as const,
-      '30_min': 'urgent' as const,
+      '24h': 'medium' as const,
+      '1h': 'high' as const,
+      'day_of': 'high' as const,
+      'custom': 'medium' as const,
     };
 
     return createNotification({
@@ -636,8 +640,8 @@ export const notificationService = {
       message: reminderMessages[data.reminderType],
       type: 'event',
       priority: priorityMap[data.reminderType],
-      targetAudience: data.registrantUserIds?.length ? 'specific' : 'all',
-      specificUserIds: data.registrantUserIds,
+      targetAudience: data.registeredUserIds?.length ? 'specific' : 'all',
+      specificUserIds: data.registeredUserIds,
       metadata: {
         eventId: data.eventId,
         eventDate: data.date,
