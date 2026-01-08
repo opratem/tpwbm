@@ -186,19 +186,12 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async redirect({ url, baseUrl }) {
       try {
-        // Parse the URL to check if it's /admin or /admin/dashboard
-        const parsedUrl = url.startsWith("/") ? url : new URL(url).pathname;
-
-        // Redirect /admin and /admin/dashboard to unified dashboard
-        if (parsedUrl === "/admin" || parsedUrl === "/admin/dashboard") {
-          return `${baseUrl}/members/dashboard`;
-        }
-
         // For direct URL redirects, allow them if they're from the same origin
         if (url.startsWith("/")) return `${baseUrl}${url}`;
         if (new URL(url).origin === baseUrl) return url;
 
-        // Default redirect - unified dashboard for all users
+        // Default redirect to members dashboard
+        // Note: Middleware handles role-based routing for logged-in users
         return `${baseUrl}/members/dashboard`;
       } catch (error) {
         console.error("Redirect callback error:", error);
@@ -408,3 +401,18 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+/**
+ * Helper function to check if a user has admin access
+ * Both 'admin' and 'super_admin' roles have admin access
+ */
+export function hasAdminAccess(role: string | undefined | null): boolean {
+  return role === 'admin' || role === 'super_admin';
+}
+
+/**
+ * Helper function to check if a user is a super admin
+ */
+export function isSuperAdmin(role: string | undefined | null): boolean {
+  return role === 'super_admin';
+}

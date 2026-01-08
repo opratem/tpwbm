@@ -299,7 +299,13 @@ export function validateOrigin(request: NextRequest): boolean {
     ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000', 'https://localhost:3000'] : []),
   ];
 
-  return allowedOrigins.includes(origin) || (!!host && origin.includes(host));
+  // Allow requests from same origin or matching host
+  // Also allow preview URLs (same-app.com, etc.)
+  return allowedOrigins.includes(origin) ||
+         (!!host && origin.includes(host)) ||
+         origin.includes('same-app.com') ||
+         origin.includes('preview.same') ||
+         origin.includes('localhost');
 }
 
 /**

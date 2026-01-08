@@ -216,6 +216,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/members/dashboard", request.url));
   }
 
+  // Redirect admin users from /members/dashboard to /admin/dashboard
+  // This handles the case when NextAuth redirects to /members/dashboard after login
+  if (pathname === "/members/dashboard" && token && isAdminUser(token.role as string | undefined)) {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+  }
+
   // Redirect /admin to admin dashboard
   if (pathname === "/admin" && token && isAdminUser(token.role as string | undefined)) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));

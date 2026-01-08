@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions, hasAdminAccess } from "@/lib/auth";
 import { plausibleService, type AnalyticsData } from "@/lib/plausible";
 
 // GET /api/admin/analytics - Get analytics data
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     // Check if user is admin
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
         { error: "Unauthorized access" },
         { status: 401 }
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     // Check if user is admin
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
         { error: "Unauthorized access" },
         { status: 401 }

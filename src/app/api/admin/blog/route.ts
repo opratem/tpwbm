@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions, hasAdminAccess } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { blogPosts } from "@/lib/db/schema";
 import { eq, desc, and } from "drizzle-orm";
@@ -25,12 +25,12 @@ export async function GET(request: NextRequest) {
     const conditions = [];
 
     // If not admin, only show published posts
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       conditions.push(eq(blogPosts.status, 'published'));
     }
 
     // Add filters with proper type validation
-    if (status && session?.user.role === 'admin') {
+    if (status && hasAdminAccess(session?.user.role)) {
       const validStatuses = ['draft', 'published', 'scheduled', 'archived'] as const;
       type BlogStatus = typeof validStatuses[number];
       if (validStatuses.includes(status as BlogStatus)) {
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }

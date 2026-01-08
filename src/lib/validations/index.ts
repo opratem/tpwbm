@@ -139,7 +139,8 @@ export const blogPostSchema = z.object({
   excerpt: z.string()
     .max(500, 'Excerpt must be less than 500 characters')
     .transform(sanitizeString)
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   content: z.string()
     .min(50, 'Content must be at least 50 characters')
     .max(50000, 'Content must be less than 50000 characters'),
@@ -147,27 +148,40 @@ export const blogPostSchema = z.object({
     .min(2, 'Category is required')
     .max(100, 'Category must be less than 100 characters')
     .transform(sanitizeString),
-  status: z.enum(['draft', 'published', 'archived'])
+  status: z.enum(['draft', 'published', 'scheduled', 'archived'])
     .default('draft'),
+  // Author is optional - if not provided, will be derived from session
   author: z.string()
-    .min(2, 'Author name is required')
     .max(100, 'Author name must be less than 100 characters')
-    .transform(sanitizeString),
+    .transform(sanitizeString)
+    .optional()
+    .or(z.literal('')),
+  // ImageUrl should accept empty strings or valid URLs
   imageUrl: z.string()
-    .url('Invalid image URL')
-    .optional(),
+    .refine((val) => !val || val === '' || /^https?:\/\//.test(val), {
+      message: 'Image URL must be a valid URL'
+    })
+    .optional()
+    .or(z.literal('')),
   tags: z.array(z.string())
     .default([]),
   isFeatured: z.boolean()
     .default(false),
+  allowComments: z.boolean()
+    .default(true),
   metaTitle: z.string()
     .max(60, 'Meta title must be less than 60 characters')
     .transform(sanitizeString)
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   metaDescription: z.string()
     .max(160, 'Meta description must be less than 160 characters')
     .transform(sanitizeString)
-    .optional(),
+    .optional()
+    .or(z.literal('')),
+  scheduledFor: z.string()
+    .optional()
+    .or(z.literal('')),
 });
 
 export const blogPostUpdateSchema = blogPostSchema.partial();

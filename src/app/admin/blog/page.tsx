@@ -4,6 +4,11 @@ import { AdminLayout } from "@/components/admin/admin-layout";
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+
+// Helper function to check if user has admin privileges (admin or super_admin)
+const isAdminUser = (role: string | undefined | null) => {
+  return role === "admin" || role === "super_admin";
+};
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -122,16 +127,16 @@ export default function AdminBlogPage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
-  // Redirect if not admin
+  // Redirect if not admin or super_admin
   useEffect(() => {
     if (status === "loading") return;
-    if (!session || session.user.role !== "admin") {
-      redirect("/");
+    if (!session || !isAdminUser(session.user.role)) {
+      redirect("/members/dashboard");
     }
   }, [session, status]);
 
   useEffect(() => {
-    if (session?.user?.role === "admin") {
+    if (session?.user?.role && isAdminUser(session.user.role)) {
       fetchPosts();
     }
   }, [session]);
@@ -627,19 +632,19 @@ export default function AdminBlogPage() {
 
   return (
     <AdminLayout>
-      <div className="container max-w-7xl py-10 space-y-8">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
+      <div className="container max-w-7xl py-4 sm:py-6 md:py-10 px-3 sm:px-4 md:px-6 space-y-6 md:space-y-8">
+        <div className="flex flex-col gap-4 mb-4 md:mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Blog Management</h1>
-            <p className="text-gray-600 dark:text-gray-300">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Blog Management</h1>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
               Create and manage church blog posts and articles
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2">
               <Select value={filters.category} onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-full sm:w-32">
                   <Filter className="h-4 w-4 mr-1" />
                   <SelectValue />
                 </SelectTrigger>
@@ -659,7 +664,7 @@ export default function AdminBlogPage() {
               </Select>
 
               <Select value={filters.status} onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-full sm:w-32">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -671,25 +676,25 @@ export default function AdminBlogPage() {
                 </SelectContent>
               </Select>
 
-              <div className="relative">
+              <div className="relative w-full sm:w-auto">
                 <Search className="h-4 w-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input
                     placeholder="Search posts..."
                     value={filters.search}
                     onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="pl-8 w-48"
+                    className="pl-8 w-full sm:w-48"
                 />
               </div>
             </div>
 
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <Button className="w-full sm:w-auto">
                   <Plus className="h-4 w-4 mr-2" />
                   Create Post
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create New Blog Post</DialogTitle>
                   <DialogDescription>
@@ -697,11 +702,11 @@ export default function AdminBlogPage() {
                   </DialogDescription>
                 </DialogHeader>
                 {renderBlogForm()}
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                <DialogFooter className="flex-col sm:flex-row gap-2">
+                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="w-full sm:w-auto">
                     Cancel
                   </Button>
-                  <Button onClick={handleCreatePost} disabled={submitting}>
+                  <Button onClick={handleCreatePost} disabled={submitting} className="w-full sm:w-auto">
                     {submitting ? "Creating..." : "Create Post"}
                   </Button>
                 </DialogFooter>
@@ -711,7 +716,7 @@ export default function AdminBlogPage() {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 md:mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Posts</CardTitle>

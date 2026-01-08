@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions, hasAdminAccess } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, prayerRequests, events, announcements } from "@/lib/db/schema";
 import { eq, desc, sql, or } from "drizzle-orm";
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
         { error: "Unauthorized - Admin access required" },
         { status: 401 }
