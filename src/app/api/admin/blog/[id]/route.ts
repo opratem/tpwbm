@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions, hasAdminAccess } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { blogPosts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -28,7 +28,7 @@ export async function GET(
     }
 
     // If not admin and post is not published, deny access
-    if ((!session || session.user.role !== 'admin') && post.status !== 'published') {
+    if ((!session || !hasAdminAccess(session.user.role)) && post.status !== 'published') {
       return NextResponse.json(
           { error: "Blog post not found" },
           { status: 404 }
@@ -63,7 +63,7 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }
@@ -166,7 +166,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
           { error: "Unauthorized - Admin access required" },
           { status: 401 }

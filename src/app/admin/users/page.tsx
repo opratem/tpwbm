@@ -85,7 +85,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: "admin" | "member" | "visitor";
+  role: "super_admin" | "admin" | "member" | "visitor";
   ministryRole?: string | null;
   ministryLevel?: string | null;
   ministryDescription?: string | null;
@@ -147,7 +147,7 @@ export default function AdminUsersPage() {
     name: "",
     email: "",
     phone: "",
-    role: "member" as "admin" | "member" | "visitor",
+    role: "member" as "super_admin" | "admin" | "member" | "visitor",
     ministryRole: "none" as MinistryRole | "none" | "",
     ministryLevel: "none" as MinistryLevel | "none" | "",
     ministryDescription: "",
@@ -160,7 +160,7 @@ export default function AdminUsersPage() {
     name: "",
     email: "",
     phone: "",
-    role: "member" as "admin" | "member" | "visitor",
+    role: "member" as "super_admin" | "admin" | "member" | "visitor",
     ministryRole: "" as MinistryRole | "none" | "",
     ministryLevel: "" as MinistryLevel | "none" | "",
     ministryDescription: "",
@@ -242,7 +242,12 @@ export default function AdminUsersPage() {
     );
   }
 
-  if (!session || session.user.role !== "admin") {
+  // Helper function to check if user has admin privileges (admin or super_admin)
+  const isAdminOrSuperAdmin = (role: string | undefined) => {
+    return role === "admin" || role === "super_admin";
+  };
+
+  if (!session || !isAdminOrSuperAdmin(session.user.role)) {
     redirect("/members/dashboard");
   }
 
@@ -451,6 +456,7 @@ export default function AdminUsersPage() {
   // Helper function to get role badge color - Using church theme
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
+      case "super_admin": return "bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-700 dark:text-amber-300 border border-amber-500/30";
       case "admin": return "bg-primary/15 text-primary dark:bg-primary/20 dark:text-primary";
       case "member": return "bg-secondary/15 text-primary dark:bg-secondary/20 dark:text-primary";
       default: return "bg-muted text-muted-foreground dark:bg-muted dark:text-muted-foreground";
@@ -1026,7 +1032,7 @@ export default function AdminUsersPage() {
                 <Label htmlFor="create-role">Role *</Label>
                 <Select
                     value={createForm.role}
-                    onValueChange={(value) => setCreateForm(prev => ({ ...prev, role: value as "admin" | "member" }))}
+                    onValueChange={(value) => setCreateForm(prev => ({ ...prev, role: value as "super_admin" | "admin" | "member" | "visitor" }))}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select role" />
@@ -1148,7 +1154,7 @@ export default function AdminUsersPage() {
                     <Label htmlFor="edit-role">Role</Label>
                     <Select
                         value={editForm.role}
-                        onValueChange={(value) => setEditForm(prev => ({ ...prev, role: value as "admin" | "member" }))}
+                        onValueChange={(value) => setEditForm(prev => ({ ...prev, role: value as "super_admin" | "admin" | "member" | "visitor" }))}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select role" />

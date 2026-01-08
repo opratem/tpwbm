@@ -9,6 +9,9 @@ import { generateBlogPostSchema, generateBreadcrumbSchema } from "@/lib/seo";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { SEOHead } from "@/components/ui/seo-head";
 import { PageHeader } from "@/components/ui/page-header";
+import { db } from "@/lib/db";
+import { blogPosts } from "@/lib/db/schema";
+import { eq, and, ne, desc } from "drizzle-orm";
 import {
   Calendar,
   User,
@@ -44,20 +47,50 @@ interface BlogPost {
 
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://tpwbm.com.ng');
-    const response = await fetch(`${baseUrl}/api/admin/blog`, {
-      cache: 'no-store'
-    });
+    // Query database directly for more reliable fetching
+    const [post] = await db
+      .select()
+      .from(blogPosts)
+      .where(
+        and(
+          eq(blogPosts.slug, slug),
+          eq(blogPosts.status, 'published')
+        )
+      )
+      .limit(1);
 
-    if (!response.ok) {
-      console.error('Failed to fetch blog posts');
+    if (!post) {
+      console.log(`[BLOG] Post not found for slug: ${slug}`);
       return null;
     }
 
-    const posts: BlogPost[] = await response.json();
-    const post = posts.find(p => p.slug === slug && p.status === 'published');
+    // Increment view count
+    await db
+      .update(blogPosts)
+      .set({ viewCount: post.viewCount + 1 })
+      .where(eq(blogPosts.id, post.id));
 
-    return post || null;
+    // Convert to the expected format
+    return {
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt || undefined,
+      content: post.content,
+      category: post.category,
+      status: post.status,
+      author: post.author,
+      authorId: post.authorId,
+      imageUrl: post.imageUrl || undefined,
+      tags: post.tags || [],
+      publishedAt: post.publishedAt?.toISOString(),
+      viewCount: post.viewCount + 1,
+      isFeatured: post.isFeatured,
+      metaTitle: post.metaTitle || undefined,
+      metaDescription: post.metaDescription || undefined,
+      createdAt: post.createdAt.toISOString(),
+      updatedAt: post.updatedAt.toISOString(),
+    };
   } catch (error) {
     console.error('Error fetching blog post:', error);
     return null;
@@ -66,19 +99,40 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
 
 async function getRelatedPosts(currentPostId: string, category: string): Promise<BlogPost[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://tpwbm.com.ng');
-    const response = await fetch(`${baseUrl}/api/admin/blog?category=${category}`, {
-      cache: 'no-store'
-    });
+    // Query database directly for related posts
+    const posts = await db
+      .select()
+      .from(blogPosts)
+      .where(
+        and(
+          eq(blogPosts.category, category as 'sermons' | 'testimonies' | 'ministry_updates' | 'community_news' | 'spiritual_growth' | 'events_recap' | 'prayer_points' | 'announcements' | 'devotional' | 'general'),
+          eq(blogPosts.status, 'published'),
+          ne(blogPosts.id, currentPostId)
+        )
+      )
+      .orderBy(desc(blogPosts.createdAt))
+      .limit(3);
 
-    if (!response.ok) {
-      return [];
-    }
-
-    const posts: BlogPost[] = await response.json();
-    return posts
-        .filter(p => p.id !== currentPostId && p.status === 'published')
-        .slice(0, 3);
+    return posts.map(post => ({
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt || undefined,
+      content: post.content,
+      category: post.category,
+      status: post.status,
+      author: post.author,
+      authorId: post.authorId,
+      imageUrl: post.imageUrl || undefined,
+      tags: post.tags || [],
+      publishedAt: post.publishedAt?.toISOString(),
+      viewCount: post.viewCount,
+      isFeatured: post.isFeatured,
+      metaTitle: post.metaTitle || undefined,
+      metaDescription: post.metaDescription || undefined,
+      createdAt: post.createdAt.toISOString(),
+      updatedAt: post.updatedAt.toISOString(),
+    }));
   } catch (error) {
     console.error('Error fetching related posts:', error);
     return [];

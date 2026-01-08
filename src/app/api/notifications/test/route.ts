@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from "@/lib/auth";
+import { authOptions, hasAdminAccess } from "@/lib/auth";
 import { notificationService } from '@/lib/notification-service';
 import { getActiveConnectionCount } from '@/app/api/notifications/stream/route';
 
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
         { error: 'Unauthorized - Admin access required' },
         { status: 401 }
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !hasAdminAccess(session.user.role)) {
       return NextResponse.json(
         { error: 'Unauthorized - Admin access required' },
         { status: 401 }

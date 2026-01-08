@@ -202,7 +202,7 @@ export default function AdminProfile() {
     );
   }
 
-  if (session.user.role !== "admin") {
+  if (session.user.role !== "admin" && session.user.role !== "super_admin") {
     return null;
   }
 

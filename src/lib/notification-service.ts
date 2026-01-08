@@ -607,6 +607,72 @@ export const notificationService = {
   async custom(data: CreateNotificationData) {
     return createNotification(data);
   },
+
+  /**
+   * Create notification for event reminder (for all members or specific registrants)
+   */
+  async eventReminder(data: {
+    eventId: string;
+    title: string;
+    date: string;
+    location?: string;
+    reminderType: '1_day' | '1_hour' | '30_min';
+    registrantUserIds?: string[];
+  }) {
+    const reminderMessages = {
+      '1_day': `Reminder: "${data.title}" is happening tomorrow at ${data.date}`,
+      '1_hour': `Reminder: "${data.title}" starts in 1 hour at ${data.date}`,
+      '30_min': `Reminder: "${data.title}" starts in 30 minutes!`,
+    };
+
+    const priorityMap = {
+      '1_day': 'medium' as const,
+      '1_hour': 'high' as const,
+      '30_min': 'urgent' as const,
+    };
+
+    return createNotification({
+      title: 'Event Reminder',
+      message: reminderMessages[data.reminderType],
+      type: 'event',
+      priority: priorityMap[data.reminderType],
+      targetAudience: data.registrantUserIds?.length ? 'specific' : 'all',
+      specificUserIds: data.registrantUserIds,
+      metadata: {
+        eventId: data.eventId,
+        eventDate: data.date,
+        location: data.location,
+        reminderType: data.reminderType,
+      },
+      actionUrl: '/events',
+      sendPush: true,
+    });
+  },
+
+  /**
+   * Create notification for upcoming event (general awareness, not registration specific)
+   */
+  async upcomingEventAlert(data: {
+    eventId: string;
+    title: string;
+    date: string;
+    daysUntil: number;
+  }) {
+    return createNotification({
+      title: 'Upcoming Event',
+      message: `Don't miss "${data.title}" happening in ${data.daysUntil} day${data.daysUntil > 1 ? 's' : ''} on ${data.date}`,
+      type: 'event',
+      priority: 'medium',
+      targetAudience: 'all',
+      metadata: {
+        eventId: data.eventId,
+        eventDate: data.date,
+        daysUntil: data.daysUntil,
+      },
+      actionUrl: '/events',
+      sendPush: true,
+    });
+  },
 };
 
 export default notificationService;

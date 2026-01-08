@@ -139,7 +139,7 @@ export function LiveNotifications({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-96 p-0" align="end" sideOffset={8}>
+      <PopoverContent className="w-[calc(100vw-2rem)] sm:w-96 max-w-96 p-0" align="end" sideOffset={8}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
@@ -251,11 +251,14 @@ export function LiveNotifications({
                             addSuffix: true,
                           })}
                         </span>
-                        <Badge
-                          className={cn("text-xs px-1.5 py-0", getPriorityColor(notification.priority))}
-                        >
-                          {notification.priority}
-                        </Badge>
+                        {/* Only show priority badge for urgent/high priority */}
+                        {(notification.priority === 'urgent' || notification.priority === 'high') && (
+                          <Badge
+                            className={cn("text-[10px] px-1 py-0 h-4 leading-4", getPriorityColor(notification.priority))}
+                          >
+                            {notification.priority}
+                          </Badge>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -298,4 +301,3 @@ export function LiveNotifications({
 }
 
 export default LiveNotifications;
-

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions, hasAdminAccess } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Only admins can access member directory
-    if (session.user.role !== 'admin') {
+    if (!hasAdminAccess(session.user.role)) {
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
     }
 
