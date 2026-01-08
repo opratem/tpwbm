@@ -24,6 +24,13 @@ const COMPRESSION_SETTINGS = {
     format: 'auto' as const,
     crop: 'fit' as const
   },
+  profile: {
+    quality: 85,
+    maxWidth: 400,
+    maxHeight: 400,
+    format: 'auto' as const,
+    crop: 'fill' as const // Square crop for profile pictures
+  },
   default: {
     quality: 75,
     maxWidth: 1024,
