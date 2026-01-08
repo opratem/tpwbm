@@ -1,14 +1,12 @@
 import { pgTable, text, varchar, boolean, integer, timestamp, uuid, jsonb, pgEnum, decimal } from 'drizzle-orm/pg-core';
 
-// Enums for all entities
 export const userRoleEnum = pgEnum('user_role', [
-  'super_admin', // Full access including password resets
+  'super_admin',
   'admin',
   'member',
   'visitor'
 ]);
 
-// Ministry Role Enums
 export const ministryRoleEnum = pgEnum('ministry_role', [
   'pastor',
   'associate_pastor',
@@ -35,14 +33,13 @@ export const ministryRoleEnum = pgEnum('ministry_role', [
 ]);
 
 export const ministryLevelEnum = pgEnum('ministry_level', [
-  'senior_leadership', // Pastor, Associate Pastor
-  'board_member',      // Elders, Deacons, Trustees
-  'ministry_leader',   // Ministry heads, coordinators
-  'ministry_member',   // Active ministry participants
-  'volunteer'          // General volunteers
+  'senior_leadership',
+  'board_member',
+  'ministry_leader',
+  'ministry_member',
+  'volunteer'
 ]);
 
-// Prayer Request Enums
 export const prayerRequestCategoryEnum = pgEnum('prayer_request_category', [
   'health',
   'family',
@@ -73,7 +70,6 @@ export const prayerRequestStatusEnum = pgEnum('prayer_request_status', [
   'archived'
 ]);
 
-// Event Enums
 export const eventCategoryEnum = pgEnum('event_category', [
   'worship',
   'fellowship',
@@ -108,7 +104,6 @@ export const eventRegistrationStatusEnum = pgEnum('event_registration_status', [
   'cancelled'
 ]);
 
-// Announcement Enums
 export const announcementCategoryEnum = pgEnum('announcement_category', [
   'general',
   'event',
@@ -131,7 +126,6 @@ export const announcementStatusEnum = pgEnum('announcement_status', [
   'archived'
 ]);
 
-// Blog Post Enums
 export const blogCategoryEnum = pgEnum('blog_category', [
   'sermons',
   'testimonies',
@@ -152,7 +146,6 @@ export const blogStatusEnum = pgEnum('blog_status', [
   'archived'
 ]);
 
-// Password Reset Token Enums
 export const tokenTypeEnum = pgEnum('token_type', [
   'regular_reset',
   'admin_reset'
@@ -165,7 +158,6 @@ export const tokenStatusEnum = pgEnum('token_status', [
   'revoked'
 ]);
 
-// Resource Type Enum for Bookmarks
 export const resourceTypeEnum = pgEnum('resource_type', [
   'sermon',
   'audio_message',
@@ -174,7 +166,6 @@ export const resourceTypeEnum = pgEnum('resource_type', [
   'other'
 ]);
 
-// Membership Request Status Enum
 export const membershipRequestStatusEnum = pgEnum('membership_request_status', [
   'pending',
   'approved',
@@ -182,14 +173,13 @@ export const membershipRequestStatusEnum = pgEnum('membership_request_status', [
   'cancelled'
 ]);
 
-// Security Audit Logs table
 export const securityAuditLogs = pgTable('security_audit_logs', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').references(() => users.id),
-  adminId: uuid('admin_id').references(() => users.id), // Who performed the action
-  action: varchar('action', { length: 100 }).notNull(), // 'password_reset_request', 'password_reset_success', 'admin_login', etc.
-  resourceType: varchar('resource_type', { length: 50 }), // 'user', 'admin', 'system'
-  resourceId: varchar('resource_id', { length: 100 }), // ID of affected resource
+  adminId: uuid('admin_id').references(() => users.id),
+  action: varchar('action', { length: 100 }).notNull(),
+  resourceType: varchar('resource_type', { length: 50 }),
+  resourceId: varchar('resource_id', { length: 100 }),
   ipAddress: varchar('ip_address', { length: 45 }),
   userAgent: text('user_agent'),
   success: boolean('success').notNull(),
@@ -201,12 +191,10 @@ export const securityAuditLogs = pgTable('security_audit_logs', {
     errorMessage?: string;
     requestId?: string;
   }>().default({}),
-
-  riskLevel: varchar('risk_level', { length: 20 }).default('low'), // 'low', 'medium', 'high', 'critical'
+  riskLevel: varchar('risk_level', { length: 20 }).default('low'),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Users table (for NextAuth and church members)
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }),
@@ -218,7 +206,7 @@ export const users = pgTable('users', {
   ministryLevel: ministryLevelEnum('ministry_level'),
   ministryStartDate: timestamp('ministry_start_date', { mode: 'date' }),
   ministryDescription: text('ministry_description'),
-  hashedPassword: text('hashed_password'), // For credential auth
+  hashedPassword: text('hashed_password'),
   phone: varchar('phone', { length: 20 }),
   address: text('address'),
   birthday: timestamp('birthday', { mode: 'date' }),
@@ -230,7 +218,6 @@ export const users = pgTable('users', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Membership Requests table
 export const membershipRequests = pgTable('membership_requests', {
   id: uuid('id').primaryKey().defaultRandom(),
   firstName: varchar('first_name', { length: 100 }).notNull(),
@@ -246,17 +233,16 @@ export const membershipRequests = pgTable('membership_requests', {
   previousChurch: text('previous_church'),
   referredBy: varchar('referred_by', { length: 255 }),
   additionalInfo: text('additional_info'),
-  hashedPassword: varchar('hashed_password', { length: 255 }), // User's chosen password (hashed)
+  hashedPassword: varchar('hashed_password', { length: 255 }),
   status: membershipRequestStatusEnum('status').default('pending').notNull(),
-  reviewedBy: uuid('reviewed_by').references(() => users.id), // Admin who reviewed
+  reviewedBy: uuid('reviewed_by').references(() => users.id),
   reviewedAt: timestamp('reviewed_at', { mode: 'date' }),
   reviewNotes: text('review_notes'),
-  userId: uuid('user_id').references(() => users.id), // Created user if approved
+  userId: uuid('user_id').references(() => users.id),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Password Reset Tokens table
 export const passwordResetTokens = pgTable('password_reset_tokens', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
@@ -266,15 +252,14 @@ export const passwordResetTokens = pgTable('password_reset_tokens', {
   expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
   usedAt: timestamp('used_at', { mode: 'date' }),
   revokedAt: timestamp('revoked_at', { mode: 'date' }),
-  ipAddress: varchar('ip_address', { length: 45 }), // IPv6 compatible
+  ipAddress: varchar('ip_address', { length: 45 }),
   userAgent: text('user_agent'),
-  adminRequesterId: uuid('admin_requester_id').references(() => users.id), // For admin-initiated resets
+  adminRequesterId: uuid('admin_requester_id').references(() => users.id),
   securityNotes: text('security_notes'),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Prayer requests table
 export const prayerRequests = pgTable('prayer_requests', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -298,7 +283,6 @@ export const prayerRequests = pgTable('prayer_requests', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Prayer responses table (tracking who prayed for what)
 export const prayerResponses = pgTable('prayer_responses', {
   id: uuid('id').primaryKey().defaultRandom(),
   prayerRequestId: uuid('prayer_request_id').references(() => prayerRequests.id, { onDelete: 'cascade' }).notNull(),
@@ -309,7 +293,6 @@ export const prayerResponses = pgTable('prayer_responses', {
   prayedAt: timestamp('prayed_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Events table
 export const events = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -329,8 +312,8 @@ export const events = pgTable('events', {
   recurringDays: jsonb('recurring_days').$type<string[]>().default([]),
   recurringEndDate: timestamp('recurring_end_date', { mode: 'date' }),
   status: eventStatusEnum('status').default('draft').notNull(),
-  imageUrl: text('image_url'), // Keep for backward compatibility
-  imageUrls: jsonb('image_urls').$type<string[]>().default([]).notNull(), // New field for multiple images
+  imageUrl: text('image_url'),
+  imageUrls: jsonb('image_urls').$type<string[]>().default([]).notNull(),
   contactEmail: varchar('contact_email', { length: 255 }),
   contactPhone: varchar('contact_phone', { length: 20 }),
   tags: jsonb('tags').$type<string[]>().default([]).notNull(),
@@ -340,7 +323,6 @@ export const events = pgTable('events', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Event registrations table
 export const eventRegistrations = pgTable('event_registrations', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id').references(() => events.id, { onDelete: 'cascade' }).notNull(),
@@ -352,7 +334,6 @@ export const eventRegistrations = pgTable('event_registrations', {
   status: eventRegistrationStatusEnum('status').default('registered').notNull(),
 });
 
-// Announcements table
 export const announcements = pgTable('announcements', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -367,7 +348,6 @@ export const announcements = pgTable('announcements', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Blog posts table
 export const blogPosts = pgTable('blog_posts', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -391,7 +371,6 @@ export const blogPosts = pgTable('blog_posts', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Blog comments table
 export const blogComments = pgTable('blog_comments', {
   id: uuid('id').primaryKey().defaultRandom(),
   blogPostId: uuid('blog_post_id').references(() => blogPosts.id, { onDelete: 'cascade' }).notNull(),
@@ -399,7 +378,7 @@ export const blogComments = pgTable('blog_comments', {
   authorEmail: varchar('author_email', { length: 255 }).notNull(),
   authorId: uuid('author_id').references(() => users.id),
   content: text('content').notNull(),
-  status: varchar('status', { length: 20 }).default('pending').notNull(), // 'pending', 'approved', 'rejected'
+  status: varchar('status', { length: 20 }).default('pending').notNull(),
   parentCommentId: uuid('parent_comment_id'),
   ipAddress: varchar('ip_address', { length: 45 }),
   userAgent: text('user_agent'),
@@ -407,17 +386,25 @@ export const blogComments = pgTable('blog_comments', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Blog likes table
 export const blogLikes = pgTable('blog_likes', {
   id: uuid('id').primaryKey().defaultRandom(),
   blogPostId: uuid('blog_post_id').references(() => blogPosts.id, { onDelete: 'cascade' }).notNull(),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  sessionId: varchar('session_id', { length: 255 }), // For anonymous likes
+  sessionId: varchar('session_id', { length: 255 }),
   ipAddress: varchar('ip_address', { length: 45 }),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// NextAuth adapter tables
+// Comment likes table
+export const commentLikes = pgTable('comment_likes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  commentId: uuid('comment_id').references(() => blogComments.id, { onDelete: 'cascade' }).notNull(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  sessionId: varchar('session_id', { length: 255 }),
+  ipAddress: varchar('ip_address', { length: 45 }),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
 export const accounts = pgTable('accounts', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
@@ -446,7 +433,6 @@ export const verificationTokens = pgTable('verification_tokens', {
   expires: timestamp('expires', { mode: 'date' }).notNull(),
 });
 
-// Notification Type Enum
 export const notificationTypeEnum = pgEnum('notification_type', [
   'announcement',
   'event',
@@ -455,7 +441,6 @@ export const notificationTypeEnum = pgEnum('notification_type', [
   'admin'
 ]);
 
-// Notification Priority Enum
 export const notificationPriorityEnum = pgEnum('notification_priority', [
   'low',
   'medium',
@@ -463,7 +448,6 @@ export const notificationPriorityEnum = pgEnum('notification_priority', [
   'urgent'
 ]);
 
-// Notification Target Audience Enum
 export const notificationTargetAudienceEnum = pgEnum('notification_target_audience', [
   'all',
   'members',
@@ -471,7 +455,6 @@ export const notificationTargetAudienceEnum = pgEnum('notification_target_audien
   'specific'
 ]);
 
-// Notifications table - for persistent real-time notifications
 export const notifications = pgTable('notifications', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -486,7 +469,6 @@ export const notifications = pgTable('notifications', {
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// User notification reads - tracks which notifications each user has read
 export const notificationReads = pgTable('notification_reads', {
   id: uuid('id').primaryKey().defaultRandom(),
   notificationId: uuid('notification_id').references(() => notifications.id, { onDelete: 'cascade' }).notNull(),
@@ -494,13 +476,12 @@ export const notificationReads = pgTable('notification_reads', {
   readAt: timestamp('read_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Push Subscriptions table - for VAPID-based Web Push
 export const pushSubscriptions = pgTable('push_subscriptions', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
   endpoint: text('endpoint').notNull(),
-  p256dh: text('p256dh').notNull(), // Client public key
-  auth: text('auth').notNull(), // Authentication secret
+  p256dh: text('p256dh').notNull(),
+  auth: text('auth').notNull(),
   userAgent: text('user_agent'),
   deviceName: varchar('device_name', { length: 255 }),
   isActive: boolean('is_active').default(true).notNull(),
@@ -509,43 +490,32 @@ export const pushSubscriptions = pgTable('push_subscriptions', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Notification Preferences table - user notification settings
 export const notificationPreferences = pgTable('notification_preferences', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull().unique(),
-
-  // Email notification preferences
   emailEnabled: boolean('email_enabled').default(true).notNull(),
   emailAnnouncements: boolean('email_announcements').default(true).notNull(),
   emailEvents: boolean('email_events').default(true).notNull(),
   emailPrayerRequests: boolean('email_prayer_requests').default(true).notNull(),
   emailSystemAlerts: boolean('email_system_alerts').default(true).notNull(),
-
-  // Push notification preferences
   pushEnabled: boolean('push_enabled').default(true).notNull(),
   pushAnnouncements: boolean('push_announcements').default(true).notNull(),
   pushEvents: boolean('push_events').default(true).notNull(),
   pushPrayerRequests: boolean('push_prayer_requests').default(true).notNull(),
   pushSystemAlerts: boolean('push_system_alerts').default(true).notNull(),
-
-  // In-app notification preferences
   inAppEnabled: boolean('in_app_enabled').default(true).notNull(),
   inAppAnnouncements: boolean('in_app_announcements').default(true).notNull(),
   inAppEvents: boolean('in_app_events').default(true).notNull(),
   inAppPrayerRequests: boolean('in_app_prayer_requests').default(true).notNull(),
   inAppSystemAlerts: boolean('in_app_system_alerts').default(true).notNull(),
-
-  // Frequency settings
-  digestFrequency: varchar('digest_frequency', { length: 20 }).default('instant').notNull(), // instant, daily, weekly
+  digestFrequency: varchar('digest_frequency', { length: 20 }).default('instant').notNull(),
   quietHoursEnabled: boolean('quiet_hours_enabled').default(false).notNull(),
-  quietHoursStart: varchar('quiet_hours_start', { length: 5 }), // HH:MM format
-  quietHoursEnd: varchar('quiet_hours_end', { length: 5 }), // HH:MM format
-
+  quietHoursStart: varchar('quiet_hours_start', { length: 5 }),
+  quietHoursEnd: varchar('quiet_hours_end', { length: 5 }),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Bookmarks/Saved Resources table
 export const bookmarks = pgTable('bookmarks', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
@@ -562,11 +532,9 @@ export const bookmarks = pgTable('bookmarks', {
     tags?: string[];
     series?: string;
   }>().default({}),
-
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// Type exports for TypeScript
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
@@ -593,6 +561,9 @@ export type NewBlogComment = typeof blogComments.$inferInsert;
 
 export type BlogLike = typeof blogLikes.$inferSelect;
 export type NewBlogLike = typeof blogLikes.$inferInsert;
+
+export type CommentLike = typeof commentLikes.$inferSelect;
+export type NewCommentLike = typeof commentLikes.$inferInsert;
 
 export type Bookmark = typeof bookmarks.$inferSelect;
 export type NewBookmark = typeof bookmarks.$inferInsert;
