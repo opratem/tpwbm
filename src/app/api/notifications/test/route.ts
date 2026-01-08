@@ -79,6 +79,19 @@ export async function POST(request: NextRequest) {
         });
         break;
 
+      case 'blog_comment':
+        notification = await notificationService.newBlogComment({
+          postId: data.postId || 'test-post-123',
+          postSlug: data.postSlug || 'test-blog-post',
+          postTitle: data.postTitle || 'Test Blog Post',
+          authorId: data.authorId || session.user.id,
+          authorName: data.authorName || session.user.name || 'Author',
+          commenterName: data.commenterName || 'Test Commenter',
+          commentPreview: data.commentPreview || 'This is a test comment on the blog post to verify notifications are working correctly.',
+          isReply: data.isReply || false,
+        });
+        break;
+
       case 'system_alert':
       default:
         notification = await notificationService.systemAlert({

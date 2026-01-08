@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, phone, address, birthday, interests, bio } = await request.json();
+    const { name, phone, address, birthday, interests, bio, image } = await request.json();
 
     // Validate input
     if (!name?.trim()) {
@@ -68,18 +68,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Build update object
+    const updateData: Record<string, unknown> = {
+      name: name.trim(),
+      phone: phone?.trim() || null,
+      address: address?.trim() || null,
+      birthday: birthday ? new Date(birthday) : null,
+      interests: interests?.trim() || null,
+      bio: bio?.trim() || null,
+      updatedAt: new Date(),
+    };
+
+    // Only update image if provided (allows removing by passing null or empty string)
+    if (image !== undefined) {
+      updateData.image = image?.trim() || null;
+    }
+
     // Update user profile
     await db
       .update(users)
-      .set({
-        name: name.trim(),
-        phone: phone?.trim() || null,
-        address: address?.trim() || null,
-        birthday: birthday ? new Date(birthday) : null,
-        interests: interests?.trim() || null,
-        bio: bio?.trim() || null,
-        updatedAt: new Date(),
-      })
+      .set(updateData)
       .where(eq(users.id, session.user.id));
 
     return NextResponse.json({

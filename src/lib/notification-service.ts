@@ -609,6 +609,62 @@ export const notificationService = {
   },
 
   /**
+   * Create notification for new blog comment (for post author and admins)
+   */
+  async newBlogComment(data: {
+    postId: string;
+    postSlug: string;
+    postTitle: string;
+    authorId: string;
+    authorName: string;
+    commenterName: string;
+    commentPreview: string;
+    isReply?: boolean;
+  }) {
+    // Notify the blog post author
+    const authorNotification = createNotification({
+      title: data.isReply ? 'New Reply on Your Blog Post' : 'New Comment on Your Blog Post',
+      message: `${data.commenterName} ${data.isReply ? 'replied to a comment on' : 'commented on'} "${data.postTitle}": "${data.commentPreview.substring(0, 100)}${data.commentPreview.length > 100 ? '...' : ''}"`,
+      type: 'announcement',
+      priority: 'medium',
+      targetAudience: 'specific',
+      specificUserIds: [data.authorId],
+      metadata: {
+        postId: data.postId,
+        postSlug: data.postSlug,
+        postTitle: data.postTitle,
+        commenterName: data.commenterName,
+        isReply: data.isReply || false,
+      },
+      actionUrl: `/blog/${data.postSlug}#comments`,
+      sendPush: true,
+    });
+
+    // Also notify all admins
+    const adminNotification = createNotification({
+      title: 'New Blog Comment',
+      message: `${data.commenterName} commented on "${data.postTitle}": "${data.commentPreview.substring(0, 80)}${data.commentPreview.length > 80 ? '...' : ''}"`,
+      type: 'admin',
+      priority: 'low',
+      targetAudience: 'admin',
+      metadata: {
+        postId: data.postId,
+        postSlug: data.postSlug,
+        postTitle: data.postTitle,
+        commenterName: data.commenterName,
+        isReply: data.isReply || false,
+      },
+      actionUrl: `/blog/${data.postSlug}#comments`,
+      sendPush: true,
+    });
+
+    // Return the author notification (or admin if author is admin)
+    const result = await authorNotification;
+    await adminNotification;
+    return result;
+  },
+
+  /**
    * Create notification for event reminder (for all members or specific registrants)
    */
   async eventReminder(data: {

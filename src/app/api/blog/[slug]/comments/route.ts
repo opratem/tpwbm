@@ -4,6 +4,7 @@ import { blogPosts, blogComments } from '@/lib/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { notificationService } from '@/lib/notification-service';
 
 // GET - Get comments for a post
 export async function GET(
@@ -86,9 +87,16 @@ export async function POST(
       );
     }
 
-    // Get the blog post
+    // Get the blog post with author info
     const [post] = await db
-      .select({ id: blogPosts.id, allowComments: blogPosts.allowComments })
+      .select({
+        id: blogPosts.id,
+        title: blogPosts.title,
+        slug: blogPosts.slug,
+        allowComments: blogPosts.allowComments,
+        authorId: blogPosts.authorId,
+        author: blogPosts.author,
+      })
       .from(blogPosts)
       .where(eq(blogPosts.slug, slug))
       .limit(1);
@@ -151,6 +159,27 @@ export async function POST(
         userAgent,
       })
       .returning();
+
+    // Send notification to blog post author and admins
+    // Only notify if comment is approved (logged-in users' comments are auto-approved)
+    if (status === 'approved') {
+      try {
+        await notificationService.newBlogComment({
+          postId: post.id,
+          postSlug: post.slug,
+          postTitle: post.title,
+          authorId: post.authorId,
+          authorName: post.author,
+          commenterName: finalAuthorName.trim(),
+          commentPreview: content.trim(),
+          isReply: !!parentCommentId,
+        });
+        console.log(`[BLOG-COMMENT] Notification sent for new comment on post: ${post.slug}`);
+      } catch (notificationError) {
+        // Don't fail the comment submission if notification fails
+        console.error('[BLOG-COMMENT] Failed to send notification:', notificationError);
+      }
+    }
 
     return NextResponse.json({
       success: true,

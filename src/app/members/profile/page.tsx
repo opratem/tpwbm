@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import {
@@ -31,12 +31,16 @@ import {
   CheckCircle,
   Settings,
   Users,
-  Crown
+  Crown,
+  Camera,
+  Upload,
+  Trash2,
+  Loader2
 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function MemberProfile() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update: updateSession } = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -46,9 +50,12 @@ export default function MemberProfile() {
     birthday: "",
     interests: "",
     bio: "",
+    image: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -72,6 +79,7 @@ export default function MemberProfile() {
                 birthday: data.user.birthday ? new Date(data.user.birthday).toISOString().split('T')[0] : "",
                 interests: data.user.interests || "",
                 bio: data.user.bio || "",
+                image: data.user.image || session.user.image || "",
               });
             }
           } else {
@@ -83,6 +91,7 @@ export default function MemberProfile() {
               birthday: "",
               interests: "",
               bio: "",
+              image: session.user.image || "",
             });
           }
         } catch (error) {
@@ -95,6 +104,7 @@ export default function MemberProfile() {
             birthday: "",
             interests: "",
             bio: "",
+            image: session.user.image || "",
           });
         }
       }
@@ -114,6 +124,69 @@ export default function MemberProfile() {
     }));
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid file type. Only JPEG, PNG, and WebP images are allowed.');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      toast.error('File size too large. Maximum size is 5MB.');
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+      uploadData.append('folder', 'profile_pictures');
+      uploadData.append('contentType', 'profile');
+      uploadData.append('tags', 'profile,member');
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData(prev => ({
+          ...prev,
+          image: data.url,
+        }));
+        toast.success('Profile picture uploaded! Click "Save" to apply changes.');
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('An error occurred while uploading your image');
+    } finally {
+      setUploadingImage(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      image: "",
+    }));
+    toast.info('Profile picture removed. Click "Save" to apply changes.');
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -128,6 +201,17 @@ export default function MemberProfile() {
       if (response.ok) {
         toast.success("Profile updated successfully!");
         setIsEditing(false);
+        // Update the session to reflect the new image
+        if (updateSession) {
+          await updateSession({
+            ...session,
+            user: {
+              ...session?.user,
+              name: formData.name,
+              image: formData.image,
+            }
+          });
+        }
       } else {
         const error = await response.json();
         toast.error(error.error || "Failed to update profile");
@@ -143,15 +227,30 @@ export default function MemberProfile() {
   const handleCancel = () => {
     setIsEditing(false);
     if (session?.user) {
-      setFormData({
-        name: session.user.name || "",
-        email: session.user.email || "",
-        phone: "",
-        address: "",
-        birthday: "",
-        interests: "",
-        bio: "",
-      });
+      // Reload profile data
+      const loadProfile = async () => {
+        try {
+          const response = await fetch("/api/profile");
+          if (response.ok) {
+            const data = await response.json();
+            if (data.user) {
+              setFormData({
+                name: data.user.name || session.user.name || "",
+                email: data.user.email || session.user.email || "",
+                phone: data.user.phone || "",
+                address: data.user.address || "",
+                birthday: data.user.birthday ? new Date(data.user.birthday).toISOString().split('T')[0] : "",
+                interests: data.user.interests || "",
+                bio: data.user.bio || "",
+                image: data.user.image || session.user.image || "",
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Error reloading profile:', error);
+        }
+      };
+      loadProfile();
     }
   };
 
@@ -209,15 +308,44 @@ export default function MemberProfile() {
         <Card className="backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border border-church-primary/10 shadow-xl">
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="relative">
+              <div className="relative group">
                 <Avatar className="h-24 w-24 ring-4 ring-church-accent/30 shadow-lg">
-                  <div className="w-full h-full bg-gradient-to-br from-church-primary to-church-primary-light flex items-center justify-center text-3xl font-bold text-white">
+                  {formData.image ? (
+                    <AvatarImage src={formData.image} alt={formData.name || "Profile"} />
+                  ) : null}
+                  <AvatarFallback className="bg-gradient-to-br from-church-primary to-church-primary-light text-3xl font-bold text-white">
                     {getUserInitials()}
-                  </div>
+                  </AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 h-6 w-6 bg-church-accent border-2 border-white dark:border-gray-900 rounded-full flex items-center justify-center">
                   <CheckCircle className="h-4 w-4 text-white" />
                 </div>
+
+                {/* Profile Picture Edit Overlay */}
+                {isEditing && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      className="hidden"
+                    />
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-8 w-8 p-0 text-white hover:bg-white/20"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingImage}
+                    >
+                      {uploadingImage ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Camera className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                )}
               </div>
 
               <div className="flex-1 text-center md:text-left">
@@ -255,7 +383,7 @@ export default function MemberProfile() {
                   <>
                     <Button
                       onClick={handleSave}
-                      disabled={saving}
+                      disabled={saving || uploadingImage}
                       className="gap-2 bg-church-accent hover:bg-church-accent/90"
                     >
                       <Save className="h-4 w-4" />
@@ -264,7 +392,7 @@ export default function MemberProfile() {
                     <Button
                       onClick={handleCancel}
                       variant="outline"
-                      disabled={saving}
+                      disabled={saving || uploadingImage}
                       className="gap-2"
                     >
                       <X className="h-4 w-4" />
@@ -276,6 +404,75 @@ export default function MemberProfile() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Profile Picture Upload Section - Only visible when editing */}
+        {isEditing && (
+          <Card className="backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border border-church-primary/10 shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-church-primary dark:text-white">
+                <Camera className="h-5 w-5" />
+                Profile Picture
+              </CardTitle>
+              <CardDescription>
+                Upload a profile picture to personalize your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                {/* Current Profile Picture Preview */}
+                <div className="relative">
+                  <Avatar className="h-20 w-20 ring-2 ring-gray-200 dark:ring-gray-700">
+                    {formData.image ? (
+                      <AvatarImage src={formData.image} alt="Profile preview" />
+                    ) : null}
+                    <AvatarFallback className="bg-gradient-to-br from-church-primary to-church-primary-light text-2xl font-bold text-white">
+                      {getUserInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <div className="flex-1 space-y-2">
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingImage}
+                    >
+                      {uploadingImage ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4" />
+                          Upload Photo
+                        </>
+                      )}
+                    </Button>
+                    {formData.image && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2 text-red-500 hover:text-red-700 hover:border-red-300"
+                        onClick={handleRemoveImage}
+                        disabled={uploadingImage}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Accepted formats: JPEG, PNG, WebP. Max size: 5MB
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border border-church-primary/10 shadow-lg">
           <CardHeader>
