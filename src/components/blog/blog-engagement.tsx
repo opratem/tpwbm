@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +20,9 @@ import {
   Twitter,
   Link as LinkIcon,
   Mail,
+  Reply,
+  CornerDownRight,
+  ThumbsUp,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -29,6 +32,12 @@ interface Comment {
   content: string;
   createdAt: string;
   parentCommentId?: string | null;
+  likeCount?: number;
+  hasLiked?: boolean;
+}
+
+interface CommentWithReplies extends Comment {
+  replies: CommentWithReplies[];
 }
 
 interface BlogEngagementProps {
@@ -36,6 +45,163 @@ interface BlogEngagementProps {
   allowComments: boolean;
   postTitle: string;
   postUrl?: string;
+}
+
+// Individual Comment Component with likes and reply functionality
+function CommentItem({
+  comment,
+  slug,
+  depth = 0,
+  onReply,
+  session,
+  formatDate,
+}: {
+  comment: CommentWithReplies;
+  slug: string;
+  depth?: number;
+  onReply: (parentId: string, parentAuthor: string) => void;
+  session: ReturnType<typeof useSession>["data"];
+  formatDate: (dateString: string) => string;
+}) {
+  const [likeCount, setLikeCount] = useState(comment.likeCount || 0);
+  const [hasLiked, setHasLiked] = useState(comment.hasLiked || false);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [showReplies, setShowReplies] = useState(true);
+
+  // Fetch comment likes on mount
+  useEffect(() => {
+    const fetchCommentLikes = async () => {
+      try {
+        const response = await fetch(`/api/blog/${slug}/comments/${comment.id}/likes`);
+        if (response.ok) {
+          const data = await response.json();
+          setLikeCount(data.likeCount);
+          setHasLiked(data.hasLiked);
+        }
+      } catch (error) {
+        console.error("Error fetching comment likes:", error);
+      }
+    };
+    fetchCommentLikes();
+  }, [slug, comment.id]);
+
+  const handleCommentLike = async () => {
+    if (isLikeLoading) return;
+
+    setIsLikeLoading(true);
+    try {
+      const method = hasLiked ? "DELETE" : "POST";
+      const response = await fetch(`/api/blog/${slug}/comments/${comment.id}/likes`, { method });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLikeCount(data.likeCount);
+        setHasLiked(data.hasLiked);
+      } else {
+        const error = await response.json();
+        toast.error(error.error || "Failed to update like");
+      }
+    } catch (error) {
+      console.error("Error toggling comment like:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsLikeLoading(false);
+    }
+  };
+
+  const maxDepth = 3;
+  const isNested = depth > 0;
+  const canReply = depth < maxDepth;
+
+  return (
+    <div className={`${isNested ? "ml-6 border-l-2 border-gray-200 pl-4" : ""}`}>
+      <div className="bg-gray-50 rounded-lg p-4 border mb-3">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            {isNested && (
+              <CornerDownRight className="h-4 w-4 text-gray-400" />
+            )}
+            <span className="font-medium text-gray-900">
+              {comment.authorName}
+            </span>
+          </div>
+          <span className="text-xs text-gray-500">
+            {formatDate(comment.createdAt)}
+          </span>
+        </div>
+        <p className="text-gray-700 text-sm leading-relaxed mb-3">
+          {comment.content}
+        </p>
+
+        {/* Comment Actions */}
+        <div className="flex items-center gap-4">
+          {/* Like Button */}
+          <button
+            onClick={handleCommentLike}
+            disabled={isLikeLoading}
+            className={`flex items-center gap-1 text-sm transition-colors ${
+              hasLiked
+                ? "text-red-500 hover:text-red-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {isLikeLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ThumbsUp className={`h-4 w-4 ${hasLiked ? "fill-current" : ""}`} />
+            )}
+            <span>{likeCount > 0 ? likeCount : ""} {likeCount === 1 ? "Like" : likeCount > 1 ? "Likes" : "Like"}</span>
+          </button>
+
+          {/* Reply Button */}
+          {canReply && (
+            <button
+              onClick={() => onReply(comment.id, comment.authorName)}
+              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <Reply className="h-4 w-4" />
+              <span>Reply</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Nested Replies */}
+      {comment.replies.length > 0 && (
+        <div className="mt-2">
+          {comment.replies.length > 2 && (
+            <button
+              onClick={() => setShowReplies(!showReplies)}
+              className="text-sm text-gray-500 hover:text-gray-700 mb-2 flex items-center gap-1"
+            >
+              {showReplies ? (
+                <>
+                  <ChevronUp className="h-4 w-4" />
+                  Hide {comment.replies.length} replies
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-4 w-4" />
+                  Show {comment.replies.length} replies
+                </>
+              )}
+            </button>
+          )}
+          {showReplies && comment.replies.map((reply) => (
+            <CommentItem
+              key={reply.id}
+              comment={reply}
+              slug={slug}
+              depth={depth + 1}
+              onReply={onReply}
+              session={session}
+              formatDate={formatDate}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function BlogEngagement({
@@ -62,6 +228,7 @@ export function BlogEngagement({
   const [commentContent, setCommentContent] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [authorEmail, setAuthorEmail] = useState("");
+  const [replyingTo, setReplyingTo] = useState<{ id: string; authorName: string } | null>(null);
 
   // Share dropdown
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -138,6 +305,56 @@ export function BlogEngagement({
     setIsCommentsExpanded(!isCommentsExpanded);
   };
 
+  // Build nested comment tree
+  const buildCommentTree = useCallback((flatComments: Comment[]): CommentWithReplies[] => {
+    const commentMap = new Map<string, CommentWithReplies>();
+    const rootComments: CommentWithReplies[] = [];
+
+    // First pass: create all comment objects with empty replies
+    for (const comment of flatComments) {
+      commentMap.set(comment.id, { ...comment, replies: [] });
+    }
+
+    // Second pass: build the tree
+    for (const comment of flatComments) {
+      const commentWithReplies = commentMap.get(comment.id)!;
+
+      if (comment.parentCommentId && commentMap.has(comment.parentCommentId)) {
+        const parent = commentMap.get(comment.parentCommentId)!;
+        parent.replies.push(commentWithReplies);
+      } else {
+        rootComments.push(commentWithReplies);
+      }
+    }
+
+    // Sort replies by date (oldest first for conversation flow)
+    const sortReplies = (comments: CommentWithReplies[]) => {
+      for (const comment of comments) {
+        comment.replies.sort((a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+        sortReplies(comment.replies);
+      }
+    };
+    sortReplies(rootComments);
+
+    return rootComments;
+  }, []);
+
+  const handleReply = (parentId: string, parentAuthor: string) => {
+    setReplyingTo({ id: parentId, authorName: parentAuthor });
+    // Focus the comment textarea
+    const textarea = document.getElementById("comment");
+    if (textarea) {
+      textarea.focus();
+      textarea.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  const cancelReply = () => {
+    setReplyingTo(null);
+  };
+
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -161,6 +378,7 @@ export function BlogEngagement({
           content: commentContent.trim(),
           authorName: session?.user?.name || authorName.trim(),
           authorEmail: session?.user?.email || authorEmail.trim(),
+          parentCommentId: replyingTo?.id || null,
         }),
       });
 
@@ -176,6 +394,7 @@ export function BlogEngagement({
 
         // Reset form
         setCommentContent("");
+        setReplyingTo(null);
         if (!session?.user) {
           setAuthorName("");
           setAuthorEmail("");
@@ -233,6 +452,8 @@ export function BlogEngagement({
       return "Recently";
     }
   };
+
+  const nestedComments = buildCommentTree(comments);
 
   return (
     <Card className="mb-8">
@@ -339,6 +560,24 @@ export function BlogEngagement({
           <div className="mt-6 border-t pt-6">
             <h3 className="text-lg font-semibold mb-4">Comments</h3>
 
+            {/* Reply Indicator */}
+            {replyingTo && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Reply className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm text-blue-700">
+                    Replying to <strong>{replyingTo.authorName}</strong>
+                  </span>
+                </div>
+                <button
+                  onClick={cancelReply}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
             {/* Comment Form */}
             <form onSubmit={handleSubmitComment} className="mb-6 space-y-4">
               {!session?.user && (
@@ -374,10 +613,12 @@ export function BlogEngagement({
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="comment">Your Comment *</Label>
+                <Label htmlFor="comment">
+                  {replyingTo ? `Reply to ${replyingTo.authorName}` : "Your Comment"} *
+                </Label>
                 <Textarea
                   id="comment"
-                  placeholder="Write your comment..."
+                  placeholder={replyingTo ? `Write your reply to ${replyingTo.authorName}...` : "Write your comment..."}
                   value={commentContent}
                   onChange={(e) => setCommentContent(e.target.value)}
                   rows={4}
@@ -398,7 +639,7 @@ export function BlogEngagement({
                   ) : (
                     <Send className="h-4 w-4 mr-2" />
                   )}
-                  Post Comment
+                  {replyingTo ? "Post Reply" : "Post Comment"}
                 </Button>
               </div>
             </form>
@@ -408,25 +649,18 @@ export function BlogEngagement({
               <div className="flex justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
               </div>
-            ) : comments.length > 0 ? (
+            ) : nestedComments.length > 0 ? (
               <div className="space-y-4">
-                {comments.map((comment) => (
-                  <div
+                {nestedComments.map((comment) => (
+                  <CommentItem
                     key={comment.id}
-                    className="bg-gray-50 rounded-lg p-4 border"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-gray-900">
-                        {comment.authorName}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {formatDate(comment.createdAt)}
-                      </span>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">
-                      {comment.content}
-                    </p>
-                  </div>
+                    comment={comment}
+                    slug={slug}
+                    depth={0}
+                    onReply={handleReply}
+                    session={session}
+                    formatDate={formatDate}
+                  />
                 ))}
               </div>
             ) : (
