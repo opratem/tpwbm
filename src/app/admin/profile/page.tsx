@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { AdminLayout } from "@/components/admin/admin-layout";
@@ -31,9 +31,13 @@ import {
   CheckCircle,
   Settings,
   Crown,
-  Star
+  Star,
+  Camera,
+  Upload,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface UserData {
   id: string;
@@ -45,10 +49,11 @@ interface UserData {
   bio: string | null;
   image: string | null;
   role: string;
+  interests?: string | null;
 }
 
 export default function AdminProfile() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update: updateSession } = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
@@ -58,15 +63,18 @@ export default function AdminProfile() {
     birthday: "",
     interests: "Administration, Church Management, Leadership",
     bio: "Church administrator with full system access and super user privileges.",
+    image: session?.user?.image || "",
   });
   const [loading, setLoading] = useState(true);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Redirect if not authenticated or not admin
+  // Redirect if not authenticated or not admin/super_admin
   useEffect(() => {
     if (status === "unauthenticated") {
       redirect("/members/login");
     }
-    if (status === "authenticated" && session?.user?.role !== "admin") {
+    if (status === "authenticated" && session?.user?.role !== "admin" && session?.user?.role !== "super_admin") {
       redirect("/members/dashboard");
     }
   }, [status, session]);
@@ -90,6 +98,7 @@ export default function AdminProfile() {
                 birthday: currentUser.birthday ? new Date(currentUser.birthday).toISOString().split('T')[0] : "",
                 interests: currentUser.interests || "Administration, Church Management, Leadership",
                 bio: currentUser.bio || "Church administrator with full system access and super user privileges.",
+                image: currentUser.image || session.user.image || "",
               }));
             }
           }
@@ -100,10 +109,82 @@ export default function AdminProfile() {
       setLoading(false);
     };
 
-    if (session?.user?.role === "admin") {
+    if (session?.user?.role === "admin" || session?.user?.role === "super_admin") {
       loadProfile();
     }
   }, [session]);
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid file type. Only JPEG, PNG, and WebP images are allowed.');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size too large. Maximum size is 5MB.');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+      formDataUpload.append('folder', 'profiles');
+      formDataUpload.append('contentType', 'profile');
+      formDataUpload.append('tags', 'profile,admin');
+
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || 'Failed to upload image');
+      }
+
+      const uploadResult = await uploadResponse.json();
+
+      // Update form data with new image URL
+      setFormData(prev => ({ ...prev, image: uploadResult.url }));
+
+      // Immediately save the profile with new image
+      const updateResponse = await fetch('/api/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          image: uploadResult.url,
+        }),
+      });
+
+      if (updateResponse.ok) {
+        toast.success('Profile picture updated successfully!');
+        // Update session to reflect new image
+        await updateSession({ image: uploadResult.url });
+      } else {
+        const errorData = await updateResponse.json();
+        throw new Error(errorData.error || 'Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Image upload error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
 
   const handleSave = async () => {
     try {
@@ -136,13 +217,14 @@ export default function AdminProfile() {
               birthday: currentUser.birthday ? new Date(currentUser.birthday).toISOString().split('T')[0] : "",
               interests: currentUser.interests || "Administration, Church Management, Leadership",
               bio: currentUser.bio || "Church administrator with full system access and super user privileges.",
+              image: currentUser.image || "",
             }));
           }
         }
 
         // Update session data if needed
         if (session?.user) {
-          session.user.name = formData.name;
+          await updateSession({ name: formData.name, image: formData.image });
         }
       } else {
         toast.error(data.error || "Failed to update profile");
@@ -171,6 +253,7 @@ export default function AdminProfile() {
               birthday: currentUser.birthday ? new Date(currentUser.birthday).toISOString().split('T')[0] : "",
               interests: currentUser.interests || "Administration, Church Management, Leadership",
               bio: currentUser.bio || "Church administrator with full system access and super user privileges.",
+              image: currentUser.image || "",
             }));
           }
         }
@@ -180,6 +263,8 @@ export default function AdminProfile() {
     }
     setIsEditing(false);
   };
+
+  const isSuperAdmin = session?.user?.role === "super_admin";
 
   if (!session) {
     return (
@@ -219,34 +304,69 @@ export default function AdminProfile() {
               <CardContent className="p-8">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                   <div className="flex items-center gap-6">
-                    <div className="relative">
-                      <Avatar className="h-20 w-20 ring-4 ring-white/50 dark:ring-gray-700/50 shadow-lg">
-                        <div className="w-full h-full bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-2xl font-bold text-white">
-                          {session.user.name?.charAt(0)}
-                        </div>
+                    <div className="relative group">
+                      <Avatar className="h-20 w-20 ring-4 ring-white/50 dark:ring-gray-700/50 shadow-lg overflow-hidden">
+                        {formData.image ? (
+                          <Image
+                            src={formData.image}
+                            alt={formData.name || "Profile"}
+                            width={80}
+                            height={80}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className={`w-full h-full ${isSuperAdmin ? 'bg-gradient-to-br from-amber-500 to-amber-600' : 'bg-gradient-to-br from-orange-500 to-red-600'} flex items-center justify-center text-2xl font-bold text-white`}>
+                            {session.user.name?.charAt(0)}
+                          </div>
+                        )}
                       </Avatar>
-                      <div className="absolute -bottom-1 -right-1 h-6 w-6 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full flex items-center justify-center">
+                      {/* Profile picture upload overlay */}
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingImage}
+                        className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer disabled:cursor-wait"
+                      >
+                        {uploadingImage ? (
+                          <Loader2 className="h-6 w-6 text-white animate-spin" />
+                        ) : (
+                          <Camera className="h-6 w-6 text-white" />
+                        )}
+                      </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                      <div className={`absolute -bottom-1 -right-1 h-6 w-6 ${isSuperAdmin ? 'bg-amber-500' : 'bg-green-500'} border-2 border-white dark:border-gray-900 rounded-full flex items-center justify-center`}>
                         <Crown className="h-3 w-3 text-white" />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center gap-3 flex-wrap">
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{session.user.name}</h1>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{formData.name || session.user.name}</h1>
                         <Badge
                           variant="destructive"
-                          className="px-3 py-1 gap-1"
+                          className={`px-3 py-1 gap-1 ${isSuperAdmin ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
                         >
                           <Shield className="h-3 w-3" />
-                          Administrator
+                          {isSuperAdmin ? "Super Admin" : "Administrator"}
                         </Badge>
-                        <Badge variant="outline" className="px-3 py-1 gap-1 border-yellow-500 text-yellow-600">
-                          <Star className="h-3 w-3" />
-                          Super User
-                        </Badge>
+                        {isSuperAdmin && (
+                          <Badge variant="outline" className="px-3 py-1 gap-1 border-amber-500 text-amber-600">
+                            <Star className="h-3 w-3" />
+                            Elevated Access
+                          </Badge>
+                        )}
                       </div>
                       <p className="text-gray-600 dark:text-gray-400 flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-500" />
                         Full system access • All permissions granted
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-500">
+                        Hover over profile picture to change it
                       </p>
                     </div>
                   </div>

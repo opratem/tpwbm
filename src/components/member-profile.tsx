@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,12 +24,15 @@ import {
   Heart,
   Edit,
   Save,
-  X
+  X,
+  Camera,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function MemberProfile() {
-  const { data: session } = useSession();
+  const { data: session, update: updateSession } = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
@@ -39,8 +42,11 @@ export default function MemberProfile() {
     birthday: "",
     interests: "Bible Study, Worship, Community Outreach",
     bio: "I've been a member of this church family for 3 years and love serving in the children's ministry.",
+    image: session?.user?.image || "",
   });
   const [loading, setLoading] = useState(true);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load user profile data
   useEffect(() => {
@@ -59,6 +65,7 @@ export default function MemberProfile() {
                 email: currentUser.email || "",
                 phone: currentUser.phone || "",
                 address: currentUser.address || "",
+                image: currentUser.image || session.user.image || "",
               }));
             }
           }
@@ -75,6 +82,80 @@ export default function MemberProfile() {
     loadProfile();
   }, [session?.user?.id]);
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid file type. Only JPEG, PNG, and WebP images are allowed.');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size too large. Maximum size is 5MB.');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+      formDataUpload.append('folder', 'profiles');
+      formDataUpload.append('contentType', 'profile');
+      formDataUpload.append('tags', 'profile,member');
+
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || 'Failed to upload image');
+      }
+
+      const uploadResult = await uploadResponse.json();
+
+      // Update form data with new image URL
+      setFormData(prev => ({ ...prev, image: uploadResult.url }));
+
+      // Immediately save the profile with new image
+      const updateResponse = await fetch('/api/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          image: uploadResult.url,
+        }),
+      });
+
+      if (updateResponse.ok) {
+        toast.success('Profile picture updated successfully!');
+        // Update session to reflect new image
+        await updateSession({ image: uploadResult.url });
+      } else {
+        const errorData = await updateResponse.json();
+        throw new Error(errorData.error || 'Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Image upload error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   const handleSave = async () => {
     try {
       const response = await fetch("/api/profile/update", {
@@ -86,6 +167,7 @@ export default function MemberProfile() {
           name: formData.name,
           phone: formData.phone,
           address: formData.address,
+          image: formData.image,
         }),
       });
 
@@ -94,6 +176,8 @@ export default function MemberProfile() {
       if (response.ok) {
         toast.success("Profile updated successfully!");
         setIsEditing(false);
+        // Update session
+        await updateSession({ name: formData.name, image: formData.image });
       } else {
         toast.error(data.error || "Failed to update profile");
       }
@@ -156,17 +240,50 @@ export default function MemberProfile() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-6">
-            <Avatar className="h-24 w-24">
-              <div className="w-full h-full bg-blue-100 flex items-center justify-center text-2xl font-semibold text-blue-600">
-                {session.user.name?.charAt(0)}
-              </div>
-            </Avatar>
+            <div className="relative group">
+              <Avatar className="h-24 w-24 overflow-hidden">
+                {formData.image ? (
+                  <Image
+                    src={formData.image}
+                    alt={formData.name || "Profile"}
+                    width={96}
+                    height={96}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-blue-100 flex items-center justify-center text-2xl font-semibold text-blue-600">
+                    {session.user.name?.charAt(0)}
+                  </div>
+                )}
+              </Avatar>
+              {/* Profile picture upload overlay */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingImage}
+                className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer disabled:cursor-wait"
+              >
+                {uploadingImage ? (
+                  <Loader2 className="h-6 w-6 text-white animate-spin" />
+                ) : (
+                  <Camera className="h-6 w-6 text-white" />
+                )}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+            </div>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-semibold">{session.user.name}</h2>
+                <h2 className="text-2xl font-semibold">{formData.name || session.user.name}</h2>
                 <Badge variant="secondary">{session.user.role}</Badge>
               </div>
               <p className="text-gray-500">{session.user.email}</p>
+              <p className="text-sm text-gray-400">Hover over profile picture to change it</p>
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
@@ -242,7 +359,7 @@ export default function MemberProfile() {
               ) : (
                 <div className="flex items-center gap-2 p-2 border rounded">
                   <Phone className="h-4 w-4 text-gray-500" />
-                  <span>{formData.phone}</span>
+                  <span>{formData.phone || "Not set"}</span>
                 </div>
               )}
             </div>
@@ -261,7 +378,7 @@ export default function MemberProfile() {
               ) : (
                 <div className="flex items-center gap-2 p-2 border rounded">
                   <Calendar className="h-4 w-4 text-gray-500" />
-                  <span>{new Date(formData.birthday).toLocaleDateString()}</span>
+                  <span>{formData.birthday ? new Date(formData.birthday).toLocaleDateString() : "Not set"}</span>
                 </div>
               )}
             </div>
@@ -281,7 +398,7 @@ export default function MemberProfile() {
             ) : (
               <div className="flex items-start gap-2 p-2 border rounded">
                 <MapPin className="h-4 w-4 text-gray-500 mt-0.5" />
-                <span>{formData.address}</span>
+                <span>{formData.address || "Not set"}</span>
               </div>
             )}
           </div>

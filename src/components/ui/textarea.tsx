@@ -42,8 +42,17 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           <textarea
             id={textareaId}
             className={cn(
-              // Base styles
-              "flex min-h-[80px] sm:min-h-[100px] w-full rounded-md border bg-background px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base ring-offset-background transition-all duration-200 resize-y",
+              // Base styles with touch-friendly sizing
+              "flex w-full rounded-md border bg-background text-sm sm:text-base ring-offset-background transition-all duration-200 resize-y",
+
+              // Minimum height
+              "min-h-[100px] sm:min-h-[120px]",
+
+              // Padding for comfortable touch
+              "px-3 sm:px-4 py-3",
+
+              // Touch-friendly line height
+              "leading-relaxed",
 
               // Placeholder
               "placeholder:text-muted-foreground",
