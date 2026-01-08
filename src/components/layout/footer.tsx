@@ -239,8 +239,8 @@ export function Footer() {
       </div>
 
       {/* Bottom Footer - Copyright - Mobile Optimized */}
-      <div className="border-t border-border">
-        <div className="container py-4 sm:py-6 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="border-t border-border safe-area-inset-bottom">
+        <div className="container py-4 sm:py-6 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 pb-safe">
           <div className="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
             &copy; {currentYear} The Prevailing Word Believers Ministry Inc. All rights reserved.
           </div>

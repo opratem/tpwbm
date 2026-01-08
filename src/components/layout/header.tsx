@@ -180,7 +180,7 @@ export function Header() {
       <header
         role="banner"
         aria-label="Site header"
-        className={`sticky top-0 z-50 w-full border-b border-gray-800/20 ${scrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-xl' : 'bg-gray-900/90 backdrop-blur-sm'} transition-all duration-300`}
+        className={`sticky top-0 z-50 w-full border-b border-gray-800/20 ${scrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-xl' : 'bg-gray-900/90 backdrop-blur-sm'} transition-all duration-300 safe-area-inset-top safe-area-inset-left safe-area-inset-right`}
       >
         <div className="container mx-auto flex h-16 sm:h-20 items-center justify-between pl-3 pr-2 sm:px-4 md:px-6 lg:px-6 max-w-none">
           {/* Logo Section - Fixed to show full name on desktop */}
@@ -367,7 +367,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-[300px] sm:w-[340px] md:w-[400px] pt-16 sm:pt-20 bg-gray-900/95 backdrop-blur-md border-gray-700/50 overflow-y-auto max-h-screen"
+                className="w-[300px] sm:w-[340px] md:w-[400px] pt-16 sm:pt-20 bg-gray-900/95 backdrop-blur-md border-gray-700/50 overflow-y-auto max-h-screen safe-area-inset-top safe-area-inset-bottom safe-area-inset-right"
                 id="mobile-navigation"
                 role="dialog"
                 aria-label="Mobile navigation menu"
