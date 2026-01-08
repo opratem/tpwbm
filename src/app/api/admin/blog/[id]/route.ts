@@ -110,20 +110,38 @@ export async function PUT(
           .replace(/(^-|-$)/g, '');
     }
 
+    // Build update data explicitly to avoid date string issues
+    // Only include fields that are actually being updated
     const updateData: Partial<typeof blogPosts.$inferInsert> = {
-      ...body,
-      slug,
       updatedAt: new Date(),
     };
+
+    // Only add fields that are provided in the request body
+    if (title !== undefined) updateData.title = title;
+    if (content !== undefined) updateData.content = content;
+    if (excerpt !== undefined) updateData.excerpt = excerpt;
+    if (category !== undefined) updateData.category = category;
+    if (status !== undefined) updateData.status = status;
+    if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
+    if (tags !== undefined) updateData.tags = tags;
+    if (isFeatured !== undefined) updateData.isFeatured = isFeatured;
+    if (allowComments !== undefined) updateData.allowComments = allowComments;
+    if (metaTitle !== undefined) updateData.metaTitle = metaTitle;
+    if (metaDescription !== undefined) updateData.metaDescription = metaDescription;
+
+    // Always update slug if title changed
+    if (slug !== existingPost.slug) {
+      updateData.slug = slug;
+    }
 
     // Set publishedAt when changing from draft to published
     if (status === 'published' && existingPost.status !== 'published') {
       updateData.publishedAt = new Date();
     }
 
-    // Handle scheduled posts
-    if (scheduledFor) {
-      updateData.scheduledFor = new Date(scheduledFor);
+    // Handle scheduled posts - convert string to Date object
+    if (scheduledFor !== undefined) {
+      updateData.scheduledFor = scheduledFor ? new Date(scheduledFor) : null;
     }
 
     const [updatedPost] = await db
