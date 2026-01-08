@@ -8,7 +8,15 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.1-38bdf8?style=flat&logo=tailwind-css)
 ![Drizzle ORM](https://img.shields.io/badge/Drizzle-0.44.1-green?style=flat)
 
-**Last Updated:** December 2025
+**Last Updated:** January 2026
+
+---
+
+## Changelog
+
+### January 2026
+- **Fixed:** Resolved syntax error in `src/components/ui/dialog.tsx` where the file was corrupted (missing imports and component declarations at the beginning of the file). This was causing build failures on Vercel/Netlify.
+- **Fixed:** Added missing `@types/web-push` dev dependency to resolve TypeScript compilation errors.
 
 ---
 
@@ -559,19 +567,19 @@ The seed script creates:
 ### Netlify Deployment (Recommended)
 
 1. **Connect Repository to Netlify**
-    - Go to https://app.netlify.com/
-    - Click "New site from Git"
-    - Connect your repository
+   - Go to https://app.netlify.com/
+   - Click "New site from Git"
+   - Connect your repository
 
 2. **Build Settings** (already configured in `netlify.toml`)
-    - Build command: `bun run build`
-    - Publish directory: `.next`
+   - Build command: `bun run build`
+   - Publish directory: `.next`
 
 3. **Set Environment Variables**
-    - Add all variables from `.env.local` in Netlify dashboard
+   - Add all variables from `.env.local` in Netlify dashboard
 
 4. **Deploy**
-    - Push to main branch for automatic deployment
+   - Push to main branch for automatic deployment
 
 ### Alternative: Vercel
 
@@ -616,8 +624,8 @@ bun run start
 
 ## 📞 Support & Contact
 
-- **Website**: https://tpwbm.org
-- **Email**: support@tpwbm.org
+- **Website**: https://tpwbm.com.ng
+- **Email**: theprevailingword95@gmail.com
 
 ---
 
@@ -629,6 +637,6 @@ This project is proprietary software for **The Prevailing Word Believers Ministr
 
 ---
 
-**Built with ❤️ for The Prevailing Word Believers Ministry Inc.**
+**Built by The Media Team for The Prevailing Word Believers Ministry Inc.**
 
-*Last Updated: December 2025*
+*Last Updated: January 2026*
