@@ -407,6 +407,16 @@ export const blogComments = pgTable('blog_comments', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
+// Blog likes table
+export const blogLikes = pgTable('blog_likes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  blogPostId: uuid('blog_post_id').references(() => blogPosts.id, { onDelete: 'cascade' }).notNull(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  sessionId: varchar('session_id', { length: 255 }), // For anonymous likes
+  ipAddress: varchar('ip_address', { length: 45 }),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
 // NextAuth adapter tables
 export const accounts = pgTable('accounts', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -580,6 +590,9 @@ export type NewBlogPost = typeof blogPosts.$inferInsert;
 
 export type BlogComment = typeof blogComments.$inferSelect;
 export type NewBlogComment = typeof blogComments.$inferInsert;
+
+export type BlogLike = typeof blogLikes.$inferSelect;
+export type NewBlogLike = typeof blogLikes.$inferInsert;
 
 export type Bookmark = typeof bookmarks.$inferSelect;
 export type NewBookmark = typeof bookmarks.$inferInsert;

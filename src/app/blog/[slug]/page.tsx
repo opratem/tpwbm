@@ -18,11 +18,9 @@ import {
   Clock,
   Tag,
   ArrowLeft,
-  Share2,
-  Heart,
-  MessageSquare,
   Eye
 } from "lucide-react";
+import { BlogEngagement } from "@/components/blog/blog-engagement";
 
 interface BlogPost {
   id: string;
@@ -43,6 +41,7 @@ interface BlogPost {
   metaDescription?: string;
   createdAt: string;
   updatedAt: string;
+  allowComments?: boolean;
 }
 
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
@@ -90,6 +89,7 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
       metaDescription: post.metaDescription || undefined,
       createdAt: post.createdAt.toISOString(),
       updatedAt: post.updatedAt.toISOString(),
+      allowComments: post.allowComments,
     };
   } catch (error) {
     console.error('Error fetching blog post:', error);
@@ -132,6 +132,7 @@ async function getRelatedPosts(currentPostId: string, category: string): Promise
       metaDescription: post.metaDescription || undefined,
       createdAt: post.createdAt.toISOString(),
       updatedAt: post.updatedAt.toISOString(),
+      allowComments: post.allowComments,
     }));
   } catch (error) {
     console.error('Error fetching related posts:', error);
@@ -337,26 +338,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             )}
 
             {/* Engagement Section */}
-            <Card className="mb-8">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <Button variant="outline" size="sm">
-                      <Heart className="h-4 w-4 mr-2" />
-                      Like
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share
-                    </Button>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Comment
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <BlogEngagement
+              slug={slug}
+              allowComments={post.allowComments ?? true}
+              postTitle={post.title}
+            />
 
             {/* Related Posts */}
             {relatedPosts.length > 0 && (
