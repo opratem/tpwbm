@@ -285,98 +285,98 @@ export default function AdminPrayerRequestsPage() {
 
   return (
       <AdminLayout>
-        <div className="container max-w-7xl py-10 space-y-8">
+        <div className="container max-w-7xl py-4 sm:py-6 md:py-10 px-4 sm:px-6 space-y-4 sm:space-y-6 md:space-y-8">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-col gap-4">
             <div>
-              <h1 className="text-3xl font-bold">Prayer Request Management</h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-2">
+              <h1 className="text-2xl sm:text-3xl font-bold">Prayer Request Management</h1>
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
                 Manage and moderate prayer requests from church members
               </p>
             </div>
           </div>
 
           {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-4">
             <Card>
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Total</p>
-                    <p className="text-2xl font-bold">{stats.total}</p>
+                  <Users className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-500 truncate">Total</p>
+                    <p className="text-xl sm:text-2xl font-bold">{stats.total}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <Heart className="h-4 w-4 text-green-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Active</p>
-                    <p className="text-2xl font-bold">{stats.active}</p>
+                  <Heart className="h-4 w-4 text-green-600 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-500 truncate">Active</p>
+                    <p className="text-xl sm:text-2xl font-bold">{stats.active}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-emerald-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Answered</p>
-                    <p className="text-2xl font-bold">{stats.answered}</p>
+                  <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-500 truncate">Answered</p>
+                    <p className="text-xl sm:text-2xl font-bold">{stats.answered}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <Timer className="h-4 w-4 text-yellow-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Pending</p>
-                    <p className="text-2xl font-bold">{stats.pending}</p>
+                  <Timer className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-500 truncate">Pending</p>
+                    <p className="text-xl sm:text-2xl font-bold">{stats.pending}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-4">
+            <Card className="hidden sm:block">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">This Week</p>
-                    <p className="text-2xl font-bold">{stats.thisWeek}</p>
+                  <TrendingUp className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-500 truncate">This Week</p>
+                    <p className="text-xl sm:text-2xl font-bold">{stats.thisWeek}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-4">
+            <Card className="hidden md:block">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-purple-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">This Month</p>
-                    <p className="text-2xl font-bold">{stats.thisMonth}</p>
+                  <Calendar className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-500 truncate">This Month</p>
+                    <p className="text-xl sm:text-2xl font-bold">{stats.thisMonth}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-4">
+            <Card className="hidden lg:block">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <Praying className="h-4 w-4 text-indigo-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Total Prayers</p>
-                    <p className="text-2xl font-bold">{stats.totalPrayers}</p>
+                  <Praying className="h-4 w-4 text-indigo-600 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-500 truncate">Total Prayers</p>
+                    <p className="text-xl sm:text-2xl font-bold">{stats.totalPrayers}</p>
                   </div>
                 </div>
               </CardContent>
@@ -385,16 +385,16 @@ export default function AdminPrayerRequestsPage() {
 
           {/* Filters */}
           <Card>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <CardContent className="pt-4 sm:pt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                 {/* Search */}
-                <div className="relative">
+                <div className="relative sm:col-span-2 md:col-span-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
                       placeholder="Search prayer requests..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 text-sm"
                   />
                 </div>
 
@@ -448,17 +448,18 @@ export default function AdminPrayerRequestsPage() {
                 </Select>
               </div>
 
-              <div className="flex items-center gap-2 mt-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-4">
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={fetchPrayerRequests}
                     disabled={isLoading}
+                    className="w-full sm:w-auto"
                 >
                   <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
                   Refresh
                 </Button>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 text-center sm:text-left">
                 {prayerRequests.length} prayer request{prayerRequests.length !== 1 ? "s" : ""}
               </span>
               </div>
@@ -471,13 +472,13 @@ export default function AdminPrayerRequestsPage() {
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600" />
               </div>
           ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {prayerRequests.map((request) => (
                     <Card key={request.id} className="hover:shadow-md transition-shadow">
-                      <CardContent className="pt-6">
-                        <div className="flex items-start gap-4">
-                          {/* Avatar */}
-                          <Avatar className="h-10 w-10">
+                      <CardContent className="p-4 sm:pt-6">
+                        <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+                          {/* Avatar - hidden on mobile */}
+                          <Avatar className="h-10 w-10 hidden sm:block flex-shrink-0">
                             <div className="w-full h-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm">
                               {request.isAnonymous
                                   ? "AN"
@@ -486,34 +487,34 @@ export default function AdminPrayerRequestsPage() {
                             </div>
                           </Avatar>
 
-                          <div className="flex-1 space-y-2">
+                          <div className="flex-1 min-w-0 space-y-2">
                             {/* Header */}
-                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
-                              <div>
-                                <h3 className="font-semibold">{request.title}</h3>
-                                <div className="flex items-center gap-2 mt-1">
-                          <span className="text-sm font-medium">
-                            {request.isAnonymous ? "Anonymous" : request.requestedBy}
-                          </span>
-                                  {request.requestedById === "00000000-0000-0000-0000-000000000000" && (
-                                      <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
-                                        Guest
-                                      </Badge>
-                                  )}
-                                  <Badge className={getCategoryColor(request.category)}>
-                                    {request.category}
-                                  </Badge>
-                                  <Badge className={getPriorityColor(request.priority)}>
-                                    {request.priority}
-                                  </Badge>
-                                  <Badge className={getStatusColor(request.status)}>
-                                    {request.status}
-                                  </Badge>
+                            <div className="flex flex-col gap-2">
+                              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                                <h3 className="font-semibold text-sm sm:text-base truncate">{request.title}</h3>
+                                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 flex-shrink-0">
+                                  <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                                  {formatTimeAgo(request.createdAt)}
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2 text-sm text-gray-500">
-                                <Clock className="h-4 w-4" />
-                                {formatTimeAgo(request.createdAt)}
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <span className="text-xs sm:text-sm font-medium">
+                                  {request.isAnonymous ? "Anonymous" : request.requestedBy}
+                                </span>
+                                {request.requestedById === "00000000-0000-0000-0000-000000000000" && (
+                                    <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+                                      Guest
+                                    </Badge>
+                                )}
+                                <Badge className={`${getCategoryColor(request.category)} text-xs`}>
+                                  {request.category}
+                                </Badge>
+                                <Badge className={`${getPriorityColor(request.priority)} text-xs`}>
+                                  {request.priority}
+                                </Badge>
+                                <Badge className={`${getStatusColor(request.status)} text-xs`}>
+                                  {request.status}
+                                </Badge>
                               </div>
                             </div>
 
@@ -546,105 +547,108 @@ export default function AdminPrayerRequestsPage() {
                             )}
 
                             {/* Actions */}
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Heart className="h-4 w-4" />
-                          {request.prayerCount} prayers
-                        </span>
-                                  {request.expiresAt && (
-                                      <span className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            Expires {new Date(request.expiresAt).toLocaleDateString()}
-                          </span>
-                                  )}
-                                </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+                              <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
+                                <span className="flex items-center gap-1">
+                                  <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
+                                  {request.prayerCount} prayers
+                                </span>
+                                {request.expiresAt && (
+                                    <span className="flex items-center gap-1">
+                                      <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                                      <span className="hidden sm:inline">Expires</span> {new Date(request.expiresAt).toLocaleDateString()}
+                                    </span>
+                                )}
+                              </div>
 
-                                <div className="flex items-center gap-2">
-                                  {request.status === "pending" && (
-                                      <>
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={() => updateRequestStatus(request.id, "active")}
-                                        >
-                                          <CheckCircle className="h-4 w-4 mr-1" />
-                                          Approve
-                                        </Button>
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={() => updateRequestStatus(request.id, "archived", "Rejected by admin")}
-                                        >
-                                          <XCircle className="h-4 w-4 mr-1" />
-                                          Reject
-                                        </Button>
-                                      </>
-                                  )}
-
-                                  {request.status === "active" && (
-                                      <Dialog>
-                                        <DialogTrigger asChild>
-                                          <Button size="sm" variant="outline">
-                                            <CheckCircle className="h-4 w-4 mr-1" />
-                                            Mark Answered
-                                          </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                          <DialogHeader>
-                                            <DialogTitle>Mark Prayer as Answered</DialogTitle>
-                                            <DialogDescription>
-                                              Share how God has answered this prayer request.
-                                            </DialogDescription>
-                                          </DialogHeader>
-                                          <form onSubmit={(e) => {
-                                            e.preventDefault();
-                                            const formData = new FormData(e.currentTarget);
-                                            const description = formData.get("description") as string;
-                                            markAsAnswered(request.id, description);
-                                          }}>
-                                            <div className="space-y-4">
-                                              <div>
-                                                <Label htmlFor="description">Answer Description</Label>
-                                                <Textarea
-                                                    id="description"
-                                                    name="description"
-                                                    placeholder="Describe how this prayer was answered..."
-                                                    required
-                                                />
-                                              </div>
-                                            </div>
-                                            <DialogFooter className="mt-4">
-                                              <Button type="submit">Mark as Answered</Button>
-                                            </DialogFooter>
-                                          </form>
-                                        </DialogContent>
-                                      </Dialog>
-                                  )}
-
-                                  <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                      <Button size="sm" variant="outline">
-                                        <Trash2 className="h-4 w-4 mr-1" />
-                                        Delete
+                              <div className="flex flex-wrap items-center gap-2">
+                                {request.status === "pending" && (
+                                    <>
+                                      <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => updateRequestStatus(request.id, "active")}
+                                          className="text-xs sm:text-sm h-8"
+                                      >
+                                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                        <span className="hidden xs:inline">Approve</span>
                                       </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>Delete Prayer Request</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          Are you sure you want to delete this prayer request? This action cannot be undone.
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => deletePrayerRequest(request.id)}>
-                                          Delete
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
-                                </div>
+                                      <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => updateRequestStatus(request.id, "archived", "Rejected by admin")}
+                                          className="text-xs sm:text-sm h-8"
+                                      >
+                                        <XCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                        <span className="hidden xs:inline">Reject</span>
+                                      </Button>
+                                    </>
+                                )}
+
+                                {request.status === "active" && (
+                                    <Dialog>
+                                      <DialogTrigger asChild>
+                                        <Button size="sm" variant="outline" className="text-xs sm:text-sm h-8">
+                                          <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                          <span className="hidden sm:inline">Mark</span> Answered
+                                        </Button>
+                                      </DialogTrigger>
+                                      <DialogContent className="max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+                                        <DialogHeader className="flex-shrink-0 pb-4 border-b">
+                                          <DialogTitle>Mark Prayer as Answered</DialogTitle>
+                                          <DialogDescription>
+                                            Share how God has answered this prayer request.
+                                          </DialogDescription>
+                                        </DialogHeader>
+                                        <form onSubmit={(e) => {
+                                          e.preventDefault();
+                                          const formData = new FormData(e.currentTarget);
+                                          const description = formData.get("description") as string;
+                                          markAsAnswered(request.id, description);
+                                        }} className="flex-1 flex flex-col overflow-hidden">
+                                          <div className="flex-1 overflow-y-auto py-4 space-y-4">
+                                            <div>
+                                              <Label htmlFor="description">Answer Description</Label>
+                                              <Textarea
+                                                  id="description"
+                                                  name="description"
+                                                  placeholder="Describe how this prayer was answered..."
+                                                  required
+                                                  className="mt-2"
+                                              />
+                                            </div>
+                                          </div>
+                                          <DialogFooter className="flex-shrink-0 pt-4 border-t">
+                                            <Button type="submit" className="w-full sm:w-auto">Mark as Answered</Button>
+                                          </DialogFooter>
+                                        </form>
+                                      </DialogContent>
+                                    </Dialog>
+                                )}
+
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button size="sm" variant="outline" className="text-xs sm:text-sm h-8">
+                                      <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                      <span className="hidden sm:inline">Delete</span>
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Prayer Request</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Are you sure you want to delete this prayer request? This action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => deletePrayerRequest(request.id)}>
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
                             </div>
                           </div>
                         </div>

@@ -386,7 +386,7 @@ export default function AdminBlogPage() {
   };
 
   const renderBlogForm = () => (
-      <div className="space-y-4 max-h-96 overflow-y-auto">
+      <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="title">Title *</Label>
@@ -694,19 +694,21 @@ export default function AdminBlogPage() {
                   Create Post
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Create New Blog Post</DialogTitle>
-                  <DialogDescription>
+              <DialogContent className="max-w-[95vw] sm:max-w-4xl max-h-[95vh] overflow-hidden flex flex-col">
+                <DialogHeader className="flex-shrink-0 pb-4 border-b">
+                  <DialogTitle className="text-xl sm:text-2xl font-bold">Create New Blog Post</DialogTitle>
+                  <DialogDescription className="text-gray-600">
                     Fill in the details to create a new blog post.
                   </DialogDescription>
                 </DialogHeader>
-                {renderBlogForm()}
-                <DialogFooter className="flex-col sm:flex-row gap-2">
+                <div className="flex-1 overflow-y-auto py-4">
+                  {renderBlogForm()}
+                </div>
+                <DialogFooter className="flex-shrink-0 pt-4 border-t bg-gray-50/50 dark:bg-gray-900/50 flex-col sm:flex-row gap-2">
                   <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="w-full sm:w-auto">
                     Cancel
                   </Button>
-                  <Button onClick={handleCreatePost} disabled={submitting} className="w-full sm:w-auto">
+                  <Button onClick={handleCreatePost} disabled={submitting} className="w-full sm:w-auto min-w-[100px]">
                     {submitting ? "Creating..." : "Create Post"}
                   </Button>
                 </DialogFooter>
@@ -888,19 +890,21 @@ export default function AdminBlogPage() {
 
         {/* Edit Post Dialog */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Edit Blog Post</DialogTitle>
-              <DialogDescription>
+          <DialogContent className="max-w-[95vw] sm:max-w-4xl max-h-[95vh] overflow-hidden flex flex-col">
+            <DialogHeader className="flex-shrink-0 pb-4 border-b">
+              <DialogTitle className="text-xl sm:text-2xl font-bold">Edit Blog Post</DialogTitle>
+              <DialogDescription className="text-gray-600">
                 Update the blog post details below.
               </DialogDescription>
             </DialogHeader>
-            {renderBlogForm()}
-            <DialogFooter>
+            <div className="flex-1 overflow-y-auto py-4">
+              {renderBlogForm()}
+            </div>
+            <DialogFooter className="flex-shrink-0 pt-4 border-t bg-gray-50/50 dark:bg-gray-900/50">
               <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleEditPost} disabled={submitting}>
+              <Button onClick={handleEditPost} disabled={submitting} className="min-w-[100px]">
                 {submitting ? "Updating..." : "Update Post"}
               </Button>
             </DialogFooter>
