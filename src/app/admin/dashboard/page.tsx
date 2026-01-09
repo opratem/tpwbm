@@ -217,7 +217,7 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <div className="container max-w-7xl py-10 space-y-8">
+      <div className="w-full max-w-7xl mx-auto space-y-6 sm:space-y-8">
         {/* Welcome Header */}
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-3xl blur-3xl" />
