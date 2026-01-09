@@ -45,6 +45,8 @@ import {
   Search,
   Filter,
   RefreshCw,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -81,6 +83,7 @@ export default function AdminAnnouncementsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
   const [formData, setFormData] = useState<AnnouncementFormData>({
     title: "",
     content: "",
@@ -302,8 +305,8 @@ export default function AdminAnnouncementsPage() {
   });
 
   const renderAnnouncementForm = () => (
-      <div className="grid gap-4 py-4">
-        <div className="grid gap-2">
+      <div className="space-y-4">
+        <div className="space-y-2">
           <Label htmlFor="title">Title *</Label>
           <Input
               id="title"
@@ -313,7 +316,7 @@ export default function AdminAnnouncementsPage() {
           />
         </div>
 
-        <div className="grid gap-2">
+        <div className="space-y-2">
           <Label htmlFor="content">Content *</Label>
           <Textarea
               id="content"
@@ -321,11 +324,12 @@ export default function AdminAnnouncementsPage() {
               onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
               placeholder="Enter announcement content..."
               rows={4}
+              className="resize-none"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
             <Label htmlFor="category">Category</Label>
             <Select
                 value={formData.category}
@@ -345,7 +349,7 @@ export default function AdminAnnouncementsPage() {
             </Select>
           </div>
 
-          <div className="grid gap-2">
+          <div className="space-y-2">
             <Label htmlFor="priority">Priority</Label>
             <Select
                 value={formData.priority}
@@ -363,8 +367,8 @@ export default function AdminAnnouncementsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
             <Select
                 value={formData.status}
@@ -381,7 +385,7 @@ export default function AdminAnnouncementsPage() {
             </Select>
           </div>
 
-          <div className="grid gap-2">
+          <div className="space-y-2">
             <Label htmlFor="expiresAt">Expires On</Label>
             <Input
                 id="expiresAt"
@@ -396,45 +400,49 @@ export default function AdminAnnouncementsPage() {
 
   return (
     <AdminLayout>
-      <div className="container max-w-7xl py-10 space-y-8">
+      <div className="container max-w-7xl py-4 sm:py-6 md:py-10 px-4 sm:px-6 space-y-4 sm:space-y-6 md:space-y-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex flex-col gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Manage Announcements</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">
+            <h1 className="text-2xl sm:text-3xl font-bold">Manage Announcements</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base">
               Create, edit, and manage church announcements
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Button
                 variant="outline"
                 size="sm"
                 onClick={fetchAnnouncements}
                 disabled={loading}
+                className="flex-shrink-0"
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" onClick={() => resetForm()}>
+                <Button size="sm" onClick={() => resetForm()} className="flex-shrink-0">
                   <Plus className="h-4 w-4 mr-2" />
-                  New Announcement
+                  <span className="hidden sm:inline">New Announcement</span>
+                  <span className="sm:hidden">New</span>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Create New Announcement</DialogTitle>
-                  <DialogDescription>
+              <DialogContent className="max-w-2xl max-h-[95vh] overflow-hidden flex flex-col">
+                <DialogHeader className="flex-shrink-0 pb-4 border-b">
+                  <DialogTitle className="text-xl sm:text-2xl font-bold">Create New Announcement</DialogTitle>
+                  <DialogDescription className="text-gray-600">
                     Create a new announcement to share with your church community.
                   </DialogDescription>
                 </DialogHeader>
-                {renderAnnouncementForm()}
-                <DialogFooter>
+                <div className="flex-1 overflow-y-auto py-4">
+                  {renderAnnouncementForm()}
+                </div>
+                <DialogFooter className="flex-shrink-0 pt-4 border-t bg-gray-50/50 dark:bg-gray-900/50">
                   <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                     Cancel
                   </Button>
-                  <Button onClick={() => handleSubmit(false)} disabled={isSubmitting}>
+                  <Button onClick={() => handleSubmit(false)} disabled={isSubmitting} className="min-w-[120px]">
                     {isSubmitting ? "Creating..." : "Create Announcement"}
                   </Button>
                 </DialogFooter>
@@ -443,32 +451,50 @@ export default function AdminAnnouncementsPage() {
           </div>
         </div>
 
-        {/* Filters */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Filters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="search">Search</Label>
+        {/* Mobile Filter Toggle Button */}
+        <div className="md:hidden">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+            className="w-full justify-between"
+          >
+            <span className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Filters
+              {(categoryFilter !== "all" || priorityFilter !== "all" || searchTerm) && (
+                <Badge variant="secondary" className="ml-1">Active</Badge>
+              )}
+            </span>
+            {showFilters ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </Button>
+        </div>
+
+        {/* Filters - Collapsible on mobile */}
+        <Card className={`${showFilters ? 'block' : 'hidden'} md:block`}>
+          <CardContent className="py-3 sm:py-4">
+            {/* Mobile: Compact 2-column grid, Desktop: 4-column with count */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+              {/* Search - full width on mobile */}
+              <div className="col-span-2 md:col-span-1 space-y-1">
+                <Label htmlFor="search" className="text-xs text-gray-500 hidden md:block">Search</Label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
                   <Input
                       id="search"
-                      placeholder="Search announcements..."
+                      placeholder="Search..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-9"
+                      className="pl-8 text-sm h-9"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="category-filter">Category</Label>
+              <div className="space-y-1">
+                <Label htmlFor="category-filter" className="text-xs text-gray-500 hidden md:block">Category</Label>
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="All categories" />
+                  <SelectTrigger className="text-sm h-9">
+                    <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
@@ -482,11 +508,11 @@ export default function AdminAnnouncementsPage() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="priority-filter">Priority</Label>
+              <div className="space-y-1">
+                <Label htmlFor="priority-filter" className="text-xs text-gray-500 hidden md:block">Priority</Label>
                 <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="All priorities" />
+                  <SelectTrigger className="text-sm h-9">
+                    <SelectValue placeholder="Priority" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Priorities</SelectItem>
@@ -497,23 +523,30 @@ export default function AdminAnnouncementsPage() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label>Total Found</Label>
-                <div className="text-2xl font-bold text-blue-600">
-                  {filteredAnnouncements.length}
+              {/* Count - shown inline on desktop */}
+              <div className="hidden md:flex items-end justify-end">
+                <div className="text-right">
+                  <span className="text-xs text-gray-500 block">Found</span>
+                  <span className="text-xl font-bold text-blue-600">{filteredAnnouncements.length}</span>
                 </div>
               </div>
+            </div>
+
+            {/* Mobile count - shown below filters */}
+            <div className="md:hidden flex items-center justify-between mt-2 pt-2 border-t">
+              <span className="text-xs text-gray-500">Total Found</span>
+              <span className="text-lg font-bold text-blue-600">{filteredAnnouncements.length}</span>
             </div>
           </CardContent>
         </Card>
 
         {/* Announcements List */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {loading ? (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {Array.from({ length: 3 }, (_, i) => (
                     <Card key={`skeleton-${i}-${Date.now()}`} className="animate-pulse">
-                      <CardContent className="p-6">
+                      <CardContent className="p-4 sm:p-6">
                         <div className="h-4 bg-gray-200 rounded w-3/4 mb-4" />
                         <div className="h-3 bg-gray-200 rounded w-full mb-2" />
                         <div className="h-3 bg-gray-200 rounded w-2/3" />
@@ -523,10 +556,10 @@ export default function AdminAnnouncementsPage() {
               </div>
           ) : announcements.length === 0 ? (
               <Card>
-                <CardContent className="p-8 text-center">
-                  <Bell className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                  <h3 className="text-lg font-semibold mb-2">No announcements found</h3>
-                  <p className="text-gray-500 mb-4">
+                <CardContent className="p-6 sm:p-8 text-center">
+                  <Bell className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-gray-400" />
+                  <h3 className="text-base sm:text-lg font-semibold mb-2">No announcements found</h3>
+                  <p className="text-gray-500 mb-4 text-sm sm:text-base">
                     {searchTerm || categoryFilter !== "all" || priorityFilter !== "all"
                         ? "Try adjusting your filters to see more results."
                         : "Get started by creating your first announcement."}
@@ -546,44 +579,49 @@ export default function AdminAnnouncementsPage() {
 
                 return (
                     <Card key={announcement.id} className={`hover:shadow-lg transition-shadow ${isExpired ? 'opacity-75' : ''}`}>
-                      <CardContent className="p-6">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-start gap-4 flex-1">
-                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                              <CategoryIcon className="h-6 w-6 text-blue-600" />
+                      <CardContent className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                          {/* Icon - hidden on smallest screens */}
+                          <div className="hidden sm:flex w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full items-center justify-center flex-shrink-0">
+                            <CategoryIcon className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            {/* Title and badges row */}
+                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4 mb-2 sm:mb-3">
+                              <h3 className="text-lg sm:text-xl font-semibold break-words">{announcement.title}</h3>
+                              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap flex-shrink-0">
+                                <Badge className={`${getCategoryColor(announcement.category)} text-xs`}>
+                                  {announcement.category}
+                                </Badge>
+                                <Badge className={`${getPriorityColor(announcement.priority)} text-xs`}>
+                                  {announcement.priority}
+                                </Badge>
+                                {isExpired && (
+                                    <Badge variant="secondary" className="text-xs">Expired</Badge>
+                                )}
+                              </div>
                             </div>
 
-                            <div className="flex-1">
-                              <div className="flex items-start justify-between gap-4 mb-3">
-                                <h3 className="text-xl font-semibold">{announcement.title}</h3>
-                                <div className="flex items-center gap-2">
-                                  <Badge className={getCategoryColor(announcement.category)}>
-                                    {announcement.category}
-                                  </Badge>
-                                  <Badge className={getPriorityColor(announcement.priority)}>
-                                    {announcement.priority}
-                                  </Badge>
-                                  {isExpired && (
-                                      <Badge variant="secondary">Expired</Badge>
-                                  )}
-                                </div>
-                              </div>
+                            {/* Content */}
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-3 sm:mb-4 text-sm sm:text-base line-clamp-3 sm:line-clamp-none">
+                              {announcement.content}
+                            </p>
 
-                              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-                                {announcement.content}
-                              </p>
-
-                              <div className="flex items-center justify-between text-sm text-gray-500">
-                                <div className="flex items-center gap-4">
-                                  <span>By {announcement.author}</span>
-                                  <span>Created: {formatDate(announcement.createdAt)}</span>
-                                  <span>Expires: {formatDate(announcement.expiresAt)}</span>
-                                </div>
+                            {/* Meta info - stack on mobile */}
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                                <span>By {announcement.author}</span>
+                                <span className="hidden sm:inline">|</span>
+                                <span>Created: {formatDate(announcement.createdAt)}</span>
+                                <span className="hidden sm:inline">|</span>
+                                <span>Expires: {formatDate(announcement.expiresAt)}</span>
                               </div>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2">
+                          {/* Actions */}
+                          <div className="flex items-center gap-2 self-end sm:self-start flex-shrink-0">
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -610,19 +648,21 @@ export default function AdminAnnouncementsPage() {
 
         {/* Edit Dialog */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Edit Announcement</DialogTitle>
-              <DialogDescription>
+          <DialogContent className="max-w-2xl max-h-[95vh] overflow-hidden flex flex-col">
+            <DialogHeader className="flex-shrink-0 pb-4 border-b">
+              <DialogTitle className="text-xl sm:text-2xl font-bold">Edit Announcement</DialogTitle>
+              <DialogDescription className="text-gray-600">
                 Make changes to the announcement details.
               </DialogDescription>
             </DialogHeader>
-            {renderAnnouncementForm()}
-            <DialogFooter>
+            <div className="flex-1 overflow-y-auto py-4">
+              {renderAnnouncementForm()}
+            </div>
+            <DialogFooter className="flex-shrink-0 pt-4 border-t bg-gray-50/50 dark:bg-gray-900/50">
               <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => handleSubmit(true)} disabled={isSubmitting}>
+              <Button onClick={() => handleSubmit(true)} disabled={isSubmitting} className="min-w-[120px]">
                 {isSubmitting ? "Updating..." : "Update Announcement"}
               </Button>
             </DialogFooter>

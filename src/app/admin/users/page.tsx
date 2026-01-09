@@ -992,14 +992,14 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
         <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
+          <DialogContent className="sm:max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader className="flex-shrink-0">
               <DialogTitle>Create New User</DialogTitle>
               <DialogDescription>
                 Add a new member or administrator to the church system.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4">
+            <div className="flex-1 overflow-y-auto space-y-4 pr-1 overscroll-contain">
               <div className="space-y-2">
                 <Label htmlFor="create-name">Full Name *</Label>
                 <Input
@@ -1104,7 +1104,7 @@ export default function AdminUsersPage() {
                 </p>
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="flex-shrink-0">
               <Button
                   variant="outline"
                   onClick={() => setShowCreateModal(false)}
@@ -1129,15 +1129,15 @@ export default function AdminUsersPage() {
           </DialogContent>
         </Dialog>
         <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
+          <DialogContent className="sm:max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader className="flex-shrink-0">
               <DialogTitle>Edit User</DialogTitle>
               <DialogDescription>
                 Update user role, ministry, and status.
               </DialogDescription>
             </DialogHeader>
             {selectedUser && (
-                <div className="space-y-4">
+                <div className="flex-1 overflow-y-auto space-y-4 pr-1 overscroll-contain">
                   <div className="space-y-2">
                     <Label>Name</Label>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -1228,7 +1228,7 @@ export default function AdminUsersPage() {
                   </div>
                 </div>
             )}
-            <DialogFooter>
+            <DialogFooter className="flex-shrink-0">
               <Button
                   variant="outline"
                   onClick={() => setShowEditModal(false)}
@@ -1253,15 +1253,15 @@ export default function AdminUsersPage() {
           </DialogContent>
         </Dialog>
         <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
+          <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader className="flex-shrink-0">
               <DialogTitle>User Details</DialogTitle>
               <DialogDescription>
                 Complete information about this user.
               </DialogDescription>
             </DialogHeader>
             {selectedUser && (
-                <div className="space-y-4">
+                <div className="flex-1 overflow-y-auto space-y-4 pr-1 overscroll-contain">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                   <span className="text-lg font-medium text-primary">

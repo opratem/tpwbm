@@ -78,7 +78,7 @@ const DialogContent = React.forwardRef<
         "gap-3 sm:gap-4 md:gap-5",
 
         // Overflow - allow horizontal scrolling inside inputs on mobile
-        "overflow-y-auto",
+        "overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]",
 
         className
       )}
@@ -188,5 +188,5 @@ export {
   DialogHeader,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
+  DialogDescription,dialog,
 }
