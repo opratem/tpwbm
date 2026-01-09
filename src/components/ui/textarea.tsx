@@ -72,6 +72,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               // Character count padding
               showCharCount && maxLength && "pb-8 sm:pb-10",
 
+              // Enable touch scrolling on mobile
+              "[touch-action:manipulation]",
+
               className
             )}
             ref={ref}

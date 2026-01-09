@@ -130,6 +130,26 @@
       overflow-x: hidden;
       touch-action: pan-y pinch-zoom;
     }
+
+    /* Allow text scrolling within inputs on mobile dialogs */
+    [role="dialog"] input[type="text"],
+    [role="dialog"] input[type="email"],
+    [role="dialog"] input[type="password"],
+    [role="dialog"] input[type="search"],
+    [role="dialog"] input[type="url"],
+    [role="dialog"] input[type="tel"],
+    [role="dialog"] input:not([type]),
+    [role="dialog"] textarea {
+      touch-action: auto !important;
+      -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+      text-overflow: clip;
+    }
+
+    /* Ensure inputs can scroll their text content */
+    input, textarea {
+      touch-action: manipulation;
+    }
   }
 
   /* ==================== ACCESSIBILITY ENHANCEMENTS ==================== */
