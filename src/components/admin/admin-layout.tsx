@@ -9,38 +9,23 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className="flex min-h-screen min-h-[100dvh] bg-slate-50 dark:bg-slate-900 overflow-x-hidden">
-      {/* Sidebar - handles its own safe areas */}
+    <div className="h-screen h-[100dvh] flex overflow-hidden bg-slate-50 dark:bg-slate-900">
+      {/* Sidebar - Desktop: flex item, Mobile: fixed header + sheet */}
       <AdminSidebar />
 
       {/* Main content area */}
-      <main
-        className={`
-          flex-1 overflow-y-auto overflow-x-hidden
-
-          /* Mobile: account for fixed header */
-          pt-14 sm:pt-16 lg:pt-0
-
-          /* Safe area insets */
-          pl-[env(safe-area-inset-left)]
-          pr-[env(safe-area-inset-right)]
-          pb-[env(safe-area-inset-bottom)]
-        `}
-      >
-        {/* Content wrapper with responsive padding */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden pt-14 sm:pt-16 lg:pt-0">
+        {/* Scrollable content container */}
         <div
-          className={`
-            /* Responsive padding */
-            p-3 sm:p-4 md:p-6 lg:p-8
-
-            /* Ensure minimum padding on all devices */
-            min-h-full
-
-            /* Extra bottom padding for mobile nav/gestures */
-            pb-6 sm:pb-4 md:pb-6 lg:pb-8
-          `}
+          className="flex-1 overflow-y-auto overflow-x-hidden"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+          }}
         >
-          {children}
+          {/* Content wrapper with responsive padding */}
+          <div className="p-3 sm:p-4 md:p-6 lg:p-8 min-h-full pb-8">
+            {children}
+          </div>
         </div>
       </main>
     </div>

@@ -1,10 +1,22 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { SkipToContent } from "@/components/shared/skip-to-content";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  // Check if we're on an admin route - admin pages have their own layout
+  const isAdminRoute = pathname?.startsWith("/admin");
+
+  // For admin routes, just render children without header/footer
+  // AdminLayout handles its own fixed positioning
+  if (isAdminRoute) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen flex-col mobile-firm-page overflow-x-hidden">
       {/* Skip to main content for accessibility */}
