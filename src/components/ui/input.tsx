@@ -70,6 +70,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               // Mobile-first touch target
               "min-h-[44px] sm:min-h-0",
 
+              // Enable text scrolling on mobile
+              "[touch-action:manipulation]",
+
               className
             )}
             ref={ref}
